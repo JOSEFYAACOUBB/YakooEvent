@@ -415,16 +415,16 @@ function LoginPage({ onLogin }: { onLogin: () => void }) {
       if (authError) throw authError;
 
       if (data?.user) {
-        // Fetch profile to verify if this user has admin role
-        const { data: profile, error: profileError } = await supabase
-          .from("profiles")
-          .select("role")
-          .eq("id", data.user.id)
+        // Fetch from admin_users by email to verify if this user is a registered admin
+        const { data: adminUser, error: adminError } = await supabase
+          .from("admin_users")
+          .select("role, status")
+          .eq("email", data.user.email)
           .single();
 
-        if (profileError || profile?.role !== "admin") {
+        if (adminError || !adminUser || adminUser.status !== "Actif") {
           await supabase.auth.signOut();
-          throw new Error("Accès refusé. Compte administrateur requis.");
+          throw new Error("Accès refusé. Compte administrateur actif requis.");
         }
 
         toast.success("Bienvenue, Admin Yakoo !");
