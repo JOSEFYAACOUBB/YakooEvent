@@ -795,13 +795,93 @@ function DashboardPage({ reservations, onNavigate, onConfirm, onDelete }: {
   const [period, setPeriod] = useState("Cette année");
   const [selectedRes, setSelectedRes] = useState<Reservation | null>(null);
 
+  // ── Real-data KPIs ──────────────────────────────────────────────────────
+  const now = new Date();
+  const currentMonth = now.getMonth(); // 0-based
+  const currentYear = now.getFullYear();
+
+  // Parse fr-FR date strings like "25/06/2025" into Date objects
+  const parseDate = (s: string): Date => {
+    if (!s) return new Date(0);
+    // Try ISO format first (YYYY-MM-DD or similar)
+    const iso = new Date(s);
+    if (!isNaN(iso.getTime()) && s.includes('-')) return iso;
+    // Try DD/MM/YYYY format
+    const parts = s.split('/');
+    if (parts.length === 3) {
+      return new Date(Number(parts[2]), Number(parts[1]) - 1, Number(parts[0]));
+    }
+    return new Date(s);
+  };
+
+  const thisMonthReservations = reservations.filter(r => {
+    const d = parseDate(r.received);
+    return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
+  });
+
+  const lastMonthReservations = reservations.filter(r => {
+    const d = parseDate(r.received);
+    const lm = currentMonth === 0 ? 11 : currentMonth - 1;
+    const ly = currentMonth === 0 ? currentYear - 1 : currentYear;
+    return d.getMonth() === lm && d.getFullYear() === ly;
+  });
+
+  const monthCount = thisMonthReservations.length;
+  const lastMonthCount = lastMonthReservations.length;
+  const monthTrend = lastMonthCount > 0
+    ? Math.round(((monthCount - lastMonthCount) / lastMonthCount) * 100)
+    : 0;
+
+  // ── Monthly chart data from real reservations ───────────────────────────
+  const FR_MONTHS = ["Jan","Fév","Mar","Avr","Mai","Jun","Jul","Aoû","Sep","Oct","Nov","Déc"];
+  const monthlyData = FR_MONTHS.map((month, i) => {
+    const current = reservations.filter(r => {
+      const d = parseDate(r.received);
+      return d.getMonth() === i && d.getFullYear() === currentYear;
+    }).length;
+    const prev = reservations.filter(r => {
+      const d = parseDate(r.received);
+      return d.getMonth() === i && d.getFullYear() === currentYear - 1;
+    }).length;
+    return { month, current, prev };
+  });
+
+  // ── Category breakdown from real reservations ───────────────────────────
+  const CATEGORY_COLORS: Record<string, string> = {
+    "Accrobranche": "#F5A623", "Kayak": "#3B82F6", "Paintball": "#EF4444",
+    "Tyrolienne": "#22C55E", "Team Building": "#8B5CF6", "Anniversaire": "#EC4899",
+    "Formation": "#14B8A6", "Hébergement": "#F97316",
+  };
+  const categoryCounts: Record<string, number> = {};
+  reservations.forEach(r => {
+    const cat = r.activity || "Autre";
+    categoryCounts[cat] = (categoryCounts[cat] || 0) + 1;
+  });
+  const totalReservations = reservations.length;
+  const categoryData = Object.entries(categoryCounts)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 6)
+    .map(([name, count]) => ({
+      name,
+      value: totalReservations > 0 ? Math.round((count / totalReservations) * 100) : 0,
+      color: CATEGORY_COLORS[name] || "#6B7A99",
+    }));
+
+  // ── Top activities from real reservations ───────────────────────────────
+  const topActivities = Object.entries(categoryCounts)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 5)
+    .map(([name, value]) => ({ name, value }));
+
+  const maxTopValue = topActivities.length > 0 ? Math.max(...topActivities.map(a => a.value)) : 1;
+
   return (
     <div className="space-y-5">
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <KPICard title="Réservations du mois" value="48" iconBg="rgba(245,166,35,0.1)" icon={<Calendar size={22} style={{ color: "#F5A623" }} />} trend={{ val: "+12%", up: true }} />
-        <KPICard title="Activités actives" value="22" sub="sur 22 disponibles" iconBg="rgba(20,184,166,0.1)" icon={<Activity size={22} style={{ color: "#14B8A6" }} />} />
-        <KPICard title="Revenus estimés" value="12 400 TND" iconBg="rgba(245,166,35,0.1)" icon={<DollarSign size={22} style={{ color: "#F5A623" }} />} trend={{ val: "+8%", up: true }} />
-        <KPICard title="Avis clients" value="4.7 / 5" sub="38 avis au total" iconBg="rgba(139,92,246,0.1)" icon={<Star size={22} style={{ color: "#8B5CF6" }} />} />
+        <KPICard title="Réservations du mois" value={String(monthCount)} iconBg="rgba(245,166,35,0.1)" icon={<Calendar size={22} style={{ color: "#F5A623" }} />} trend={lastMonthCount > 0 ? { val: `${monthTrend > 0 ? "+" : ""}${monthTrend}%`, up: monthTrend >= 0 } : undefined} />
+        <KPICard title="Total réservations" value={String(totalReservations)} sub={`${Object.keys(categoryCounts).length} activité(s)`} iconBg="rgba(20,184,166,0.1)" icon={<Activity size={22} style={{ color: "#14B8A6" }} />} />
+        <KPICard title="En attente" value={String(reservations.filter(r => r.status === "En attente").length)} sub="à confirmer" iconBg="rgba(245,166,35,0.1)" icon={<DollarSign size={22} style={{ color: "#F5A623" }} />} />
+        <KPICard title="Confirmées" value={String(reservations.filter(r => r.status === "Confirmée").length)} sub={`/ ${totalReservations} total`} iconBg="rgba(139,92,246,0.1)" icon={<Star size={22} style={{ color: "#8B5CF6" }} />} />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
@@ -813,14 +893,14 @@ function DashboardPage({ reservations, onNavigate, onConfirm, onDelete }: {
             </select>
           </div>
           <ResponsiveContainer width="100%" height={220}>
-            <LineChart data={lineData}>
+            <LineChart data={monthlyData}>
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(27,42,74,0.06)" />
               <XAxis dataKey="month" tick={{ fontSize: 11, fill: "#6B7A99" }} axisLine={false} tickLine={false} />
               <YAxis tick={{ fontSize: 11, fill: "#6B7A99" }} axisLine={false} tickLine={false} />
               <Tooltip contentStyle={{ background: "white", border: "1px solid rgba(27,42,74,0.1)", borderRadius: 8, fontSize: 12 }} />
               <Legend iconType="circle" wrapperStyle={{ fontSize: 12 }} />
-              <Line type="monotone" dataKey="current" name="2025" stroke="#F5A623" strokeWidth={2.5} dot={{ r: 3, fill: "#F5A623" }} />
-              <Line type="monotone" dataKey="prev" name="2024" stroke="#1B2A4A" strokeWidth={2} strokeDasharray="5 4" dot={false} />
+              <Line type="monotone" dataKey="current" name={String(currentYear)} stroke="#F5A623" strokeWidth={2.5} dot={{ r: 3, fill: "#F5A623" }} />
+              <Line type="monotone" dataKey="prev" name={String(currentYear - 1)} stroke="#1B2A4A" strokeWidth={2} strokeDasharray="5 4" dot={false} />
             </LineChart>
           </ResponsiveContainer>
         </Card>
@@ -830,24 +910,24 @@ function DashboardPage({ reservations, onNavigate, onConfirm, onDelete }: {
             <div className="relative">
               <ResponsiveContainer width={160} height={160}>
                 <PieChart>
-                  <Pie data={donutData} cx="50%" cy="50%" innerRadius={50} outerRadius={75} dataKey="value" paddingAngle={3}>
-                    {donutData.map(d => <Cell key={d.name} fill={d.color} />)}
+                  <Pie data={categoryData.length > 0 ? categoryData : [{ name: "Aucune", value: 1, color: "#E5E7EB" }]} cx="50%" cy="50%" innerRadius={50} outerRadius={75} dataKey="value" paddingAngle={3}>
+                    {(categoryData.length > 0 ? categoryData : [{ name: "Aucune", value: 1, color: "#E5E7EB" }]).map(d => <Cell key={d.name} fill={d.color} />)}
                   </Pie>
                 </PieChart>
               </ResponsiveContainer>
               <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                <div className="text-xl font-bold" style={{ color: "#1B2A4A" }}>156</div>
+                <div className="text-xl font-bold" style={{ color: "#1B2A4A" }}>{totalReservations}</div>
                 <div className="text-xs" style={{ color: "#6B7A99" }}>total</div>
               </div>
             </div>
           </div>
           <div className="space-y-2">
-            {donutData.map(d => (
+            {categoryData.length > 0 ? categoryData.map(d => (
               <div key={d.name} className="flex items-center justify-between text-xs">
                 <div className="flex items-center gap-2"><div className="w-2.5 h-2.5 rounded-full" style={{ background: d.color }} /><span style={{ color: "#6B7A99" }}>{d.name}</span></div>
                 <span className="font-semibold" style={{ color: "#1B2A4A" }}>{d.value}%</span>
               </div>
-            ))}
+            )) : <p className="text-xs text-center" style={{ color: "#6B7A99" }}>Aucune donnée</p>}
           </div>
         </Card>
       </div>
@@ -898,12 +978,12 @@ function DashboardPage({ reservations, onNavigate, onConfirm, onDelete }: {
           <Card className="p-5">
             <h3 className="font-semibold text-sm mb-4" style={{ color: "#1B2A4A" }}>Activités les plus demandées</h3>
             <div className="space-y-3">
-              {barData.map(item => (
+              {topActivities.length > 0 ? topActivities.map(item => (
                 <div key={item.name}>
-                  <div className="flex justify-between text-xs mb-1"><span style={{ color: "#1B2A4A" }}>{item.name}</span><span className="font-semibold" style={{ color: "#F5A623" }}>{item.value}</span></div>
-                  <div className="h-1.5 rounded-full overflow-hidden" style={{ background: "#F0F2F5" }}><div className="h-full rounded-full" style={{ width: `${(item.value / 50) * 100}%`, background: "#F5A623" }} /></div>
+                  <div className="flex justify-between text-xs mb-1"><span style={{ color: "#1B2A4A" }}>{item.name}</span><span className="font-semibold" style={{ color: "#F5A623" }}>{item.value} rés.</span></div>
+                  <div className="h-1.5 rounded-full overflow-hidden" style={{ background: "#F0F2F5" }}><div className="h-full rounded-full" style={{ width: `${(item.value / maxTopValue) * 100}%`, background: "#F5A623" }} /></div>
                 </div>
-              ))}
+              )) : <p className="text-xs" style={{ color: "#6B7A99" }}>Aucune donnée</p>}
             </div>
           </Card>
           <Card className="p-5">
