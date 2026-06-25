@@ -6504,7 +6504,7 @@ function PlaceholderPage({ title }: { title: string }) {
 // ─── App ───────────────────────────────────────────────────────────────────────
 function AppInner() {
   const { lang } = useLang();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [page, setPage] = useState<Page>("dashboard");
   const [reservations, setReservations] = useState<Reservation[]>([]);

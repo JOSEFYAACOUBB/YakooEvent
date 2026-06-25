@@ -302,3 +302,37 @@ CREATE POLICY "Anyone can update events" ON events FOR UPDATE USING (true);
 CREATE POLICY "Anyone can delete events" ON events FOR DELETE USING (true);
 
 CREATE TRIGGER update_events_updated_at BEFORE UPDATE ON events FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+-- ==========================================
+-- 15. ADMIN USERS TABLE (internal staff)
+-- ==========================================
+CREATE TABLE IF NOT EXISTS admin_users (
+    id BIGSERIAL PRIMARY KEY,
+    name TEXT NOT NULL,
+    email TEXT UNIQUE NOT NULL,
+    phone TEXT DEFAULT '',
+    role TEXT DEFAULT 'Lecteur' CHECK (role IN ('Super Admin','Admin','Éditeur','Modérateur','Lecteur')),
+    status TEXT DEFAULT 'Actif' CHECK (status IN ('Actif','Inactif','Suspendu')),
+    last_login TEXT DEFAULT '',
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc', now()) NOT NULL,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc', now()) NOT NULL
+);
+
+ALTER TABLE admin_users ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Public read admin_users"   ON admin_users FOR SELECT USING (true);
+CREATE POLICY "Anyone insert admin_users" ON admin_users FOR INSERT WITH CHECK (true);
+CREATE POLICY "Anyone update admin_users" ON admin_users FOR UPDATE USING (true);
+CREATE POLICY "Anyone delete admin_users" ON admin_users FOR DELETE USING (true);
+
+DROP TRIGGER IF EXISTS update_admin_users_updated_at ON admin_users;
+CREATE TRIGGER update_admin_users_updated_at BEFORE UPDATE ON admin_users
+    FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+INSERT INTO admin_users (name, email, phone, role, status, last_login) VALUES
+  ('Admin Yakoo','admin@yakoo.tn','+216 71 234 567','Super Admin','Actif','Aujourd''hui, 09:14'),
+  ('Sarra Ben Salah','sarra@yakoo.tn','+216 55 234 567','Admin','Actif','Hier, 14:32'),
+  ('Amine Trabelsi','amine@yakoo.tn','+216 22 987 654','Éditeur','Actif','12 Jun 2025'),
+  ('Lina Mansouri','lina@yakoo.tn','+216 98 765 432','Modérateur','Actif','10 Jun 2025'),
+  ('Khalil Ben Romdhane','khalil@yakoo.tn','+216 71 543 210','Éditeur','Suspendu','01 Jun 2025'),
+  ('Yasmine Chaabane','yasmine@yakoo.tn','+216 29 876 543','Lecteur','Inactif','22 Mai 2025')
+ON CONFLICT (email) DO NOTHING;
