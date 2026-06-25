@@ -2,6 +2,7 @@ import { supabase } from "../supabaseClient";
 import { useState, useEffect, useRef, createContext, useContext } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "motion/react";
+import logoImg from "../photos/logo.png";
 
 const ContentContext = createContext<Record<string, string>>({});
 export const useContent = () => useContext(ContentContext);
@@ -127,7 +128,7 @@ function Logo() {
     <a href="#accueil" className="select-none group relative flex items-center justify-center w-24 sm:w-32 lg:w-48 h-16 sm:h-20 z-50">
       <div className="w-full h-full transition-transform duration-300 group-hover:scale-110 flex items-center justify-center">
         <img
-          src="src/photos/logo.png"
+          src={logoImg}
           alt="Logo"
           className="w-full h-full object-contain scale-[1.5] lg:scale-[2.2]"
         />
