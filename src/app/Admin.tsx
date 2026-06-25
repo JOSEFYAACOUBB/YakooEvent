@@ -400,20 +400,40 @@ function LoginPage({ onLogin }: { onLogin: () => void }) {
   const [loading, setLoading] = useState(false);
   const [focused, setFocused] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     if (!email || !password) { setError("Veuillez remplir tous les champs."); return; }
     setLoading(true);
-    setTimeout(() => {
-      if (email === "admin@yakoo.tn" && password === "yakoo2025") {
+
+    try {
+      // Authenticate with Supabase Auth
+      const { data, error: authError } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+      if (authError) throw authError;
+
+      if (data?.user) {
+        // Fetch profile to verify if this user has admin role
+        const { data: profile, error: profileError } = await supabase
+          .from("profiles")
+          .select("role")
+          .eq("id", data.user.id)
+          .single();
+
+        if (profileError || profile?.role !== "admin") {
+          await supabase.auth.signOut();
+          throw new Error("Accès refusé. Compte administrateur requis.");
+        }
+
         toast.success("Bienvenue, Admin Yakoo !");
         onLogin();
-      } else {
-        setError("Email ou mot de passe incorrect.");
-        setLoading(false);
       }
-    }, 1000);
+    } catch (err: any) {
+      setError(err.message || "Email ou mot de passe incorrect.");
+      setLoading(false);
+    }
   };
 
   return (
@@ -438,20 +458,12 @@ function LoginPage({ onLogin }: { onLogin: () => void }) {
       {/* Decorative gold diagonal strip */}
       <div className="absolute top-0 right-0 w-1 h-full opacity-60" style={{ background: "linear-gradient(to bottom, transparent, #F5A623, transparent)" }} />
 
-      {/* Scattered floating badges — desktop only */}
-
-
       {/* Main content — brand left + form right */}
       <div className="relative z-10 w-full max-w-5xl mx-auto px-6 flex items-center gap-16 lg:gap-24">
-
-        {/* Left — brand */}
-
 
         {/* Right — form card */}
         <div className="w-full lg:w-[420px] flex-shrink-0 mx-auto">
           <div className="rounded-3xl p-8 backdrop-blur-xl" style={{ background: "rgba(255,255,255,0.96)", boxShadow: "0 32px 80px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.15)" }}>
-            {/* Mobile logo */}
-
 
             <div className="mb-7">
               <h2 className="text-2xl font-black mb-1.5" style={{ color: "#0F1C30", letterSpacing: "-0.5px" }}>{tr("Connexion")}</h2>
@@ -486,7 +498,6 @@ function LoginPage({ onLogin }: { onLogin: () => void }) {
               <div>
                 <div className="flex items-center justify-between mb-2">
                   <label className="block text-xs font-bold uppercase tracking-wide" style={{ color: "#1B2A4A" }}>Mot de passe</label>
-                  <button type="button" className="text-xs font-medium" style={{ color: "#F5A623" }}>Mot de passe oublié ?</button>
                 </div>
                 <div className="relative">
                   <Lock size={15} className="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" style={{ color: focused === "pass" ? "#F5A623" : "#9CA3AF" }} />
@@ -531,26 +542,6 @@ function LoginPage({ onLogin }: { onLogin: () => void }) {
                   : <><Lock size={15} /> {tr("Se connecter")}</>}
               </button>
             </form>
-
-            {/* Demo hint */}
-            <div className="mt-5 p-4 rounded-xl" style={{ background: "linear-gradient(135deg, rgba(27,42,74,0.04), rgba(245,166,35,0.04))", border: "1px dashed rgba(27,42,74,0.15)" }}>
-              <div className="flex items-center gap-2 mb-2">
-                <div className="w-4 h-4 rounded-full flex items-center justify-center" style={{ background: "rgba(245,166,35,0.2)" }}>
-                  <span style={{ fontSize: 9, color: "#F5A623" }}>i</span>
-                </div>
-                <span className="text-xs font-bold" style={{ color: "#1B2A4A" }}>Accès démo</span>
-              </div>
-              <div className="space-y-1">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs" style={{ color: "#6B7A99" }}>Email</span>
-                  <button onClick={() => setEmail("admin@yakoo.tn")} className="text-xs font-mono font-semibold px-2 py-0.5 rounded-md hover:opacity-80 transition-opacity" style={{ background: "rgba(27,42,74,0.08)", color: "#1B2A4A" }}>admin@yakoo.tn</button>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-xs" style={{ color: "#6B7A99" }}>Mot de passe</span>
-                  <button onClick={() => setPassword("yakoo2025")} className="text-xs font-mono font-semibold px-2 py-0.5 rounded-md hover:opacity-80 transition-opacity" style={{ background: "rgba(27,42,74,0.08)", color: "#1B2A4A" }}>yakoo2025</button>
-                </div>
-              </div>
-            </div>
 
             <p className="text-center text-xs mt-5" style={{ color: "#9CA3AF" }}>
               © 2025 Yakoo Events — Tous droits réservés
@@ -6504,7 +6495,7 @@ function PlaceholderPage({ title }: { title: string }) {
 // ─── App ───────────────────────────────────────────────────────────────────────
 function AppInner() {
   const { lang } = useLang();
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [page, setPage] = useState<Page>("dashboard");
   const [reservations, setReservations] = useState<Reservation[]>([]);
