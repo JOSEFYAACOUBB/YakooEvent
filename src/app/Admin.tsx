@@ -1633,7 +1633,7 @@ function PacksPage() {
   const [packStates, setPackStates] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [showAddModal, setShowAddModal] = useState(false);
-  const [newPackForm, setNewPackForm] = useState({ tier: "", tagline: "", selectedActivities: [] as string[], price: 0, games_count: 0, badge: "" });
+  const [newPackForm, setNewPackForm] = useState({ tier: "", tagline: "", description: "", selectedActivities: [] as string[], price: 0, games_count: 0, badge: "" });
 
   const ACTIVITIES_LIST = [
     "Accrobranche", "Tyrolienne", "Kayak", "Paintball",
@@ -1715,10 +1715,12 @@ function PacksPage() {
   const handleAddPackSubmit = async () => {
     if (!newPackForm.tier.trim()) return toast.error("Le nom du pack est requis.");
 
+    const description = newPackForm.selectedActivities.join(" + ");
+
     const { data, error } = await supabase.from('packs').insert([{
       tier: newPackForm.tier.trim().toUpperCase(),
       tagline: newPackForm.tagline.trim(),
-      description: newPackForm.description.trim(),
+      description: description,
       price: newPackForm.price,
       games_count: newPackForm.games_count,
       badge: newPackForm.badge.trim(),
@@ -1739,7 +1741,7 @@ function PacksPage() {
         features: []
       }]);
       setShowAddModal(false);
-      setNewPackForm({ tier: "", tagline: "", selectedActivities: [], price: 0, games_count: 0, badge: "" });
+      setNewPackForm({ tier: "", tagline: "", description: "", selectedActivities: [], price: 0, games_count: 0, badge: "" });
     }
   };
 
