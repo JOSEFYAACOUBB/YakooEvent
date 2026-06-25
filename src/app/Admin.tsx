@@ -23,7 +23,7 @@ import {
   Award, Crown, Zap, Heart, Star as StarIcon, ArrowRight,
   ChevronLeft as ChevLeft, ChevronRight as ChevRight,
   Clock as ClockIcon, Flag, MessageCircle, ThumbsUp, Send,
-  RefreshCw as Refresh, Coins,
+  RefreshCw as Refresh, Coins, Menu,
 } from "lucide-react";
 import {
   LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, AreaChart, Area,
@@ -586,54 +586,83 @@ const navItems: { icon: React.ReactNode; label: string; page: Page; badge?: numb
   { icon: <Settings size={18} />, label: "Paramètres", page: "settings" },
 ];
 
-function Sidebar({ activePage, onNavigate, onLogout }: {
+function Sidebar({ activePage, onNavigate, onLogout, isOpen, onClose }: {
   activePage: Page; onNavigate: (p: Page) => void; onLogout: () => void;
+  isOpen: boolean; onClose: () => void;
 }) {
   const { lang, tr } = useLang();
   const isAr = lang === "ar";
   return (
-    <aside style={{ background: "#0F1C30", width: 260, minHeight: "100vh", fontFamily: isAr ? "'Noto Sans Arabic', sans-serif" : "Inter, sans-serif", [isAr ? "right" : "left"]: 0 }} className="flex flex-col fixed top-0 bottom-0 z-30">
-      <div className="px-6 pt-6 pb-4">
-        <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-lg flex items-center justify-center font-bold text-sm" style={{ background: "#F5A623", color: "#0F1C30" }}>YE</div>
-          <div>
-            <div className="font-bold text-white text-sm leading-tight">Yakoo Events</div>
-            <div className="text-xs" style={{ color: "#F5A623" }}>Agence Événementielle</div>
+    <>
+      {/* Mobile Overlay */}
+      {isOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-40 lg:hidden transition-opacity"
+          onClick={onClose}
+        />
+      )}
+      <aside
+        style={{
+          background: "#0F1C30",
+          width: 260,
+          minHeight: "100vh",
+          fontFamily: isAr ? "'Noto Sans Arabic', sans-serif" : "Inter, sans-serif"
+        }}
+        className={`flex flex-col fixed top-0 bottom-0 z-50 transition-transform duration-300 ease-in-out lg:translate-x-0 ${
+          isAr
+            ? `right-0 ${isOpen ? "translate-x-0" : "translate-x-full"}`
+            : `left-0 ${isOpen ? "translate-x-0" : "-translate-x-full"}`
+        }`}
+      >
+        <div className="px-6 pt-6 pb-4 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-lg flex items-center justify-center font-bold text-sm" style={{ background: "#F5A623", color: "#0F1C30" }}>YE</div>
+            <div>
+              <div className="font-bold text-white text-sm leading-tight">Yakoo Events</div>
+              <div className="text-xs" style={{ color: "#F5A623" }}>Agence Événementielle</div>
+            </div>
+          </div>
+          {/* Close button for mobile screens */}
+          <button
+            onClick={onClose}
+            className="w-8 h-8 rounded-lg flex items-center justify-center lg:hidden hover:bg-white/10 text-white transition-colors"
+          >
+            <X size={18} />
+          </button>
+        </div>
+        <div className="mx-4 mb-4 rounded-lg px-3 py-3" style={{ background: "rgba(255,255,255,0.05)" }}>
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-full flex items-center justify-center font-semibold text-sm" style={{ background: "#F5A623", color: "#0F1C30" }}>AY</div>
+            <div className="flex-1 min-w-0">
+              <div className="text-sm font-medium text-white truncate">Admin Yakoo</div>
+              <div className="text-xs px-2 py-0.5 rounded-full inline-block mt-0.5" style={{ background: "rgba(245,166,35,0.2)", color: "#F5A623" }}>{tr("Super Admin")}</div>
+            </div>
           </div>
         </div>
-      </div>
-      <div className="mx-4 mb-4 rounded-lg px-3 py-3" style={{ background: "rgba(255,255,255,0.05)" }}>
-        <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-full flex items-center justify-center font-semibold text-sm" style={{ background: "#F5A623", color: "#0F1C30" }}>AY</div>
-          <div className="flex-1 min-w-0">
-            <div className="text-sm font-medium text-white truncate">Admin Yakoo</div>
-            <div className="text-xs px-2 py-0.5 rounded-full inline-block mt-0.5" style={{ background: "rgba(245,166,35,0.2)", color: "#F5A623" }}>{tr("Super Admin")}</div>
-          </div>
+        <div className="h-px mx-4 mb-3" style={{ background: "rgba(255,255,255,0.08)" }} />
+        <nav className="flex-1 px-3 overflow-y-auto">
+          {navItems.map(item => {
+            const active = activePage === item.page;
+            return (
+              <button key={item.page} onClick={() => { onNavigate(item.page); onClose(); }}
+                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg mb-0.5 text-left transition-all duration-150"
+                style={{ background: active ? "rgba(245,166,35,0.12)" : "transparent", borderLeft: active ? "3px solid #F5A623" : "3px solid transparent", color: active ? "#F5A623" : "rgba(255,255,255,0.65)" }}>
+                <span style={{ color: active ? "#F5A623" : "rgba(255,255,255,0.5)" }}>{item.icon}</span>
+                <span className="text-sm font-medium flex-1">{item.label}</span>
+                {item.badge && <span className="text-xs px-1.5 py-0.5 rounded-full font-semibold" style={{ background: "#F5A623", color: "#0F1C30" }}>{item.badge}</span>}
+              </button>
+            );
+          })}
+        </nav>
+        <div className="p-4">
+          <div className="h-px mb-4" style={{ background: "rgba(255,255,255,0.08)" }} />
+          <button onClick={onLogout} className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-150 text-sm hover:bg-red-500/10"
+            style={{ color: "rgba(255,255,255,0.5)" }}>
+            <LogOut size={18} /><span>{tr("Déconnexion")}</span>
+          </button>
         </div>
-      </div>
-      <div className="h-px mx-4 mb-3" style={{ background: "rgba(255,255,255,0.08)" }} />
-      <nav className="flex-1 px-3 overflow-y-auto">
-        {navItems.map(item => {
-          const active = activePage === item.page;
-          return (
-            <button key={item.page} onClick={() => onNavigate(item.page)}
-              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg mb-0.5 text-left transition-all duration-150"
-              style={{ background: active ? "rgba(245,166,35,0.12)" : "transparent", borderLeft: active ? "3px solid #F5A623" : "3px solid transparent", color: active ? "#F5A623" : "rgba(255,255,255,0.65)" }}>
-              <span style={{ color: active ? "#F5A623" : "rgba(255,255,255,0.5)" }}>{item.icon}</span>
-              <span className="text-sm font-medium flex-1">{item.label}</span>
-              {item.badge && <span className="text-xs px-1.5 py-0.5 rounded-full font-semibold" style={{ background: "#F5A623", color: "#0F1C30" }}>{item.badge}</span>}
-            </button>
-          );
-        })}
-      </nav>
-      <div className="p-4">
-        <div className="h-px mb-4" style={{ background: "rgba(255,255,255,0.08)" }} />
-        <button onClick={onLogout} className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-150 text-sm hover:bg-red-500/10"
-          style={{ color: "rgba(255,255,255,0.5)" }}>
-          <LogOut size={18} /><span>{tr("Déconnexion")}</span>
-        </button>
-      </div>
-    </aside>
+      </aside>
+    </>
   );
 }
 
@@ -650,7 +679,7 @@ const pageTitles: Record<Page, string> = {
   services: "Services Offerts", social: "Réseaux Sociaux",
 };
 
-function Header({ page, onNavigate, onLogout }: { page: Page; onNavigate: (p: Page) => void; onLogout: () => void }) {
+function Header({ page, onNavigate, onLogout, onToggleSidebar }: { page: Page; onNavigate: (p: Page) => void; onLogout: () => void; onToggleSidebar: () => void }) {
   const { lang, setLang, tr } = useLang();
   const [showProfile, setShowProfile] = useState(false);
   const [showNotifs, setShowNotifs] = useState(false);
@@ -664,7 +693,15 @@ function Header({ page, onNavigate, onLogout }: { page: Page; onNavigate: (p: Pa
 
   return (
     <header className="h-16 flex items-center px-6 gap-4 sticky top-0 z-20 bg-white border-b" style={{ borderColor: "rgba(27,42,74,0.08)", fontFamily: "Inter, sans-serif" }}>
-      <h1 className="text-base font-semibold flex-1" style={{ color: "#1B2A4A" }}>{pageTitles[page]}</h1>
+      {/* Sidebar mobile toggle */}
+      <button
+        onClick={onToggleSidebar}
+        className="w-9 h-9 rounded-lg flex items-center justify-center lg:hidden hover:bg-gray-100 mr-2 flex-shrink-0"
+        aria-label="Toggle navigation menu"
+      >
+        <Menu size={20} style={{ color: "#1B2A4A" }} />
+      </button>
+      <h1 className="text-base font-semibold flex-1 truncate" style={{ color: "#1B2A4A" }}>{pageTitles[page]}</h1>
       <div className="flex items-center gap-3">
         <div className="relative hidden md:block">
           <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: "#6B7A99" }} />
@@ -6468,6 +6505,7 @@ function PlaceholderPage({ title }: { title: string }) {
 function AppInner() {
   const { lang } = useLang();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [page, setPage] = useState<Page>("dashboard");
   const [reservations, setReservations] = useState<Reservation[]>([]);
 
@@ -6560,9 +6598,9 @@ function AppInner() {
   return (
     <div className="min-h-screen" style={{ background: "#F0F2F5", fontFamily: lang === "ar" ? "'Noto Sans Arabic', sans-serif" : "Inter, sans-serif", direction: lang === "ar" ? "rtl" : "ltr" }}>
       <Toaster position={lang === "ar" ? "bottom-left" : "bottom-right"} richColors />
-      <Sidebar activePage={page} onNavigate={setPage} onLogout={handleLogout} />
-      <div style={{ [lang === "ar" ? "marginRight" : "marginLeft"]: 260 }}>
-        <Header page={page} onNavigate={setPage} onLogout={handleLogout} />
+      <Sidebar activePage={page} onNavigate={setPage} onLogout={handleLogout} isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+      <div className={lang === "ar" ? "lg:mr-[260px] mr-0" : "lg:ml-[260px] ml-0"}>
+        <Header page={page} onNavigate={setPage} onLogout={handleLogout} onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} />
         <main className="p-6">{renderPage()}</main>
       </div>
     </div>
