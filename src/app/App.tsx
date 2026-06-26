@@ -2641,6 +2641,7 @@ const FAQS = [
 ];
 
 function FAQ() {
+  const content = useContent();
   const [open, setOpen] = useState<number | null>(0);
   const [faqs, setFaqs] = useState<any[]>([]);
 
@@ -2884,6 +2885,7 @@ function FAQ() {
 
 // ─── Contact ──────────────────────────────────────────────────────────────────
 function Contact() {
+  const content = useContent();
   const [cName, setCName]       = useState("");
   const [cEmail, setCEmail]     = useState("");
   const [cMessage, setCMessage] = useState("");
@@ -3263,6 +3265,7 @@ function TransitionStats() {
  * The most visually dramatic CTA on the page.
  */
 function TransitionBookCTA() {
+  const content = useContent();
   return (
     <div className="relative overflow-hidden" style={{ minHeight: "240px" }}>
       {/* Background photo */}
@@ -3324,6 +3327,7 @@ function TransitionBookCTA() {
  * A breathing moment before the FAQ.
  */
 function TransitionNatureQuote() {
+  const content = useContent();
   return (
     <div className="relative overflow-hidden" style={{ height: "180px" }}>
       <img
