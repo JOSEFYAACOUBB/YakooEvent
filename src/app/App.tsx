@@ -486,7 +486,7 @@ function Hero() {
         style={{ clipPath: "polygon(14% 0%, 100% 0%, 100% 100%, 0% 100%)" }}
       >
         <motion.img
-          src="https://images.unsplash.com/photo-1648853070657-6d58398bee93?w=1200&h=900&fit=crop&auto=format"
+          src={content['hero_img'] || "https://images.unsplash.com/photo-1648853070657-6d58398bee93?w=1200&h=900&fit=crop&auto=format"}
           alt="Activité aventure Yakoo Events"
           className="w-full h-full object-cover"
           style={{ scale: 1.1 }}
@@ -524,7 +524,7 @@ function Hero() {
       {/* Mobile background image */}
       <div className="lg:hidden absolute inset-0">
         <img
-          src="https://images.unsplash.com/photo-1648853070657-6d58398bee93?w=800&h=1200&fit=crop&auto=format"
+          src={content['hero_img'] || "https://images.unsplash.com/photo-1648853070657-6d58398bee93?w=800&h=1200&fit=crop&auto=format"}
           alt="Yakoo Events"
           className="w-full h-full object-cover"
           style={{ opacity: 0.2 }}
@@ -721,8 +721,8 @@ function About() {
 
   const bentoItems = [
     { type: "stat",  value: "500+", label: "Groupes",      sub: "accueillis",      color: NAVY, bg: "#fff",  accent: GOLD },
-    { type: "photo", img: "https://images.unsplash.com/photo-1480480565647-1c4385c7c0bf?w=500&h=400&fit=crop&auto=format", label: "Kayak" },
-    { type: "photo", img: "https://images.unsplash.com/photo-1637511077877-3c6a00eb32ba?w=500&h=400&fit=crop&auto=format", label: "Tyrolienne" },
+    { type: "photo", img: content['about_img_1'] || "https://images.unsplash.com/photo-1480480565647-1c4385c7c0bf?w=500&h=400&fit=crop&auto=format", label: "Kayak" },
+    { type: "photo", img: content['about_img_2'] || "https://images.unsplash.com/photo-1637511077877-3c6a00eb32ba?w=500&h=400&fit=crop&auto=format", label: "Tyrolienne" },
     { type: "stat",  value: "22",   label: "Activités",    sub: "pour tous",       color: "#fff", bg: NAVY,  accent: GOLD },
     { type: "stat",  value: "3 ha", label: "Parc Naturel", sub: "préservé",        color: NAVY, bg: "#fff",  accent: GOLD },
     { type: "stat",  value: "4.9★", label: "Satisfaction", sub: "sur 500+ avis",  color: NAVY, bg: GOLD,   accent: NAVY },
@@ -2184,35 +2184,35 @@ const TESTIMONIALS = [
     name: "Sana Belhadj", role: "Directrice RH", company: "TechTunis",
     activity: "Team Building", stars: 5,
     text: "Une expérience de team building absolument incroyable ! L'équipe de Yakoo Events a su créer une ambiance exceptionnelle. Nos collaborateurs en parlent encore des mois après.",
-    img: "https://images.unsplash.com/photo-1531204709756-1c7a41bf8936?w=120&h=120&fit=crop&auto=format",
+    img: "https://api.dicebear.com/9.x/adventurer/svg?seed=Sana",
     color: "#22c55e",
   },
   {
     name: "Karim Mansouri", role: "Gérant", company: "EventPro Maghreb",
     activity: "Séminaire", stars: 5,
     text: "Le cadre naturel est magnifique, les infrastructures sont impeccables, et le staff vraiment aux petits soins. Notre séminaire annuel fut une vraie réussite. Nous reviendrons !",
-    img: "https://images.unsplash.com/photo-1521336575822-6da63fb45455?w=120&h=120&fit=crop&auto=format",
+    img: "https://api.dicebear.com/9.x/adventurer/svg?seed=Karim",
     color: "#38bdf8",
   },
   {
     name: "Leïla Trabelsi", role: "Cliente particulière", company: "Anniversaire enfants",
     activity: "Animation", stars: 5,
     text: "Un endroit magique pour les anniversaires enfants ! L'animation était top, les activités adaptées à tous les âges. Mes enfants ont adoré l'accrobranche et le tir à l'arc.",
-    img: "https://images.unsplash.com/photo-1637511077877-3c6a00eb32ba?w=120&h=120&fit=crop&auto=format",
+    img: "https://api.dicebear.com/9.x/adventurer/svg?seed=Leila",
     color: "#fb7185",
   },
   {
     name: "Mehdi Chaabane", role: "Chef de projet", company: "BuildTech Tunis",
     activity: "Accrobranche", stars: 5,
     text: "Journée parfaite avec toute l'équipe ! L'accrobranche était le clou du spectacle. Encadrement sérieux, ambiance décontractée. On repart avec des souvenirs plein la tête.",
-    img: "https://images.unsplash.com/photo-1480480565647-1c4385c7c0bf?w=120&h=120&fit=crop&auto=format",
+    img: "https://api.dicebear.com/9.x/adventurer/svg?seed=Mehdi",
     color: "#f97316",
   },
   {
     name: "Amira Khelifi", role: "Enseignante", company: "École primaire Tunis",
     activity: "Tir à l'arc", stars: 5,
     text: "Sortie scolaire inoubliable ! Les enfants ont adoré le tir à l'arc et les jeux en pleine nature. Le personnel est patient et pédagogique. Je recommande vivement à tous les établissements.",
-    img: "https://images.unsplash.com/photo-1771525552094-ce394cf95343?w=120&h=120&fit=crop&auto=format",
+    img: "https://api.dicebear.com/9.x/adventurer/svg?seed=Amira",
     color: "#a78bfa",
   },
 ];
@@ -2453,7 +2453,7 @@ function Testimonials() {
       name: "Yassine Jrad", role: "Organisateur", company: "StartUp Weekend",
       activity: "Team Building", stars: 5,
       text: "Un espace formidable qui a permis à nos participants de se déconnecter et de tisser de vrais liens. L'orga était nickel, le lieu est très inspirant.",
-      img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&h=120&fit=crop&auto=format",
+      img: "https://api.dicebear.com/9.x/adventurer/svg?seed=Yassine",
       color: "#3b82f6",
     }
   ];
@@ -2466,7 +2466,7 @@ function Testimonials() {
       activity: "Yakoo Events",
       stars: r.rating || 5,
       text: r.review,
-      img: `https://images.unsplash.com/photo-${1500000000000 + (r.name.length * 1000)}?w=120&h=120&fit=crop&auto=format`,
+      img: `https://api.dicebear.com/9.x/adventurer/svg?seed=${encodeURIComponent(r.name || "Jacob")}`,
       color: ["#22c55e", "#38bdf8", "#fb7185", "#f97316", "#3b82f6"][i % 5],
     }));
   };
@@ -2796,7 +2796,7 @@ function FAQ() {
               {/* Image */}
               <div className="relative h-48 overflow-hidden" style={{ background: "#0d1929" }}>
                 <img
-                  src="https://images.unsplash.com/photo-1780733063138-8a847437ab96?w=600&h=300&fit=crop&auto=format"
+                  src={content['faq_contact_img'] || "https://images.unsplash.com/photo-1780733063138-8a847437ab96?w=600&h=300&fit=crop&auto=format"}
                   alt="Equipe Yakoo Events"
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                   style={{ opacity: 0.5 }}
@@ -3014,7 +3014,7 @@ function Contact() {
             <div className="rounded-[32px] overflow-hidden relative group h-[280px]"
               style={{ background: "rgba(255,255,255,0.02)", border: "1.5px solid rgba(255,255,255,0.05)" }}>
               <img
-                src="https://images.unsplash.com/photo-1752097439028-b167f1d0901a?w=800&h=400&fit=crop&auto=format"
+                src={content['contact_map_img'] || "https://images.unsplash.com/photo-1752097439028-b167f1d0901a?w=800&h=400&fit=crop&auto=format"}
                 alt="Localisation Yakoo Events"
                 className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
                 style={{ opacity: 0.4 }}
@@ -3267,7 +3267,7 @@ function TransitionBookCTA() {
     <div className="relative overflow-hidden" style={{ minHeight: "240px" }}>
       {/* Background photo */}
       <img
-        src="https://images.unsplash.com/photo-1758272959533-201492a5d36c?w=1600&h=400&fit=crop&auto=format"
+        src={content['transition_book_img'] || "https://images.unsplash.com/photo-1758272959533-201492a5d36c?w=1600&h=400&fit=crop&auto=format"}
         alt=""
         className="absolute inset-0 w-full h-full object-cover"
         style={{ opacity: 0.28 }}
@@ -3327,7 +3327,7 @@ function TransitionNatureQuote() {
   return (
     <div className="relative overflow-hidden" style={{ height: "180px" }}>
       <img
-        src="https://images.unsplash.com/photo-1752097439028-b167f1d0901a?w=1600&h=300&fit=crop&auto=format"
+        src={content['transition_quote_img'] || "https://images.unsplash.com/photo-1752097439028-b167f1d0901a?w=1600&h=300&fit=crop&auto=format"}
         alt="Forêt Yakoo Events"
         className="absolute inset-0 w-full h-full object-cover"
         style={{ opacity: 0.4 }}

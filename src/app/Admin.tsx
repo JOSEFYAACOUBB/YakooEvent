@@ -1923,7 +1923,18 @@ function ContentPage() {
   const [seoTitle, setSeoTitle] = useState("Yakoo Events — Agence Événementielle Aventure Tunisie");
   const [seoDescription, setSeoDescription] = useState("Vivez des aventures inoubliables avec Yakoo Events. Accrobranche, kayak, paintball, team building et hébergement en Tunisie. Réservez dès maintenant !");
 
-  const tabs = ["Hero", "À propos", "Témoignages", "Footer", "SEO"];
+  // Custom Site Images
+  const [heroImg, setHeroImg] = useState("");
+  const [aboutImg1, setAboutImg1] = useState("");
+  const [aboutImg2, setAboutImg2] = useState("");
+  const [faqContactImg, setFaqContactImg] = useState("");
+  const [contactMapImg, setContactMapImg] = useState("");
+  const [transitionBookImg, setTransitionBookImg] = useState("");
+  const [transitionQuoteImg, setTransitionQuoteImg] = useState("");
+
+  const [isUploadingImage, setIsUploadingImage] = useState<string | null>(null);
+
+  const tabs = ["Hero", "À propos", "Images du site", "Témoignages", "Footer", "SEO"];
 
   useEffect(() => {
     fetchContent();
@@ -1960,12 +1971,91 @@ function ContentPage() {
 
         if (contentMap['seo_title']) setSeoTitle(contentMap['seo_title']);
         if (contentMap['seo_description']) setSeoDescription(contentMap['seo_description']);
+
+        // Custom Images
+        if (contentMap['hero_img']) setHeroImg(contentMap['hero_img']);
+        if (contentMap['about_img_1']) setAboutImg1(contentMap['about_img_1']);
+        if (contentMap['about_img_2']) setAboutImg2(contentMap['about_img_2']);
+        if (contentMap['faq_contact_img']) setFaqContactImg(contentMap['faq_contact_img']);
+        if (contentMap['contact_map_img']) setContactMapImg(contentMap['contact_map_img']);
+        if (contentMap['transition_book_img']) setTransitionBookImg(contentMap['transition_book_img']);
+        if (contentMap['transition_quote_img']) setTransitionQuoteImg(contentMap['transition_quote_img']);
       }
     } catch (e: any) {
       console.error(e.message);
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, key: string, setter: (val: string) => void) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setIsUploadingImage(key);
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Math.random()}.${fileExt}`;
+      const filePath = `site/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage.from('images').upload(filePath, file);
+      if (uploadError) {
+        toast.error("Erreur lors de l'upload: " + uploadError.message);
+        return;
+      }
+
+      const { data: publicUrlData } = supabase.storage.from('images').getPublicUrl(filePath);
+      setter(publicUrlData.publicUrl);
+      toast.success("Image téléversée avec succès !");
+    } catch (err: any) {
+      toast.error("Erreur: " + err.message);
+    } finally {
+      setIsUploadingImage(null);
+    }
+  };
+
+  const renderImageField = (label: string, value: string, setter: (val: string) => void, key: string) => {
+    return (
+      <div className="space-y-2 p-3 rounded-lg border bg-gray-50" style={{ borderColor: "rgba(27,42,74,0.08)" }}>
+        <label className="block text-xs font-semibold" style={{ color: "#1B2A4A" }}>{label}</label>
+        <div className="flex gap-3 items-center">
+          {value && (
+            <div className="w-16 h-16 rounded-lg overflow-hidden bg-gray-100 border flex-shrink-0">
+              <img src={value} alt="Preview" className="w-full h-full object-cover" />
+            </div>
+          )}
+          <div className="flex-1 space-y-2">
+            <input 
+              value={value} 
+              onChange={e => setter(e.target.value)} 
+              className="w-full px-3 py-1.5 text-xs rounded outline-none border" 
+              style={{ background: "#fff", color: "#1B2A4A" }} 
+              placeholder="URL de l'image (ou téléversez ci-dessous)" 
+            />
+            <div className="flex items-center gap-2">
+              <label className="flex items-center gap-1 px-2.5 py-1 text-[11px] font-medium bg-white border rounded cursor-pointer hover:bg-gray-100 transition-colors">
+                <Upload size={12} style={{ color: "#F5A623" }} />
+                <span>{isUploadingImage === key ? "Téléversement..." : "Téléverser"}</span>
+                <input 
+                  type="file" 
+                  accept="image/*" 
+                  onChange={e => handleImageUpload(e, key, setter)} 
+                  className="hidden" 
+                  disabled={isUploadingImage !== null} 
+                />
+              </label>
+              {value && (
+                <button 
+                  onClick={() => setter("")} 
+                  className="px-2 py-1 text-[11px] font-medium text-red-600 bg-white border border-red-200 rounded hover:bg-red-50"
+                >
+                  Supprimer
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
   };
 
   const handleSaveKeys = async (keys: Record<string, string>) => {
@@ -2006,11 +2096,8 @@ function ContentPage() {
               <div><label className="block text-xs font-semibold mb-1.5" style={{ color: "#6B7A99" }}>CTA 2 — URL</label><input value={heroCta2Url} onChange={e => setHeroCta2Url(e.target.value)} className="w-full px-3 py-2.5 text-sm rounded-lg outline-none" style={{ background: "#F0F2F5", border: "none", color: "#1B2A4A" }} /></div>
             </div>
             <div>
-              <label className="block text-xs font-semibold mb-1.5" style={{ color: "#6B7A99" }}>Image de fond</label>
-              <div className="rounded-xl border-2 border-dashed p-4 text-center cursor-pointer hover:bg-amber-50 transition-colors" style={{ borderColor: "rgba(245,166,35,0.4)" }} onClick={() => toast.info("Upload disponible en production.")}>
-                <Upload size={18} className="mx-auto mb-1" style={{ color: "#F5A623" }} />
-                <p className="text-xs" style={{ color: "#6B7A99" }}>Glissez une image ici</p>
-              </div>
+              <label className="block text-xs font-semibold mb-1.5" style={{ color: "#6B7A99" }}>Image de fond du Hero</label>
+              {renderImageField("Image de fond", heroImg, setHeroImg, "hero_img")}
             </div>
             <div>
               <label className="block text-xs font-semibold mb-2" style={{ color: "#6B7A99" }}>Opacité overlay : {overlay}%</label>
@@ -2023,7 +2110,8 @@ function ContentPage() {
               hero_cta1_url: heroCta1Url,
               hero_cta2_text: heroCta2Text,
               hero_cta2_url: heroCta2Url,
-              hero_overlay: String(overlay)
+              hero_overlay: String(overlay),
+              hero_img: heroImg
             })}
               className="w-full py-2.5 text-sm font-semibold rounded-lg text-white" style={{ background: "#F5A623", color: "#0F1C30" }}>
               Enregistrer les modifications
@@ -2032,7 +2120,7 @@ function ContentPage() {
           <Card className="p-5">
             <h3 className="font-semibold text-sm mb-4" style={{ color: "#1B2A4A" }}>Aperçu mobile</h3>
             <div className="mx-auto w-[260px] h-[520px] rounded-[28px] overflow-hidden relative" style={{ border: "8px solid #1B2A4A", boxShadow: "0 20px 40px rgba(0,0,0,0.2)" }}>
-              <img src="https://images.unsplash.com/photo-1551632811-561732d1e306?w=260&h=520&fit=crop&auto=format" alt="Hero" className="w-full h-full object-cover" />
+              <img src={heroImg || "https://images.unsplash.com/photo-1551632811-561732d1e306?w=260&h=520&fit=crop&auto=format"} alt="Hero" className="w-full h-full object-cover" />
               <div className="absolute inset-0 flex flex-col items-center justify-center text-white p-5" style={{ background: `rgba(15,28,48,${overlay / 100})` }}>
                 <div className="text-lg font-black text-center mb-1 leading-tight" style={{ textShadow: "0 2px 8px rgba(0,0,0,0.4)" }}>{heroTitle}</div>
                 <div className="text-xs font-bold mb-5" style={{ color: "#F5A623" }}>{heroSub}</div>
@@ -2113,6 +2201,36 @@ function ContentPage() {
           })}
             className="px-5 py-2.5 text-sm font-semibold rounded-lg text-white" style={{ background: "#F5A623", color: "#0F1C30" }}>
             Enregistrer
+          </button>
+        </Card>
+      )}
+      {tab === "Images du site" && (
+        <Card className="p-5 max-w-2xl space-y-4">
+          <h3 className="font-semibold text-sm" style={{ color: "#1B2A4A" }}>Images d'illustration du site</h3>
+          <p className="text-xs" style={{ color: "#6B7A99" }}>Ces images s'affichent à différents endroits clés du site. Vous pouvez saisir une URL directe ou téléverser vos propres images.</p>
+          
+          <div className="space-y-4">
+            {renderImageField("Image À propos 1 (Bento Kayak)", aboutImg1, setAboutImg1, "about_img_1")}
+            {renderImageField("Image À propos 2 (Bento Tyrolienne)", aboutImg2, setAboutImg2, "about_img_2")}
+            {renderImageField("Image Contact FAQ (Notre équipe vous répond)", faqContactImg, setFaqContactImg, "faq_contact_img")}
+            {renderImageField("Image de fond de la Carte (Bento Adresse)", contactMapImg, setContactMapImg, "contact_map_img")}
+            {renderImageField("Image Section Réservation (Prêt à vivre l'aventure)", transitionBookImg, setTransitionBookImg, "transition_book_img")}
+            {renderImageField("Image Section FAQ Transition (Forêt)", transitionQuoteImg, setTransitionQuoteImg, "transition_quote_img")}
+          </div>
+
+          <button 
+            onClick={() => handleSaveKeys({
+              about_img_1: aboutImg1,
+              about_img_2: aboutImg2,
+              faq_contact_img: faqContactImg,
+              contact_map_img: contactMapImg,
+              transition_book_img: transitionBookImg,
+              transition_quote_img: transitionQuoteImg,
+            })}
+            className="px-5 py-2.5 text-sm font-semibold rounded-lg text-white" 
+            style={{ background: "#F5A623", color: "#0F1C30" }}
+          >
+            Enregistrer les images
           </button>
         </Card>
       )}
