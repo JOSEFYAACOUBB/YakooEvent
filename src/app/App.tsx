@@ -31,6 +31,10 @@ import {
   ChevronRight,
   Zap,
   Play,
+  Building2,
+  PartyPopper,
+  Bus,
+  Sparkles,
 } from "lucide-react";
 
 // ─── Global styles ───────────────────────────────────────────────────────────
@@ -3670,30 +3674,30 @@ function HeroAboutSeparator() {
 
 // ─── Event Management Section ────────────────────────────────────────────────
 function EventManagementSection() {
-  const eventsServices = [
+  const eventsServices: { title: string; desc: string; icon: React.ElementType; color: string }[] = [
     {
       title: "Team Building & Corporate",
       desc: "Renforcez la cohésion de vos équipes avec des challenges sur mesure, des chasses au trésor et des parcours d'aventure en pleine nature.",
-      icon: "🏢",
+      icon: Building2,
       color: "#3B82F6",
     },
     {
       title: "Anniversaires & Fêtes",
       desc: "Des formules complètes pour petits et grands : gâteau, animateurs dédiés, activités encadrées et moments inoubliables assurés.",
-      icon: "🎉",
+      icon: PartyPopper,
       color: "#22C55E",
     },
     {
       title: "Sorties Scolaires & Clubs",
       desc: "Sensibilisation à l'environnement et dépassement de soi à travers des ateliers scientifiques et des parcours sportifs adaptés à tous les âges.",
-      icon: "🚌",
+      icon: Bus,
       color: "#8B5CF6",
     },
     {
       title: "Événements sur Mesure",
       desc: "Que ce soit pour une fête de famille, un enterrement de vie de célibataire ou un événement associatif, nous personnalisons chaque détail.",
-      icon: "✨",
-      color: "#EF4444",
+      icon: Sparkles,
+      color: "#F5A623",
     },
   ];
 
@@ -3747,7 +3751,17 @@ function EventManagementSection() {
                     background: "radial-gradient(circle at top right, " + s.color + "15, transparent 65%)",
                   }}
                 />
-                <div className="text-4xl mb-6">{s.icon}</div>
+                {/* Icon badge */}
+                <div
+                  className="w-14 h-14 rounded-2xl flex items-center justify-center mb-6 relative overflow-hidden"
+                  style={{
+                    background: `linear-gradient(135deg, ${s.color}28 0%, ${s.color}10 100%)`,
+                    border: `1.5px solid ${s.color}40`,
+                    boxShadow: `0 0 24px ${s.color}20`,
+                  }}
+                >
+                  <s.icon size={26} strokeWidth={1.8} style={{ color: s.color }} />
+                </div>
                 <h3 className="text-lg font-black text-white mb-3" style={{ fontFamily: "'KG Red Hands', sans-serif" }}>
                   {s.title}
                 </h3>
