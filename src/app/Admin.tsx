@@ -31,6 +31,55 @@ import {
 } from "recharts";
 import { toast, Toaster } from "sonner";
 
+// ─── Image Compression Utility ───────────────────────────────────────────────
+/**
+ * Compresses an image file using the Canvas API.
+ * @param file - Original image File object
+ * @param maxWidth - Maximum output width in pixels (default: 1200)
+ * @param maxHeight - Maximum output height in pixels (default: 900)
+ * @param quality - WebP compression quality (default: 0.80, i.e. 80%)
+ * @returns A Promise resolving to a compressed Blob
+ */
+async function compressImage(
+  file: File,
+  maxWidth = 1200,
+  maxHeight = 900,
+  quality = 0.80
+): Promise<Blob> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      URL.revokeObjectURL(url);
+      let { width, height } = img;
+
+      // Scale down proportionally if needed
+      if (width > maxWidth || height > maxHeight) {
+        const ratio = Math.min(maxWidth / width, maxHeight / height);
+        width = Math.round(width * ratio);
+        height = Math.round(height * ratio);
+      }
+
+      const canvas = document.createElement("canvas");
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext("2d")!;
+      ctx.drawImage(img, 0, 0, width, height);
+
+      canvas.toBlob(
+        (blob) => {
+          if (blob) resolve(blob);
+          else reject(new Error("Image compression failed"));
+        },
+        "image/webp",
+        quality
+      );
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); reject(new Error("Failed to load image")); };
+    img.src = url;
+  });
+}
+
 // ─── Translation System ───────────────────────────────────────────────────────
 type Lang = "fr" | "ar";
 
@@ -1443,20 +1492,26 @@ function ActivitiesPage() {
     let finalImageUrl = form.image_url;
 
     if (imageFile) {
-      const fileExt = imageFile.name.split('.').pop();
-      const fileName = `${Math.random()}.${fileExt}`;
-      const filePath = `activities/${fileName}`;
+      try {
+        const compressed = await compressImage(imageFile);
+        const fileName = `${Math.random()}.webp`;
+        const filePath = `activities/${fileName}`;
 
-      const { error: uploadError } = await supabase.storage.from('images').upload(filePath, imageFile);
+        const { error: uploadError } = await supabase.storage.from('images').upload(filePath, compressed, { contentType: 'image/webp' });
 
-      if (uploadError) {
-        toast.error("Erreur lors de l'upload de l'image: " + uploadError.message);
+        if (uploadError) {
+          toast.error("Erreur lors de l'upload de l'image: " + uploadError.message);
+          setIsUploading(false);
+          return;
+        }
+
+        const { data: publicUrlData } = supabase.storage.from('images').getPublicUrl(filePath);
+        finalImageUrl = publicUrlData.publicUrl;
+      } catch (compressErr: any) {
+        toast.error("Erreur de compression: " + compressErr.message);
         setIsUploading(false);
         return;
       }
-
-      const { data: publicUrlData } = supabase.storage.from('images').getPublicUrl(filePath);
-      finalImageUrl = publicUrlData.publicUrl;
     }
 
     const payload = {
@@ -2024,11 +2079,11 @@ function ContentPage() {
     if (!file) return;
     setIsUploadingImage(key);
     try {
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${Math.random()}.${fileExt}`;
+      const compressed = await compressImage(file);
+      const fileName = `${Math.random()}.webp`;
       const filePath = `site/${fileName}`;
 
-      const { error: uploadError } = await supabase.storage.from('images').upload(filePath, file);
+      const { error: uploadError } = await supabase.storage.from('images').upload(filePath, compressed, { contentType: 'image/webp' });
       if (uploadError) {
         toast.error("Erreur lors de l'upload: " + uploadError.message);
         return;
@@ -4558,11 +4613,11 @@ function MaterielsPage() {
     // Upload photo to Supabase Storage if a file was selected
     if (imageFile) {
       try {
-        const ext = imageFile.name.split('.').pop();
-        const fileName = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+        const compressed = await compressImage(imageFile);
+        const fileName = `${Date.now()}-${Math.random().toString(36).slice(2)}.webp`;
         const { data: uploadData, error: uploadError } = await supabase.storage
           .from('materiels')
-          .upload(fileName, imageFile, { upsert: true, contentType: imageFile.type });
+          .upload(fileName, compressed, { upsert: true, contentType: 'image/webp' });
         if (uploadError) throw uploadError;
         const { data: urlData } = supabase.storage.from('materiels').getPublicUrl(uploadData.path);
         finalImageUrl = urlData.publicUrl;
