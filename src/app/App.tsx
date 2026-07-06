@@ -683,18 +683,58 @@ function About() {
   const [videoOpen, setVideoOpen] = useState(false);
   const content = useContent();
 
+  const [stats, setStats] = useState({
+    groupes: 500,
+    activites: 22,
+    parcSize: 3,
+    satisfaction: 4.9,
+    satisfactionCount: 500
+  });
+
+  useEffect(() => {
+    const loadStats = async () => {
+      try {
+        const [resRes, actRes, revRes] = await Promise.all([
+          supabase.from('reservations').select('*', { count: 'exact', head: true }),
+          supabase.from('activities').select('*', { count: 'exact', head: true }),
+          supabase.from('reviews').select('rating').eq('status', 'Publié')
+        ]);
+
+        const resCount = resRes.count ?? 500;
+        const actCount = actRes.count ?? 22;
+        
+        const reviewsData = revRes.data;
+        const satisfactionCount = reviewsData && reviewsData.length > 0 ? reviewsData.length : 500;
+        const avgRating = reviewsData && reviewsData.length > 0
+          ? parseFloat((reviewsData.reduce((sum, r) => sum + (r.rating || 5), 0) / reviewsData.length).toFixed(1))
+          : 4.9;
+
+        setStats({
+          groupes: resCount > 0 ? resCount : 500,
+          activites: actCount > 0 ? actCount : 22,
+          parcSize: 3,
+          satisfaction: avgRating,
+          satisfactionCount: satisfactionCount
+        });
+      } catch (err) {
+        console.error("Error loading statistics:", err);
+      }
+    };
+    loadStats();
+  }, []);
+
   const mission = content['about_mission'] || "Agence événementielle tunisienne de premier plan, spécialisée dans les activités de plein air, le team building et l'aventure nature. Nous créons des expériences immersives dans un parc préservé de 3 hectares.";
   const vision = content['about_vision'] || "Être le parc de référence en Tunisie en matière d'éthique, d'engagement éco-responsable et de satisfaction absolue de nos visiteurs.";
 
   const marqueeWords = ["YAKOO EVENTS", "VIVEZ L'AVENTURE", "TUNISIE", "NATURE", "ADRÉNALINE", "TEAM BUILDING"];
 
   const bentoItems = [
-    { type: "stat",  value: "500+", label: "Groupes",      sub: "accueillis",      color: NAVY, bg: "#fff",  accent: GOLD },
+    { type: "stat",  value: `${stats.groupes}+`, label: "Groupes",      sub: "accueillis",      color: NAVY, bg: "#fff",  accent: GOLD },
     { type: "photo", img: content['about_img_1'] || "https://images.unsplash.com/photo-1480480565647-1c4385c7c0bf?w=500&h=400&fit=crop&auto=format", label: "Kayak" },
     { type: "photo", img: content['about_img_2'] || "https://images.unsplash.com/photo-1637511077877-3c6a00eb32ba?w=500&h=400&fit=crop&auto=format", label: "Tyrolienne" },
-    { type: "stat",  value: "22",   label: "Activités",    sub: "pour tous",       color: "#fff", bg: NAVY,  accent: GOLD },
-    { type: "stat",  value: "3 ha", label: "Parc Naturel", sub: "préservé",        color: NAVY, bg: "#fff",  accent: GOLD },
-    { type: "stat",  value: "4.9★", label: "Satisfaction", sub: "sur 500+ avis",  color: NAVY, bg: GOLD,   accent: NAVY },
+    { type: "stat",  value: String(stats.activites), label: "Activités",    sub: "pour tous",       color: "#fff", bg: NAVY,  accent: GOLD },
+    { type: "stat",  value: `${stats.parcSize} ha`, label: "Parc Naturel", sub: "préservé",        color: NAVY, bg: "#fff",  accent: GOLD },
+    { type: "stat",  value: `${stats.satisfaction}★`, label: "Satisfaction", sub: `sur ${stats.satisfactionCount}+ avis`,  color: NAVY, bg: GOLD,   accent: NAVY },
   ];
 
   return (
