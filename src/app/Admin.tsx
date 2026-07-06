@@ -562,18 +562,18 @@ const navItems: { icon: React.ReactNode; label: string; page: Page; badge?: numb
   { icon: <MessageSquare size={18} />, label: "Avis Clients", page: "reviews" },
   { icon: <HelpCircle size={18} />, label: "FAQ", page: "faq" },
   { icon: <FileEdit size={18} />, label: "Contenu du site", page: "content" },
-  { icon: <Megaphone size={18} />, label: "Sponsors", page: "sponsors" },
+  // { icon: <Megaphone size={18} />, label: "Sponsors", page: "sponsors" },         // TODO: à activer
   { icon: <BarChart2 size={18} />, label: "Statistiques", page: "stats" },
   { icon: <Wallet size={18} />, label: "Finances", page: "finances" },
-  { icon: <Users size={18} />, label: "Utilisateurs", page: "users" },
+  // { icon: <Users size={18} />, label: "Utilisateurs", page: "users" },             // TODO: à activer
   { icon: <BookOpen size={18} />, label: "Contacts", page: "contacts" },
   { icon: <Box size={18} />, label: "Matériels", page: "materiel" },
   { icon: <CalendarDays size={18} />, label: "Événements", page: "calendar" },
-  { icon: <CheckSquare size={18} />, label: "Tâches", page: "tasks" },
-  { icon: <Ticket size={18} />, label: "Tickets Support", page: "tickets" },
-  { icon: <Gift size={18} />, label: "Fidélité", page: "loyalty" },
+  // { icon: <CheckSquare size={18} />, label: "Tâches", page: "tasks" },             // TODO: à activer
+  // { icon: <Ticket size={18} />, label: "Tickets Support", page: "tickets" },       // TODO: à activer
+  // { icon: <Gift size={18} />, label: "Fidélité", page: "loyalty" },                // TODO: à activer
   { icon: <Sparkles size={18} />, label: "Services", page: "services" },
-  { icon: <Share2 size={18} />, label: "Réseaux Sociaux", page: "social" },
+  // { icon: <Share2 size={18} />, label: "Réseaux Sociaux", page: "social" },        // TODO: à activer
   { icon: <Settings size={18} />, label: "Paramètres", page: "settings" },
 ];
 
@@ -1633,7 +1633,7 @@ function PacksPage() {
   const [packStates, setPackStates] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [showAddModal, setShowAddModal] = useState(false);
-  const [newPackForm, setNewPackForm] = useState({ tier: "", tagline: "", description: "", selectedActivities: [] as string[], price: 0, games_count: 0, badge: "" });
+  const [newPackForm, setNewPackForm] = useState({ tier: "", tagline: "", description: "", selectedActivities: [] as string[], price: 0, badge: "" });
 
   const ACTIVITIES_LIST = [
     "Accrobranche", "Tyrolienne", "Kayak", "Paintball",
@@ -1694,13 +1694,27 @@ function PacksPage() {
     setPackStates(prev => prev.map((p, i) => i === packIdx ? { ...p, features: p.features.filter((_: any, fi: number) => fi !== featIdx) } : p));
   };
 
+  const deletePack = async (packIdx: number) => {
+    const pack = packStates[packIdx];
+    const confirmed = window.confirm(`Supprimer le pack ${pack.tier} ? Cette action est irréversible.`);
+    if (!confirmed) return;
+    const { error } = await supabase.from('packs').delete().eq('id', pack.id);
+    if (error) {
+      toast.error("Erreur lors de la suppression : " + error.message);
+    } else {
+      toast.success(`Pack ${pack.tier} supprimé.`);
+      setPackStates(prev => prev.filter((_, i) => i !== packIdx));
+    }
+  };
+
   const savePack = async (packIdx: number) => {
     const pack = packStates[packIdx];
+    const selectedActivitiesCount = (pack.description || "").split(" + ").filter(Boolean).length;
     const { error } = await supabase.from('packs').update({
       price: pack.price,
       tagline: pack.tagline,
       description: pack.description,
-      games_count: pack.games_count,
+      games_count: selectedActivitiesCount,
       badge: pack.badge,
       features: pack.features
     }).eq('id', pack.id);
@@ -1716,13 +1730,14 @@ function PacksPage() {
     if (!newPackForm.tier.trim()) return toast.error("Le nom du pack est requis.");
 
     const description = newPackForm.selectedActivities.join(" + ");
+    const gamesCount = newPackForm.selectedActivities.length;
 
     const { data, error } = await supabase.from('packs').insert([{
       tier: newPackForm.tier.trim().toUpperCase(),
       tagline: newPackForm.tagline.trim(),
       description: description,
       price: newPackForm.price,
-      games_count: newPackForm.games_count,
+      games_count: gamesCount,
       badge: newPackForm.badge.trim(),
       features: []
     }]).select().single();
@@ -1741,7 +1756,7 @@ function PacksPage() {
         features: []
       }]);
       setShowAddModal(false);
-      setNewPackForm({ tier: "", tagline: "", description: "", selectedActivities: [], price: 0, games_count: 0, badge: "" });
+      setNewPackForm({ tier: "", tagline: "", description: "", selectedActivities: [], price: 0, badge: "" });
     }
   };
 
@@ -1766,12 +1781,22 @@ function PacksPage() {
         {packStates.map((pack, packIdx) => (
           <div key={pack.id} className="bg-white rounded-[10px] shadow-[0_2px_12px_rgba(0,0,0,0.08)] overflow-hidden">
             <div className="px-5 py-4 border-b" style={{ background: pack.style.bg, borderColor: pack.style.border }}>
-              <div className="flex items-center gap-3">
-                <span className="text-2xl">{pack.style.emoji}</span>
-                <div>
-                  <div className="font-bold text-base" style={{ color: pack.style.color }}>Pack {pack.tier}</div>
-                  <div className="text-xs mt-0.5" style={{ color: "#6B7A99" }}>{pack.tagline}</div>
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex items-center gap-3">
+                  <span className="text-2xl">{pack.style.emoji}</span>
+                  <div>
+                    <div className="font-bold text-base" style={{ color: pack.style.color }}>Pack {pack.tier}</div>
+                    <div className="text-xs mt-0.5" style={{ color: "#6B7A99" }}>{pack.tagline}</div>
+                  </div>
                 </div>
+                <button
+                  onClick={() => deletePack(packIdx)}
+                  title="Supprimer ce pack"
+                  className="w-8 h-8 rounded-lg flex items-center justify-center transition-colors hover:bg-red-50 shrink-0"
+                  style={{ border: "1.5px solid rgba(239,68,68,0.25)", color: "#EF4444" }}
+                >
+                  <Trash2 size={14} />
+                </button>
               </div>
             </div>
             <div className="p-5 space-y-4">
@@ -1782,7 +1807,10 @@ function PacksPage() {
                 </div>
                 <div>
                   <label className="block text-xs font-semibold mb-1.5" style={{ color: "#6B7A99" }}>Nombre de jeux</label>
-                  <input type="number" value={pack.games_count || ""} onChange={e => setPackStates(prev => prev.map((p, i) => i === packIdx ? { ...p, games_count: Number(e.target.value) } : p))} className="w-full px-3 py-2 text-sm rounded-lg outline-none" style={{ background: "#F0F2F5", border: "none", color: "#1B2A4A" }} />
+                  <div className="w-full px-3 py-2 text-sm rounded-lg flex items-center gap-2" style={{ background: pack.style.bg, border: `1.5px solid ${pack.style.border}`, color: pack.style.color, fontWeight: 700 }}>
+                    <span style={{ fontSize: "18px", lineHeight: 1 }}>{(pack.description || "").split(" + ").filter(Boolean).length}</span>
+                    <span className="text-xs font-medium" style={{ color: "#6B7A99", fontWeight: 400 }}>activité{(pack.description || "").split(" + ").filter(Boolean).length !== 1 ? "s" : ""} sélectionnée{(pack.description || "").split(" + ").filter(Boolean).length !== 1 ? "s" : ""}</span>
+                  </div>
                 </div>
               </div>
               <div>
@@ -1852,7 +1880,10 @@ function PacksPage() {
                 </div>
                 <div>
                   <label className="block text-xs font-semibold mb-1.5" style={{ color: "#6B7A99" }}>Nombre de jeux</label>
-                  <input type="number" value={newPackForm.games_count || ""} onChange={e => setNewPackForm({ ...newPackForm, games_count: Number(e.target.value) })} className="w-full px-3 py-2.5 text-sm rounded-lg outline-none" style={{ background: "#F0F2F5", border: "none", color: "#1B2A4A" }} placeholder="Jeux..." />
+                  <div className="w-full px-3 py-2.5 text-sm rounded-lg flex items-center gap-2" style={{ background: "rgba(245,166,35,0.08)", border: "1.5px solid rgba(245,166,35,0.3)", color: "#F5A623", fontWeight: 700 }}>
+                    <span style={{ fontSize: "18px", lineHeight: 1 }}>{newPackForm.selectedActivities.length}</span>
+                    <span className="text-xs font-medium" style={{ color: "#6B7A99", fontWeight: 400 }}>activité{newPackForm.selectedActivities.length !== 1 ? "s" : ""} sélectionnée{newPackForm.selectedActivities.length !== 1 ? "s" : ""}</span>
+                  </div>
                 </div>
               </div>
               <div>
@@ -4396,9 +4427,13 @@ function MaterielsPage() {
   const [confirmDelete, setConfirmDelete] = useState<any | null>(null);
   const [showAssignModal, setShowAssignModal] = useState<Materiel | null>(null);
   const [assignForm, setAssignForm] = useState({ person: "", qty: 1, returnDate: "" });
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const categories: (MaterielCategory | "Tous")[] = ["Tous", "Escalade", "Kayak", "Paintball", "Camping", "Sécurité", "Animation", "Formation", "Tyrolienne"];
-  const emptyForm = { name: "", category: "Escalade" as MaterielCategory, image: "photo-1504280390367-361c6d9f38f4", description: "", totalQty: 1, availableQty: 1, assignments: [] as Assignment[], rentalPricePerDay: 0, purchasePrice: 0, condition: "Bon" as MaterielCondition, serialNumber: "", purchaseDate: "", location: "" };
+  const emptyForm = { name: "", category: "Escalade" as MaterielCategory, image: "", description: "", totalQty: 1, availableQty: 1, assignments: [] as Assignment[], rentalPricePerDay: 0, purchasePrice: 0, condition: "Bon" as MaterielCondition, serialNumber: "", purchaseDate: "", location: "" };
   const [form, setForm] = useState(emptyForm);
 
   useEffect(() => {
@@ -4505,16 +4540,43 @@ function MaterielsPage() {
   const inUse = totalItems - availableItems;
   const inRepair = materiels.filter(m => m.condition === "En réparation").length;
 
-  const openAdd = () => { setEditing(null); setForm(emptyForm); setShowModal(true); };
-  const openEdit = (m: Materiel) => { setEditing(m); setForm({ ...m }); setShowModal(true); };
+  const openAdd = () => { setEditing(null); setForm(emptyForm); setImageFile(null); setImagePreview(null); setShowModal(true); };
+  const openEdit = (m: Materiel) => {
+    setEditing(m);
+    setForm({ ...m });
+    setImageFile(null);
+    setImagePreview(m.image?.startsWith('http') ? m.image : m.image ? `https://images.unsplash.com/${m.image}?w=500&h=128&fit=crop&auto=format` : null);
+    setShowModal(true);
+  };
 
   const handleSave = async () => {
     if (!form.name.trim()) { toast.error("Le nom du matériel est requis."); return; }
-    
+
+    setUploading(true);
+    let finalImageUrl = form.image;
+
+    // Upload photo to Supabase Storage if a file was selected
+    if (imageFile) {
+      try {
+        const ext = imageFile.name.split('.').pop();
+        const fileName = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+        const { data: uploadData, error: uploadError } = await supabase.storage
+          .from('materiels')
+          .upload(fileName, imageFile, { upsert: true, contentType: imageFile.type });
+        if (uploadError) throw uploadError;
+        const { data: urlData } = supabase.storage.from('materiels').getPublicUrl(uploadData.path);
+        finalImageUrl = urlData.publicUrl;
+      } catch (err: any) {
+        toast.error("Erreur upload photo: " + err.message);
+        setUploading(false);
+        return;
+      }
+    }
+
     const payload = {
       name: form.name,
       category: form.category,
-      image: form.image,
+      image: finalImageUrl,
       description: form.description,
       total_qty: form.totalQty,
       available_qty: form.availableQty,
@@ -4537,9 +4599,13 @@ function MaterielsPage() {
         toast.success(`"${form.name}" ajouté à l'inventaire !`);
       }
       setShowModal(false);
+      setImageFile(null);
+      setImagePreview(null);
       fetchMateriels();
     } catch (err: any) {
       toast.error("Erreur lors de la sauvegarde: " + err.message);
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -4668,7 +4734,7 @@ function MaterielsPage() {
                   onClick={() => setSelected(m)}>
                   {/* Image */}
                   <div className="relative h-40 bg-gray-100">
-                    <img src={`https://images.unsplash.com/${m.image}?w=400&h=160&fit=crop&auto=format`} alt={m.name} className="w-full h-full object-cover" />
+                    <img src={m.image?.startsWith('http') ? m.image : `https://images.unsplash.com/${m.image}?w=400&h=160&fit=crop&auto=format`} alt={m.name} className="w-full h-full object-cover" />
                     <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, transparent 40%, rgba(15,28,48,0.75))" }} />
                     <div className="absolute top-2 left-2 px-2 py-0.5 rounded-full text-xs font-semibold" style={{ background: catColors[m.category] || "#1B2A4A", color: "white" }}>{m.category}</div>
                     <div className="absolute top-2 right-2 px-2 py-0.5 rounded-full text-xs font-semibold" style={{ background: conditionColors[m.condition].bg, color: conditionColors[m.condition].text, backdropFilter: "blur(4px)" }}>{m.condition}</div>
@@ -4729,7 +4795,7 @@ function MaterielsPage() {
             <Card className="overflow-hidden sticky top-20">
               {/* Header image */}
               <div className="relative h-36">
-                <img src={`https://images.unsplash.com/${selected.image}?w=320&h=144&fit=crop&auto=format`} alt={selected.name} className="w-full h-full object-cover" />
+                <img src={selected.image?.startsWith('http') ? selected.image : `https://images.unsplash.com/${selected.image}?w=320&h=144&fit=crop&auto=format`} alt={selected.name} className="w-full h-full object-cover" />
                 <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, transparent 20%, rgba(15,28,48,0.85))" }} />
                 <button onClick={() => setSelected(null)} className="absolute top-2 right-2 w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: "rgba(0,0,0,0.4)" }}><X size={14} style={{ color: "white" }} /></button>
                 <div className="absolute bottom-3 left-3 right-3">
@@ -4893,17 +4959,59 @@ function MaterielsPage() {
               <button onClick={() => setShowModal(false)} className="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-gray-100"><X size={16} style={{ color: "#6B7A99" }} /></button>
             </div>
             <div className="p-6 space-y-4">
-              {/* Photo preview */}
+              {/* Photo upload */}
               <div>
                 <label className="block text-xs font-semibold mb-2" style={{ color: "#1B2A4A" }}>Photo du matériel</label>
-                {form.image && (
-                  <div className="h-32 rounded-xl overflow-hidden mb-2 bg-gray-100">
-                    <img src={`https://images.unsplash.com/${form.image}?w=500&h=128&fit=crop&auto=format`} alt="" className="w-full h-full object-cover" />
+                {/* Preview */}
+                {(imagePreview || form.image) && (
+                  <div className="h-32 rounded-xl overflow-hidden mb-2 bg-gray-100 relative group">
+                    <img
+                      src={imagePreview || (form.image?.startsWith('http') ? form.image : `https://images.unsplash.com/${form.image}?w=500&h=128&fit=crop&auto=format`)}
+                      alt=""
+                      className="w-full h-full object-cover"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => { setImageFile(null); setImagePreview(null); setForm(f => ({ ...f, image: '' })); }}
+                      className="absolute top-2 right-2 w-6 h-6 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                      style={{ background: 'rgba(239,68,68,0.85)', color: '#fff' }}
+                    >
+                      <X size={11} />
+                    </button>
                   </div>
                 )}
-                <div className="rounded-xl border-2 border-dashed p-3 text-center cursor-pointer hover:bg-amber-50 transition-colors" style={{ borderColor: "rgba(245,166,35,0.4)" }} onClick={() => toast.info("Upload disponible en production.")}>
-                  <Upload size={16} className="mx-auto mb-1" style={{ color: "#F5A623" }} />
-                  <p className="text-xs" style={{ color: "#6B7A99" }}>Glissez une photo ou <span style={{ color: "#F5A623" }}>parcourez</span></p>
+                {/* Hidden file input */}
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={e => {
+                    const file = e.target.files?.[0];
+                    if (!file) return;
+                    setImageFile(file);
+                    setImagePreview(URL.createObjectURL(file));
+                  }}
+                />
+                {/* Drop zone */}
+                <div
+                  className="rounded-xl border-2 border-dashed p-4 text-center cursor-pointer hover:bg-amber-50 transition-colors"
+                  style={{ borderColor: 'rgba(245,166,35,0.4)' }}
+                  onClick={() => fileInputRef.current?.click()}
+                  onDragOver={e => e.preventDefault()}
+                  onDrop={e => {
+                    e.preventDefault();
+                    const file = e.dataTransfer.files?.[0];
+                    if (!file || !file.type.startsWith('image/')) return;
+                    setImageFile(file);
+                    setImagePreview(URL.createObjectURL(file));
+                  }}
+                >
+                  <Upload size={18} className="mx-auto mb-1.5" style={{ color: '#F5A623' }} />
+                  <p className="text-xs font-medium" style={{ color: '#6B7A99' }}>
+                    {imageFile ? imageFile.name : <><span style={{ color: '#F5A623' }}>Cliquez</span> ou glissez une photo ici</>}
+                  </p>
+                  <p className="text-[10px] mt-0.5" style={{ color: '#9BA8BF' }}>JPG, PNG, WEBP — max 5 Mo</p>
                 </div>
               </div>
 
@@ -4960,8 +5068,8 @@ function MaterielsPage() {
             </div>
             <div className="px-6 py-4 border-t flex gap-3 justify-end sticky bottom-0 bg-white" style={{ borderColor: "rgba(27,42,74,0.08)" }}>
               <button onClick={() => setShowModal(false)} className="px-5 py-2.5 text-sm font-medium rounded-lg" style={{ background: "#F0F2F5", color: "#1B2A4A" }}>Annuler</button>
-              <button onClick={handleSave} className="px-5 py-2.5 text-sm font-bold rounded-lg text-white flex items-center gap-2" style={{ background: "#F5A623", color: "#0F1C30" }}>
-                <Save size={14} /> {editing ? "Enregistrer" : "Ajouter à l'inventaire"}
+              <button onClick={handleSave} disabled={uploading} className="px-5 py-2.5 text-sm font-bold rounded-lg text-white flex items-center gap-2 disabled:opacity-60" style={{ background: '#F5A623', color: '#0F1C30' }}>
+                {uploading ? <><span className="animate-spin w-3.5 h-3.5 border-2 border-white/40 border-t-white rounded-full inline-block" /> Envoi...</> : <><Save size={14} /> {editing ? 'Enregistrer' : "Ajouter à l'inventaire"}</>}
               </button>
             </div>
           </div>

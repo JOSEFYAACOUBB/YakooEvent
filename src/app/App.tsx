@@ -35,6 +35,10 @@ import {
   PartyPopper,
   Bus,
   Sparkles,
+  Utensils,
+  CalendarDays,
+  Shirt,
+  Map,
 } from "lucide-react";
 
 // ─── Global styles ───────────────────────────────────────────────────────────
@@ -187,9 +191,10 @@ function Button({ children, href, onClick, variant = "primary", icon: Icon, clas
     color: isPrimary ? NAVY : "#fff",
     border: isOutline ? "1.5px solid rgba(255,255,255,0.2)" : isPrimary ? "none" : "1.5px solid rgba(255,255,255,0.12)",
     boxShadow: isPrimary ? "0 10px 30px rgba(245,166,35,0.3)" : "none",
+    padding: Icon ? "8px 8px 8px 28px" : "12px 28px",
   };
 
-  const classes = `group inline-flex items-center gap-4 pl-7 pr-2 py-2 rounded-[2rem] text-sm transition-all duration-300 hover:shadow-[0_15px_35px_rgba(245,166,35,0.4)] ${fullWidth ? 'w-full flex' : ''} ${className}`;
+  const classes = `group inline-flex items-center gap-4 rounded-[2rem] text-sm transition-all duration-300 hover:shadow-[0_15px_35px_rgba(245,166,35,0.4)] ${fullWidth ? 'w-full flex' : ''} ${className}`;
 
   if (href) {
     return (
@@ -460,12 +465,7 @@ function Hero() {
 
   const title = content['hero_title'] || "VOULEZ PLUS PRENEZ TOUT";
   const subtitle = content['hero_subtitle'] || "Stage Adrénaline · Tunis, Tunisie";
-  const description = content['about_mission'] || "Votre agence spécialisée en activités de plein air, team building et aventure nature.";
-  const cta1Text = content['hero_cta1_text'] || "Découvrir les activités";
-  const cta1Url = content['hero_cta1_url'] || "#activites";
-  const cta2Text = content['hero_cta2_text'] || "Réserver maintenant";
-  const cta2Url = content['hero_cta2_url'] || "#reservation";
-  const overlayOpacity = content['hero_overlay'] ? Number(content['hero_overlay']) / 100 : 0.6;
+  const overlayOpacity = content['hero_overlay'] ? Number(content['hero_overlay']) / 100 : 0.65;
   const titleWords = title.split(" ");
 
   useEffect(() => {
@@ -481,95 +481,64 @@ function Hero() {
   return (
     <section
       id="accueil"
-      className="relative min-h-screen overflow-hidden flex flex-col"
-      style={{ background: "#070e1b" }}
+      className="relative min-h-screen overflow-hidden flex flex-col justify-between pt-24 pb-12"
+      style={{ background: "#040914" }}
     >
-      {/* ── RIGHT IMAGE PANEL (desktop) ── */}
-      <div
-        className="hidden lg:block absolute right-0 top-0 h-full w-[52%] overflow-hidden"
-        style={{ clipPath: "polygon(14% 0%, 100% 0%, 100% 100%, 0% 100%)" }}
-      >
+      {/* ── Immersive Full-Screen Background ── */}
+      <div className="absolute inset-0 z-0">
         <motion.img
-          src={content['hero_img'] || "https://images.unsplash.com/photo-1648853070657-6d58398bee93?w=1200&h=900&fit=crop&auto=format"}
+          src={content['hero_img'] || "https://images.unsplash.com/photo-1648853070657-6d58398bee93?w=1600&h=1200&fit=crop&auto=format"}
           alt="Activité aventure Yakoo Events"
           className="w-full h-full object-cover"
-          style={{ scale: 1.1 }}
-          animate={{ x: mousePos.x * -18, y: mousePos.y * -14 }}
-          transition={{ type: "spring", stiffness: 35, damping: 22 }}
+          style={{ scale: 1.05 }}
+          animate={{ x: mousePos.x * -12, y: mousePos.y * -10 }}
+          transition={{ type: "spring", stiffness: 30, damping: 20 }}
           onLoad={() => setImgLoaded(true)}
         />
-        {/* Overlay gradients */}
+        {/* Complex Gradient Overlays for readability and depth */}
         <div
           className="absolute inset-0"
-          style={{ background: `linear-gradient(to right, #070e1b 0%, rgba(7,14,27,${overlayOpacity}) 40%, rgba(7,14,27,${overlayOpacity * 0.1}) 100%)` }}
+          style={{
+            background: `radial-gradient(circle at 30% 50%, rgba(4,9,20,${overlayOpacity * 0.7}) 0%, rgba(4,9,20,${overlayOpacity}) 70%, #040914 100%)`
+          }}
         />
         <div
           className="absolute inset-0"
-          style={{ background: "linear-gradient(to top, rgba(7,14,27,0.7) 0%, transparent 40%)" }}
+          style={{
+            background: `linear-gradient(to right, #040914 0%, rgba(4,9,20,0.8) 40%, rgba(4,9,20,0.3) 70%, transparent 100%)`
+          }}
         />
-
-        {/* Vertical rotated text */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 0.25 }}
-          transition={{ delay: 2 }}
-          className="absolute right-6 top-1/2 -translate-y-1/2"
-          style={{ writingMode: "vertical-rl", textOrientation: "mixed", transform: "translateY(-50%) rotate(180deg)" }}
-        >
-          <span
-            className="text-[10px] font-bold tracking-[0.3em] uppercase"
-            style={{ fontFamily: "'KG Red Hands', sans-serif", color: GOLD }}
-          >
-            3 HECTARES · EN PLEINE NATURE
-          </span>
-        </motion.div>
       </div>
 
-      {/* Mobile background image */}
-      <div className="lg:hidden absolute inset-0">
-        <img
-          src={content['hero_img'] || "https://images.unsplash.com/photo-1648853070657-6d58398bee93?w=800&h=1200&fit=crop&auto=format"}
-          alt="Yakoo Events"
-          className="w-full h-full object-cover"
-          style={{ opacity: 0.2 }}
-        />
-        <div className="absolute inset-0" style={{ background: `linear-gradient(to bottom, #070e1b 0%, rgba(7,14,27,${overlayOpacity}) 50%, #070e1b 100%)` }} />
-      </div>
+      {/* Decorative Light Glows */}
+      <div className="absolute top-[20%] left-[-10%] w-[500px] h-[500px] rounded-full blur-[150px] opacity-[0.08] pointer-events-none" style={{ background: GOLD }} />
+      <div className="absolute bottom-[10%] right-[-5%] w-[450px] h-[450px] rounded-full blur-[160px] opacity-[0.05] pointer-events-none" style={{ background: "#a78bfa" }} />
 
-      {/* ── LEFT CONTENT PANEL ── */}
-      <div className="relative z-10 flex flex-col h-full w-full lg:w-[54%] px-5 sm:px-8 lg:px-16 xl:px-20 pt-24 sm:pt-28 pb-0">
-
+      {/* ── Content Container ── */}
+      <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-12 w-full my-auto flex flex-col items-start">
         {/* Top identifier bar */}
         <motion.div
           initial={{ opacity: 0, y: -12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
-          className="flex items-center gap-4 mb-auto"
+          className="flex items-center gap-3 mb-8"
         >
-          <div className="flex items-center gap-3">
-            <div className="w-6 h-px" style={{ background: GOLD }} />
-            <span className="text-[10px] font-semibold tracking-[0.25em] uppercase" style={{ fontFamily: "'KG Red Hands', sans-serif", color: "rgba(255,255,255,0.55)" }}>
-              Agence Événementielle
-            </span>
-          </div>
-          <div className="ml-auto text-[10px] tracking-[0.2em] uppercase" style={{ fontFamily: "'KG Red Hands', sans-serif", color: "rgba(255,255,255,0.2)" }}>
-            2026 — TUNIS
-          </div>
+          <div className="w-8 h-px" style={{ background: GOLD }} />
+          <span className="text-[11px] font-black tracking-[0.3em] uppercase" style={{ fontFamily: "'KG Red Hands', sans-serif", color: GOLD }}>
+            Agence Événementielle Nature
+          </span>
         </motion.div>
 
         {/* ── HEADLINE ── */}
-        <div className="mt-auto mb-auto">
+        <div className="relative max-w-3xl">
           {/* Watermark behind headline */}
-          <div
-            className="absolute left-6 lg:left-12 select-none pointer-events-none overflow-hidden"
-            style={{ top: "15%", zIndex: -1 }}
-          >
+          <div className="absolute -left-4 -top-8 select-none pointer-events-none overflow-hidden" style={{ zIndex: -1 }}>
             <span
               style={{
                 fontFamily: "'KG Red Hands', sans-serif",
                 fontWeight: 900,
-                fontSize: "min(22vw, 18rem)",
-                color: "rgba(255,255,255,0.022)",
+                fontSize: "min(18vw, 12rem)",
+                color: "rgba(255,255,255,0.015)",
                 lineHeight: 1,
                 whiteSpace: "nowrap",
                 letterSpacing: "-0.04em",
@@ -579,44 +548,46 @@ function Hero() {
             </span>
           </div>
 
-          {/* Render title words dynamically */}
-          {titleWords.map((word, idx) => {
-            const isGoldOutlined = idx === 1;
-            const isGoldFilled = idx >= 2;
-            const colorVal = isGoldOutlined ? "transparent" : (isGoldFilled ? GOLD : "#ffffff");
-            const strokeVal = isGoldOutlined ? `3px ${GOLD}` : "none";
-            return (
-              <div key={idx} className="overflow-hidden">
-                <motion.span
-                  initial={{ y: "110%" }}
-                  animate={{ y: "0%" }}
-                  transition={{ duration: 1.0, delay: 0.2 + idx * 0.12, ease }}
-                  className="block font-black leading-[0.88]"
-                  style={{
-                    fontFamily: "'KG Red Hands', sans-serif",
-                    fontSize: "clamp(3rem, 11vw, 10rem)",
-                    color: colorVal,
-                    WebkitTextStroke: strokeVal,
-                    letterSpacing: "-0.04em",
-                  }}
-                >
-                  {word}
-                </motion.span>
-              </div>
-            );
-          })}
+          {/* Title words */}
+          <div className="flex flex-wrap gap-x-6 gap-y-2">
+            {titleWords.map((word, idx) => {
+              const isGoldOutlined = idx === 1;
+              const isGoldFilled = idx >= 2;
+              const colorVal = isGoldOutlined ? "transparent" : (isGoldFilled ? GOLD : "#ffffff");
+              const strokeVal = isGoldOutlined ? `2.5px ${GOLD}` : "none";
+              return (
+                <div key={idx} className="overflow-hidden">
+                  <motion.span
+                    initial={{ y: "110%" }}
+                    animate={{ y: "0%" }}
+                    transition={{ duration: 0.85, delay: 0.2 + idx * 0.1, ease }}
+                    className="block font-black leading-[0.9]"
+                    style={{
+                      fontFamily: "'KG Red Hands', sans-serif",
+                      fontSize: "clamp(2.8rem, 9vw, 6.5rem)",
+                      color: colorVal,
+                      WebkitTextStroke: strokeVal,
+                      letterSpacing: "-0.03em",
+                    }}
+                  >
+                    {word}
+                  </motion.span>
+                </div>
+              );
+            })}
+          </div>
 
-          {/* Stage tag line */}
+          {/* Subtitle / Tagline */}
           <motion.div
-            initial={{ opacity: 0, x: -20 }}
+            initial={{ opacity: 0, x: -16 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.85, duration: 0.6 }}
-            className="flex items-center gap-2 sm:gap-4 mt-5 sm:mt-7"
+            transition={{ delay: 0.75, duration: 0.5 }}
+            className="flex items-center gap-3 mt-6"
           >
-            <div className="h-px w-6 sm:w-8 flex-shrink-0" style={{ background: GOLD }} />
+            <div className="h-px w-6 flex-shrink-0" style={{ background: GOLD }} />
             <span
-              className="text-xs sm:text-sm font-semibold tracking-[0.15em] sm:tracking-[0.2em] uppercase"
-              style={{ fontFamily: "'KG Red Hands', sans-serif", color: "rgba(255,255,255,0.65)" }}
+              className="text-xs sm:text-sm font-semibold tracking-[0.2em] uppercase"
+              style={{ fontFamily: "'KG Red Hands', sans-serif", color: "rgba(255,255,255,0.7)" }}
             >
               {subtitle}
             </span>
@@ -624,66 +595,60 @@ function Hero() {
 
           {/* Description */}
           <motion.p
-            initial={{ opacity: 0, y: 16 }}
+            initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.0, duration: 0.65 }}
-            className="mt-4 sm:mt-5 text-sm sm:text-base leading-relaxed max-w-sm"
-            style={{ fontFamily: "'KG Red Hands', sans-serif", color: "rgba(255,255,255,0.60)" }}
+            transition={{ delay: 0.9, duration: 0.6 }}
+            className="mt-6 text-sm sm:text-base leading-relaxed max-w-xl font-medium"
+            style={{ fontFamily: "'KG Red Hands', sans-serif", color: "rgba(255,255,255,0.55)" }}
           >
-            Votre agence spécialisée en activités de plein air, team building et aventure nature.
+            Votre agence spécialisée en activités de plein air, team building de groupe et aventures sportives en pleine nature.
           </motion.p>
 
           {/* CTAs */}
           <motion.div
-            initial={{ opacity: 0, y: 16 }}
+            initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.15, duration: 0.6 }}
-            className="flex flex-wrap items-center gap-2 sm:gap-3 mt-6 sm:mt-8"
+            transition={{ delay: 1.05, duration: 0.55 }}
+            className="flex flex-wrap items-center gap-4 mt-8"
           >
             <Button href="#activites" icon={ArrowRight}>
               Découvrir les activités
             </Button>
-            <Button href="#reservation" variant="outline" className="px-5 sm:px-7 py-3 sm:py-3.5">
+            <Button href="#reservation" variant="outline" className="px-6 py-3.5">
               Réserver maintenant
             </Button>
           </motion.div>
-
-         
         </div>
-
-        {/* Bottom spacer so buttons are never cut off */}
-        <div className="h-32 lg:h-40" />
       </div>
 
 
+      {/* Scroll mouse indicator */}
+      <motion.div
+        className="absolute left-1/2 bottom-20 -translate-x-1/2 hidden lg:flex flex-col items-center gap-2"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 2 }}
+      >
+        <motion.div
+          animate={{ y: [0, 7, 0] }}
+          transition={{ duration: 1.4, repeat: Infinity, ease: "easeInOut" }}
+          className="w-5 h-8 rounded-full border-2 flex items-start justify-center pt-1.5"
+          style={{ borderColor: "rgba(255,255,255,0.2)" }}
+        >
+          <div className="w-1 h-1.5 rounded-full" style={{ background: GOLD }} />
+        </motion.div>
 
-  {/* Scroll mouse indicator */}
-<motion.div
-  className="absolute left-1/2 bottom-20 -translate-x-1/2 hidden lg:flex flex-col items-center gap-2"
-  initial={{ opacity: 0 }}
-  animate={{ opacity: 1 }}
-  transition={{ delay: 2 }}
->
-  <motion.div
-    animate={{ y: [0, 7, 0] }}
-    transition={{ duration: 1.4, repeat: Infinity, ease: "easeInOut" }}
-    className="w-5 h-8 rounded-full border-2 flex items-start justify-center pt-1.5"
-    style={{ borderColor: "rgba(255,255,255,0.2)" }}
-  >
-    <div className="w-1 h-1.5 rounded-full" style={{ background: GOLD }} />
-  </motion.div>
-
-  <span
-    className="text-[9px] uppercase tracking-widest"
-    style={{
-      fontFamily: "'KG Red Hands', sans-serif",
-      color: "rgba(255,255,255,0.2)",
-      writingMode: "vertical-rl"
-    }}
-  >
-    Défiler
-  </span>
-</motion.div>
+        <span
+          className="text-[9px] uppercase tracking-widest"
+          style={{
+            fontFamily: "'KG Red Hands', sans-serif",
+            color: "rgba(255,255,255,0.2)",
+            writingMode: "vertical-rl"
+          }}
+        >
+          Défiler
+        </span>
+      </motion.div>
     </section>
   );
 }
@@ -767,143 +732,34 @@ function About() {
 
       <div className="relative max-w-7xl mx-auto px-6 lg:px-12 z-10">
 
-        {/* ── SPLIT LAYOUT ── */}
-        <div className="flex flex-col lg:flex-row gap-16 lg:gap-24 mb-32 items-start">
-
-          {/* ── LEFT: Typography + Video Button + Mission Card ── */}
-          <FadeUp className="flex-1 w-full lg:sticky lg:top-32 self-start">
-
-            {/* Label */}
-            <div className="flex items-center gap-4 mb-10">
-              <span className="flex items-center justify-center w-10 h-10 rounded-full" style={{ background: "rgba(245,166,35,0.15)", color: GOLD }}>
-                
-              </span>
-              <span className="text-xs font-black tracking-[0.3em] uppercase" style={{ fontFamily: "'KG Red Hands', sans-serif", color: NAVY }}>
-                À Propos de nous
-              </span>
-            </div>
-
-            {/* Headline */}
-            <h2 className="mb-8 flex flex-col">
-              <span
-                className="font-black text-transparent leading-none"
-                style={{ fontFamily: "'KG Red Hands', sans-serif", fontSize: "clamp(3rem, 6vw, 4.5rem)", WebkitTextStroke: `1.5px ${NAVY}`, opacity: 0.7 }}
-              >
-                Qu'est-Ce Que
-              </span>
-              <span
-                className="font-black leading-none mt-1"
-                style={{ fontFamily: "'KG Red Hands', sans-serif", fontSize: "clamp(3.5rem, 7vw, 5.5rem)", color: NAVY, letterSpacing: "-0.04em" }}
-              >
-                Yakoo Events ?
-              </span>
-            </h2>
-
-            <p className="text-lg leading-relaxed mb-10 max-w-xl font-medium" style={{ fontFamily: "'KG Red Hands', sans-serif", color: "#5a6a8a" }}>
-              {mission}
-            </p>
-
-            {/* ── Cinematic Video Button ── */}
-            <div className="flex items-center gap-6 mb-12">
-              <button
-                onClick={() => setVideoOpen(true)}
-                className="group relative flex items-center justify-center flex-shrink-0 w-20 h-20 rounded-full shadow-2xl transition-transform duration-500 hover:scale-110 focus:outline-none"
-                style={{ background: NAVY }}
-                aria-label="Voir la vidéo"
-              >
-                {/* Pulsing rings */}
-                <span className="absolute inset-0 rounded-full" style={{ animation: "pulse-ring 2s ease-out infinite", border: `2px solid ${GOLD}` }} />
-                <span className="absolute inset-0 rounded-full" style={{ animation: "pulse-ring 2s ease-out 0.7s infinite", border: `2px solid ${GOLD}` }} />
-                <Play size={28} className="relative z-10 ml-1" style={{ color: GOLD }} fill={GOLD} />
-              </button>
-              <div>
-                <p className="font-black text-base mb-1" style={{ fontFamily: "'KG Red Hands', sans-serif", color: NAVY }}>
-                  Voir la vidéo
-                </p>
-                <p className="text-sm font-medium" style={{ fontFamily: "'KG Red Hands', sans-serif", color: "#8b9bb4" }}>
-                  Découvrez le parc en 90 secondes
-                </p>
-              </div>
-            </div>
-
-            {/* Mission Card */}
-            <div
-              className="relative p-8 md:p-10 rounded-[32px] max-w-lg shadow-2xl transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_40px_80px_rgba(27,42,74,0.25)]"
-              style={{ background: NAVY }}
-            >
-              <div className="absolute top-0 right-8 transform -translate-y-1/2">
-                <div className="w-14 h-14 rounded-full flex items-center justify-center shadow-lg" style={{ background: GOLD, color: NAVY }}>
-                 
-                </div>
-              </div>
-              <p className="text-base md:text-lg italic leading-relaxed font-medium mb-8" style={{ fontFamily: "'KG Red Hands', sans-serif", color: "rgba(255,255,255,0.9)" }}>
-                {vision.startsWith('"') ? vision : `"${vision}"`}
-              </p>
-              <div className="flex items-center gap-4">
-                <div className="h-px w-10" style={{ background: "rgba(255,255,255,0.2)" }} />
-                <span className="text-xs uppercase tracking-[0.2em] font-black" style={{ fontFamily: "'KG Red Hands', sans-serif", color: GOLD }}>
-                  Notre Mission
-                </span>
-              </div>
-            </div>
-          </FadeUp>
-
-          {/* ── RIGHT: Bento Photo + Stat Collage ── */}
-          <div className="flex-1 w-full">
-            <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:gap-5">
-              {bentoItems.map((item, i) =>
-                item.type === "photo" ? (
-                  <FadeUp key={i} delay={i * 0.1} className={i % 2 !== 0 ? "lg:mt-8" : ""}>
-                    <div
-                      className="group relative overflow-hidden rounded-[20px] sm:rounded-[28px] cursor-pointer"
-                      style={{ height: "clamp(160px, 22vw, 260px)", background: "#0d1929", boxShadow: "0 20px 50px rgba(27,42,74,0.12)" }}
-                    >
-                      <img
-                        src={item.img}
-                        alt={item.label}
-                        className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
-                        style={{ opacity: 0.88 }}
-                      />
-                      {/* Gradient overlay */}
-                      <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(27,42,74,0.8) 0%, transparent 60%)" }} />
-                      {/* Label */}
-                      <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-6 flex items-center justify-between">
-                        <span className="text-xs sm:text-sm font-black uppercase tracking-widest" style={{ fontFamily: "'KG Red Hands', sans-serif", color: "#fff" }}>
-                          {item.label}
-                        </span>
-                        <div
-                          className="w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center opacity-0 translate-x-4 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0"
-                          style={{ background: GOLD, color: NAVY }}
-                        >
-                          <ArrowRight size={12} strokeWidth={3} />
-                        </div>
-                      </div>
-                    </div>
-                  </FadeUp>
-                ) : (
-                  <FadeUp key={i} delay={i * 0.1} className={i % 2 !== 0 ? "lg:mt-8" : ""}>
-                    <div
-                      className="group flex flex-col justify-center h-full min-h-[160px] sm:min-h-[260px] p-5 sm:p-8 rounded-[20px] sm:rounded-[28px] transition-all duration-500 hover:-translate-y-4 hover:shadow-2xl cursor-default"
-                      style={{ background: item.bg, boxShadow: "0 20px 40px rgba(27,42,74,0.07)" }}
-                    >
-                      <span
-                        className="font-black leading-none mb-3 sm:mb-4"
-                        style={{ fontFamily: "'KG Red Hands', sans-serif", fontSize: "clamp(1.6rem, 4vw, 3.5rem)", color: item.color, letterSpacing: "-0.03em" }}
-                      >
-                        {item.value}
-                      </span>
-                      <span className="font-extrabold text-xs sm:text-sm mb-1 sm:mb-2" style={{ fontFamily: "'KG Red Hands', sans-serif", color: item.accent }}>
-                        {item.label}
-                      </span>
-                      <span className="text-[10px] sm:text-[11px] uppercase tracking-wider font-bold opacity-60" style={{ fontFamily: "'KG Red Hands', sans-serif", color: item.color }}>
-                        {item.sub}
-                      </span>
-                    </div>
-                  </FadeUp>
-                )
-              )}
-            </div>
+        {/* ── CENTERED TYPOGRAPHY LAYOUT ── */}
+        <div className="max-w-3xl mx-auto text-center mb-20">
+          {/* Label */}
+          <div className="flex items-center justify-center gap-4 mb-10">
+            <span className="text-xs font-black tracking-[0.3em] uppercase" style={{ fontFamily: "'KG Red Hands', sans-serif", color: NAVY }}>
+              À Propos de nous
+            </span>
           </div>
+
+          {/* Headline */}
+          <h2 className="mb-8 flex flex-col items-center">
+            <span
+              className="font-black text-transparent leading-none"
+              style={{ fontFamily: "'KG Red Hands', sans-serif", fontSize: "clamp(3rem, 6vw, 4.5rem)", WebkitTextStroke: `1.5px ${NAVY}`, opacity: 0.7 }}
+            >
+              Qu'est-Ce Que
+            </span>
+            <span
+              className="font-black leading-none mt-1"
+              style={{ fontFamily: "'KG Red Hands', sans-serif", fontSize: "clamp(3.5rem, 7vw, 5.5rem)", color: NAVY, letterSpacing: "-0.04em" }}
+            >
+              Yakoo Events ?
+            </span>
+          </h2>
+
+          <p className="text-lg leading-relaxed max-w-2xl mx-auto font-medium" style={{ fontFamily: "'KG Red Hands', sans-serif", color: "#5a6a8a" }}>
+            {mission}
+          </p>
         </div>
 
         {/* ── PILLARS ── */}
@@ -1254,6 +1110,17 @@ function Activities() {
     fetchActivities();
   }, []);
 
+  useEffect(() => {
+    if (selected) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [selected]);
+
   const filtered = active === "Tous" ? activities : activities.filter((a) => a.category === active);
   const accent   = CAT_COLOR[active] ?? GOLD;
 
@@ -1279,7 +1146,7 @@ function Activities() {
 
         {/* Categories */}
         <Reveal delay={0.1}>
-          <div className="flex flex-wrap justify-center gap-3 mb-16">
+          <div className="flex flex-wrap justify-center gap-6 md:gap-10 mb-16">
             {CATEGORIES.map((cat) => {
               const isSelected = active === cat.label;
               const color = CAT_COLOR[cat.label] ?? GOLD;
@@ -1287,8 +1154,9 @@ function Activities() {
                 <button
                   key={cat.label}
                   onClick={() => setActive(cat.label)}
-                  className="px-5 py-2.5 rounded-full text-sm font-bold uppercase tracking-wider transition-all duration-300 backdrop-blur-sm"
+                  className="inline-flex items-center justify-center rounded-full text-sm font-bold uppercase tracking-wider transition-all duration-300 backdrop-blur-sm whitespace-nowrap"
                   style={{
+                    padding: "14px 28px",
                     color: isSelected ? "#0F1C30" : "white",
                     background: isSelected ? color : "rgba(255,255,255,0.05)",
                     border: `1px solid ${isSelected ? color : "rgba(255,255,255,0.1)"}`,
@@ -1367,11 +1235,11 @@ function Activities() {
       </div>
 
       {/* Modal */}
-      {selected && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={() => setSelected(null)} />
+      {selected && createPortal(
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-10">
+          <div className="absolute inset-0 bg-black/85 backdrop-blur-sm" onClick={() => setSelected(null)} />
           <div
-            className="relative w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-3xl flex flex-col md:flex-row"
+            className="relative w-full max-w-4xl max-h-[85vh] md:max-h-[90vh] overflow-y-auto rounded-3xl flex flex-col md:flex-row"
             style={{ background: "#0F1C30", border: "1px solid rgba(255,255,255,0.1)" }}
           >
             {/* Close */}
@@ -1447,7 +1315,8 @@ function Activities() {
               </button>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </section>
   );
@@ -1719,16 +1588,6 @@ function Packs() {
             );
           })}
         </div>
-
-        {/* ── Bottom note ── */}
-        <FadeUp delay={0.4} className="text-center mt-14">
-          <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
-            <span className="w-1.5 h-1.5 rounded-full" style={{ background: GOLD }} />
-            <p className="text-xs font-medium" style={{ fontFamily: "'KG Red Hands', sans-serif", color: "rgba(255,255,255,0.45)" }}>
-              Tous les packs incluent l'encadrement professionnel, les équipements et la sécurité · Groupe minimum 20 personnes
-            </p>
-          </div>
-        </FadeUp>
       </div>
     </section>
   );
@@ -1741,14 +1600,33 @@ function Packs() {
 
 
 // ─── Reservation ──────────────────────────────────────────────────────────────
-const ACTIVITY_OPTIONS = [
-  "Accrobranche", "Kayak", "Paintball", "Tyrolienne", "Mur d'escalade", "Geo-searching",
-  "Tir à l'arc", "Jeu d'entonnoire", "Billards Japonais", "Twister Géant", "Jeu d'équilibre",
-  "Atelier Robotique", "Jeu d'écrou", "Jeux des fléchettes", "Jeux de labyrinthe", "Séminaire",
-  "Dortoire", "Espace en nature", "Animation et clown", "Tentes", "Lit pliable", "Conférences & fêtes",
+const BOOKING_CATEGORIES = [
+  {
+    title: "Activités & Loisirs",
+    options: [
+      "Accrobranche", "Kayak", "Paintball", "Tyrolienne", "Mur d'escalade", 
+      "Geo-searching", "Tir à l'arc", "Jeu d'entonnoire", "Billards Japonais", 
+      "Twister Géant", "Jeu d'équilibre", "Atelier Robotique", "Jeu d'écrou", 
+      "Jeux des fléchettes", "Jeux de labyrinthe"
+    ]
+  },
+  {
+    title: "Location de Matériels",
+    options: [
+      "Tentes Scoutes", "Lit pliable", "Dortoire", "Matériel de sécurité / Baudrier",
+      "Équipements de Paintball", "Gilets de sauvetage & Kayaks"
+    ]
+  },
+  {
+    title: "Organisation d'Événements",
+    options: [
+      "Séminaire d'entreprise", "Team Building personnalisé", "Anniversaires & Fêtes",
+      "Conférence / Espace Nature", "Sortie Scolaire / Club"
+    ]
+  }
 ];
 
-const STEPS = ["Activité", "Groupe & Date", "Vos infos"];
+const STEPS = ["Votre Choix", "Groupe & Date", "Vos infos"];
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
@@ -1778,32 +1656,94 @@ const inputCls: React.CSSProperties = {
 };
 
 function Reservation() {
-  const [step, setStep]         = useState(0);
-  const [activity, setActivity] = useState("");
-  const [people, setPeople]     = useState(20);
-  const [date, setDate]         = useState("");
-  const [name, setName]         = useState("");
-  const [phone, setPhone]       = useState("");
-  const [message, setMessage]   = useState("");
-  const [submitted, setSubmitted] = useState(false);
+  const [step, setStep]               = useState(0);
+  const [selectedItems, setSelectedItems] = useState<string[]>([]);
+  const [itemQuantities, setItemQuantities] = useState<Record<string, number>>({});
+  const [date, setDate]               = useState("");
+  const [name, setName]               = useState("");
+  const [phone, setPhone]             = useState("");
+  const [message, setMessage]         = useState("");
+  const [submitted, setSubmitted]     = useState(false);
+
+  useEffect(() => {
+    setItemQuantities(prev => {
+      const next = { ...prev };
+      selectedItems.forEach(item => {
+        if (next[item] === undefined) {
+          const isRentalItem = BOOKING_CATEGORIES[1].options.includes(item);
+          const isEventItem = BOOKING_CATEGORIES[2].options.includes(item);
+          next[item] = isRentalItem ? 1 : (isEventItem ? 10 : 20);
+        }
+      });
+      Object.keys(next).forEach(key => {
+        if (!selectedItems.includes(key)) {
+          delete next[key];
+        }
+      });
+      return next;
+    });
+  }, [selectedItems]);
+
+  const updateQty = (item: string, delta: number) => {
+    setItemQuantities(prev => {
+      const isRentalItem = BOOKING_CATEGORIES[1].options.includes(item);
+      const isEventItem = BOOKING_CATEGORIES[2].options.includes(item);
+      const minVal = isRentalItem ? 1 : (isEventItem ? 10 : 1);
+      const currentVal = prev[item] || 0;
+      const nextVal = Math.max(minVal, currentVal + delta);
+      return { ...prev, [item]: nextVal };
+    });
+  };
 
   const canNext = [
-    activity !== "",
-    people >= 1 && date !== "",
+    selectedItems.length > 0,
+    date !== "",
     name !== "" && phone !== "",
   ];
 
-  
+  const toggleItem = (opt: string) => {
+    setSelectedItems(prev =>
+      prev.includes(opt) ? prev.filter(x => x !== opt) : [...prev, opt]
+    );
+  };
+
+  const hasType = (categoryIndex: number) => {
+    return selectedItems.some(item => BOOKING_CATEGORIES[categoryIndex].options.includes(item));
+  };
+
+  const isRental = hasType(1);
+  const isEvent = hasType(2);
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const handleSubmit = async () => {
     setIsSubmitting(true);
+    
+    // Compute group size: max activity/event participants, or sum of rental items, or 1
+    const maxActivityPeople = selectedItems
+      .filter(item => BOOKING_CATEGORIES[0].options.includes(item) || BOOKING_CATEGORIES[2].options.includes(item))
+      .reduce((max, item) => Math.max(max, itemQuantities[item] || 0), 0);
+
+    const totalRentalItems = selectedItems
+      .filter(item => BOOKING_CATEGORIES[1].options.includes(item))
+      .reduce((sum, item) => sum + (itemQuantities[item] || 0), 0);
+
+    const dbGroupSize = maxActivityPeople > 0 ? maxActivityPeople : (totalRentalItems > 0 ? totalRentalItems : 1);
+
+    // Format detailed list for notes (makes it readable in admin without dashboard updates)
+    const detailsText = selectedItems
+      .map(item => `${item} (${itemQuantities[item] || 1} ${BOOKING_CATEGORIES[1].options.includes(item) ? "unités" : BOOKING_CATEGORIES[2].options.includes(item) ? "invités" : "pers."})`)
+      .join(', ');
+
+    const dbNotes = `Détails : ${detailsText}.${message ? ` Message client : ${message}` : ''}`;
+
     const { error } = await supabase.from('reservations').insert({
-      activity_name: activity,
-      group_size: people,
+      activity_name: selectedItems.join(', '),
+      group_size: dbGroupSize,
       reservation_date: date,
       contact_name: name,
       contact_phone: phone,
-      notes: message,
+      notes: dbNotes,
+      booking_details: itemQuantities,
       status: 'pending'
     });
     
@@ -1816,11 +1756,10 @@ function Reservation() {
     }
   };
 
-
   return (
     <section
       id="reservation"
-      className="relative overflow-hidden"
+      className="relative overflow-hidden py-24"
       style={{ background: "#07101f" }}
     >
       {/* Gold ambient glow */}
@@ -1833,61 +1772,25 @@ function Reservation() {
         style={{ background: "#4ade80" }}
       />
 
-      <div className="relative max-w-7xl mx-auto px-6 py-24">
-        <div className="grid lg:grid-cols-[1fr_500px] gap-10 lg:gap-16 items-start">
+      <div className="relative max-w-4xl mx-auto px-6">
+        
+        {/* Centered Section Header */}
+        <FadeUp className="text-center mb-16 max-w-2xl mx-auto">
+          <div className="flex items-center justify-center gap-4 mb-6">
+            <div className="h-px w-10" style={{ background: GOLD }} />
+            <span className="text-xs font-black tracking-[0.3em] uppercase"
+              style={{ fontFamily: "'KG Red Hands', sans-serif", color: GOLD }}>
+              Réservation &amp; Location
+            </span>
+            <div className="h-px w-10" style={{ background: GOLD }} />
+          </div>
+          <h2 className="font-black leading-none"
+            style={{ fontFamily: "'KG Red Hands', sans-serif", fontSize: "clamp(2.2rem, 5vw, 3.8rem)", color: "#fff", letterSpacing: "-0.03em" }}>
+            Votre <span style={{ color: "transparent", WebkitTextStroke: `2px ${GOLD}` }}>Réservation</span>
+          </h2>
+        </FadeUp>
 
-          {/* ── LEFT: info panel ── */}
-          <FadeUp className="flex flex-col gap-12 lg:sticky lg:top-32 self-start">
-
-            {/* Label + heading */}
-            <div>
-              <div className="flex items-center gap-4 mb-6">
-                <span className="flex items-center justify-center w-10 h-10 rounded-full" style={{ background: "rgba(245,166,35,0.15)", color: GOLD }}>
-                  
-                </span>
-                <span className="text-xs font-black tracking-[0.3em] uppercase" style={{ fontFamily: "'KG Red Hands', sans-serif", color: GOLD }}>
-                  Prendre rendez-vous
-                </span>
-              </div>
-              
-              <h2 className="mb-6 flex flex-col">
-                <span 
-                  className="font-black text-transparent leading-none" 
-                  style={{ 
-                    fontFamily: "'KG Red Hands', sans-serif", 
-                    fontSize: "clamp(3rem, 5vw, 4rem)", 
-                    WebkitTextStroke: `1.5px rgba(255,255,255,0.4)`,
-                    opacity: 0.9
-                  }}
-                >
-                  Réservez
-                </span>
-                <span 
-                  className="font-black leading-none mt-1" 
-                  style={{ 
-                    fontFamily: "'KG Red Hands', sans-serif", 
-                    fontSize: "clamp(3.5rem, 6vw, 4.8rem)", 
-                    color: "#fff", 
-                    letterSpacing: "-0.04em" 
-                  }}
-                >
-                  votre aventure
-                </span>
-              </h2>
-              
-              <p className="text-lg leading-relaxed font-medium" style={{ fontFamily: "'KG Red Hands', sans-serif", color: "rgba(255,255,255,0.6)", maxWidth: "420px" }}>
-                Remplissez le formulaire en 3 étapes simples. Notre équipe vous contacte sous 24h pour confirmer.
-              </p>
-            </div>
-
-           
-
-            {/* Direct contact card */}
-            
-          </FadeUp>
-
-
-          {/* ── RIGHT: stepped form ── */}
+        <div className="max-w-2xl mx-auto">
           <FadeUp delay={0.15}>
             <AnimatePresence mode="wait">
               {submitted ? (
@@ -1912,8 +1815,8 @@ function Reservation() {
                   <h3 className="font-black text-3xl text-white mb-3" style={{ fontFamily: "'KG Red Hands', sans-serif" }}>
                     C'est réservé !
                   </h3>
-                  <p className="text-sm mb-2" style={{ fontFamily: "'KG Red Hands', sans-serif", color: "rgba(255,255,255,0.65)", maxWidth: "280px" }}>
-                    Votre demande pour <strong style={{ color: GOLD }}>{activity}</strong> a bien été enregistrée.
+                  <p className="text-sm mb-2" style={{ fontFamily: "'KG Red Hands', sans-serif", color: "rgba(255,255,255,0.65)", maxWidth: "340px" }}>
+                    Votre demande pour <strong style={{ color: GOLD }}>{selectedItems.join(', ')}</strong> a bien été enregistrée.
                   </p>
                   <p className="text-xs mb-8" style={{ fontFamily: "'KG Red Hands', sans-serif", color: "rgba(255,255,255,0.3)" }}>
                     Nous vous contacterons sous 24h au {phone || "votre numéro"}.
@@ -1921,9 +1824,9 @@ function Reservation() {
                   <motion.button
                     whileHover={{ scale: 1.04 }}
                     whileTap={{ scale: 0.97 }}
-                    onClick={() => { setSubmitted(false); setStep(0); setActivity(""); setDate(""); setName(""); setPhone(""); setMessage(""); }}
-                    className="px-7 py-3 rounded-xl font-bold text-sm"
-                    style={{ fontFamily: "'KG Red Hands', sans-serif", background: GOLD, color: NAVY }}
+                    onClick={() => { setSubmitted(false); setStep(0); setSelectedItems([]); setDate(""); setName(""); setPhone(""); setMessage(""); }}
+                    className="rounded-xl font-bold text-sm"
+                    style={{ fontFamily: "'KG Red Hands', sans-serif", background: GOLD, color: NAVY, padding: "12px 28px" }}
                   >
                     Nouvelle réservation
                   </motion.button>
@@ -1987,102 +1890,129 @@ function Reservation() {
                           className="flex flex-col gap-5"
                         >
                           <div>
-                            <h3 className="font-black text-xl text-white mb-1" style={{ fontFamily: "'KG Red Hands', sans-serif" }}>Quelle activité ?</h3>
-                            <p className="text-xs" style={{ fontFamily: "'KG Red Hands', sans-serif", color: "rgba(255,255,255,0.55)" }}>Choisissez parmi nos 22 activités disponibles</p>
+                            <h3 className="font-black text-xl text-white mb-1" style={{ fontFamily: "'KG Red Hands', sans-serif" }}>Que souhaitez-vous réserver ?</h3>
+                            <p className="text-xs" style={{ fontFamily: "'KG Red Hands', sans-serif", color: "rgba(255,255,255,0.55)" }}>Sélectionnez une ou plusieurs options ci-dessous :</p>
                           </div>
 
-                          {/* Activity grid selector */}
-                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-[320px] overflow-y-auto pr-2" style={{ scrollbarWidth: "thin" }}>
-                            {ACTIVITY_OPTIONS.map((opt) => {
-                              const isSelected = activity === opt;
-                              return (
-                                <motion.button
-                                  key={opt}
-                                  type="button"
-                                  whileHover={{ background: isSelected ? `rgba(245,166,35,0.15)` : "rgba(255,255,255,0.06)" }}
-                                  whileTap={{ scale: 0.98 }}
-                                  onClick={() => setActivity(opt)}
-                                  className="flex items-center justify-between w-full rounded-xl text-sm font-semibold transition-all overflow-hidden"
-                                  style={{
-                                    padding: "14px 18px",
-                                    fontFamily: "'KG Red Hands', sans-serif",
-                                    background: isSelected ? `rgba(245,166,35,0.12)` : "rgba(255,255,255,0.03)",
-                                    border: `1.5px solid ${isSelected ? GOLD : "rgba(255,255,255,0.06)"}`,
-                                    color: isSelected ? GOLD : "rgba(255,255,255,0.65)",
-                                    boxShadow: isSelected ? `0 4px 12px rgba(245,166,35,0.1)` : "none"
-                                  }}
-                                >
-                                  <span className="truncate text-left">{opt}</span>
-                                  {/* Custom Radio Indicator */}
-                                  <div 
-                                    className="w-4 h-4 rounded-full flex-shrink-0 transition-colors flex items-center justify-center ml-3" 
-                                    style={{ 
-                                      border: `1.5px solid ${isSelected ? GOLD : "rgba(255,255,255,0.2)"}`,
-                                      background: isSelected ? GOLD : "transparent" 
-                                    }} 
-                                  >
-                                    {isSelected && <div className="w-1.5 h-1.5 rounded-full" style={{ background: "#07101f" }} />}
-                                  </div>
-                                </motion.button>
-                              );
-                            })}
+                          {/* Grouped selector (Multi-select) */}
+                          <div className="flex flex-col gap-6 max-h-[340px] overflow-y-auto pr-2" style={{ scrollbarWidth: "thin" }}>
+                            {BOOKING_CATEGORIES.map((cat) => (
+                              <div key={cat.title} className="flex flex-col gap-2">
+                                <div className="text-[10px] font-black uppercase tracking-[0.2em] mb-1" style={{ fontFamily: "'KG Red Hands', sans-serif", color: GOLD }}>
+                                  {cat.title}
+                                </div>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                  {cat.options.map((opt) => {
+                                    const isSelected = selectedItems.includes(opt);
+                                    return (
+                                      <motion.button
+                                        key={opt}
+                                        type="button"
+                                        whileHover={{ background: isSelected ? `rgba(245,166,35,0.15)` : "rgba(255,255,255,0.06)" }}
+                                        whileTap={{ scale: 0.98 }}
+                                        onClick={() => toggleItem(opt)}
+                                        className="flex items-center justify-between w-full rounded-xl text-xs font-semibold transition-all overflow-hidden"
+                                        style={{
+                                          padding: "11px 14px",
+                                          fontFamily: "'KG Red Hands', sans-serif",
+                                          background: isSelected ? `rgba(245,166,35,0.12)` : "rgba(255,255,255,0.03)",
+                                          border: `1.5px solid ${isSelected ? GOLD : "rgba(255,255,255,0.06)"}`,
+                                          color: isSelected ? GOLD : "rgba(255,255,255,0.65)",
+                                          boxShadow: isSelected ? `0 4px 12px rgba(245,166,35,0.1)` : "none"
+                                        }}
+                                      >
+                                        <span className="truncate text-left">{opt}</span>
+                                        {/* Custom Checkbox Indicator */}
+                                        <div 
+                                          className="w-3.5 h-3.5 rounded flex-shrink-0 transition-colors flex items-center justify-center ml-2 border" 
+                                          style={{ 
+                                            borderColor: isSelected ? GOLD : "rgba(255,255,255,0.2)",
+                                            background: isSelected ? GOLD : "transparent" 
+                                          }} 
+                                        >
+                                          {isSelected && (
+                                            <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#07101f" strokeWidth="4">
+                                              <polyline points="20 6 9 17 4 12" />
+                                            </svg>
+                                          )}
+                                        </div>
+                                      </motion.button>
+                                    );
+                                  })}
+                                </div>
+                              </div>
+                            ))}
                           </div>
                         </motion.div>
                       )}
-
-                      {/* Step 1 — Group & date */}
+                      
+                      {/* Step 1 — Details & quantities per element */}
                       {step === 1 && (
                         <motion.div
-                          key="step1"
+                          key="step1-details"
                           initial={{ opacity: 0, x: 30 }}
                           animate={{ opacity: 1, x: 0 }}
                           exit={{ opacity: 0, x: -30 }}
-                          transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+                          transition={{ duration: 0.35 }}
                           className="flex flex-col gap-6"
                         >
                           <div>
-                            <h3 className="font-black text-xl text-white mb-1" style={{ fontFamily: "'KG Red Hands', sans-serif" }}>Groupe & date</h3>
+                            <h3 className="font-black text-xl text-white mb-1" style={{ fontFamily: "'KG Red Hands', sans-serif" }}>Détails de votre projet</h3>
                             <p className="text-xs" style={{ fontFamily: "'KG Red Hands', sans-serif", color: "rgba(255,255,255,0.55)" }}>
-                              Activité choisie : <span style={{ color: GOLD }}>{activity}</span>
+                              Ajustez les quantités pour chaque option sélectionnée :
                             </p>
                           </div>
 
-                          {/* People stepper */}
-                          <Field label="Nombre de personnes">
-                            <div
-                              className="flex items-center rounded-2xl overflow-hidden"
-                              style={{ border: "1.5px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.05)" }}
-                            >
-                              <motion.button
-                                whileTap={{ scale: 0.9 }}
-                                type="button"
-                                onClick={() => setPeople(Math.max(1, people - 1))}
-                                className="px-5 py-4 text-xl font-bold transition-colors hover:bg-white/10"
-                                style={{ color: "rgba(255,255,255,0.5)" }}
-                              >
-                                −
-                              </motion.button>
-                              <div className="flex-1 text-center">
-                                <span className="font-black text-2xl text-white" style={{ fontFamily: "'KG Red Hands', sans-serif" }}>{people}</span>
-                                <p className="text-[10px]" style={{ fontFamily: "'KG Red Hands', sans-serif", color: "rgba(255,255,255,0.3)" }}>personnes</p>
-                              </div>
-                              <motion.button
-                                whileTap={{ scale: 0.9 }}
-                                type="button"
-                                onClick={() => setPeople(people + 1)}
-                                className="px-5 py-4 text-xl font-bold transition-colors hover:bg-white/10"
-                                style={{ color: GOLD }}
-                              >
-                                +
-                              </motion.button>
-                            </div>
-                            <div className="flex justify-between text-[10px] px-1" style={{ fontFamily: "'KG Red Hands', sans-serif", color: "rgba(255,255,255,0.25)" }}>
-                              <span>Min. 1 personne</span>
-                              <span>Groupe recommandé : 20+</span>
-                            </div>
-                          </Field>
+                          <div className="flex flex-col gap-3 max-h-[300px] overflow-y-auto pr-2" style={{ scrollbarWidth: "thin" }}>
+                            {selectedItems.map((item) => {
+                              const isRentalItem = BOOKING_CATEGORIES[1].options.includes(item);
+                              const isEventItem = BOOKING_CATEGORIES[2].options.includes(item);
+                              
+                              const typeLabel = isRentalItem ? "Location de Matériels" : isEventItem ? "Organisation d'Événements" : "Activités & Loisirs";
+                              const unitLabel = isRentalItem ? "unités" : isEventItem ? "invités" : "pers.";
 
-                          <Field label="Date souhaitée">
+                              return (
+                                <div
+                                  key={item}
+                                  className="flex items-center justify-between p-3 rounded-2xl gap-3"
+                                  style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)" }}
+                                >
+                                  <div className="flex flex-col min-w-0">
+                                    <span className="font-black text-xs text-white truncate" style={{ fontFamily: "'KG Red Hands', sans-serif" }}>{item}</span>
+                                    <span className="text-[9px] uppercase tracking-wider mt-0.5" style={{ color: GOLD, fontFamily: "'KG Red Hands', sans-serif" }}>
+                                      {typeLabel}
+                                    </span>
+                                  </div>
+                                  <div className="flex items-center rounded-xl overflow-hidden flex-shrink-0" style={{ border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.03)" }}>
+                                    <motion.button
+                                      whileTap={{ scale: 0.9 }}
+                                      type="button"
+                                      onClick={() => updateQty(item, isRentalItem ? -1 : (isEventItem ? -5 : -1))}
+                                      className="px-3 py-1.5 text-xs font-bold hover:bg-white/10 text-white/50 transition-colors"
+                                    >
+                                      −
+                                    </motion.button>
+                                    <div className="px-3 text-center min-w-[55px]">
+                                      <span className="font-black text-sm text-white" style={{ fontFamily: "'KG Red Hands', sans-serif" }}>
+                                        {itemQuantities[item] || 0}
+                                      </span>
+                                      <p className="text-[8px] text-white/30" style={{ fontFamily: "'KG Red Hands', sans-serif" }}>{unitLabel}</p>
+                                    </div>
+                                    <motion.button
+                                      whileTap={{ scale: 0.9 }}
+                                      type="button"
+                                      onClick={() => updateQty(item, isRentalItem ? 1 : (isEventItem ? 5 : 1))}
+                                      className="px-3 py-1.5 text-xs font-bold hover:bg-white/10 text-amber-500 transition-colors"
+                                    >
+                                      +
+                                    </motion.button>
+                                  </div>
+                                </div>
+                              );
+                            })}
+                          </div>
+
+                          <Field label={isRental ? "Date de début de location" : isEvent ? "Date de l'événement" : "Date souhaitée"}>
                             <input
                               type="date"
                               value={date}
@@ -2106,7 +2036,7 @@ function Reservation() {
                           <div>
                             <h3 className="font-black text-xl text-white mb-1" style={{ fontFamily: "'KG Red Hands', sans-serif" }}>Vos coordonnées</h3>
                             <p className="text-xs" style={{ fontFamily: "'KG Red Hands', sans-serif", color: "rgba(255,255,255,0.55)" }}>
-                              {activity} · {people} pers. · {date || "date à confirmer"}
+                              {selectedItems.join(', ')} · {Object.values(itemQuantities).reduce((a, b) => a + b, 0)} {isRental ? "unités" : isEvent ? "invités" : "pers."} · {date || "date à confirmer"}
                             </p>
                           </div>
 
@@ -2146,12 +2076,13 @@ function Reservation() {
                         type="button"
                         disabled={!canNext[step]}
                         onClick={() => step < STEPS.length - 1 ? setStep(step + 1) : handleSubmit()}
-                        className="group flex-1 py-3 rounded-[2rem] font-bold text-sm flex items-center justify-center gap-3 transition-all"
+                        className="group flex-1 rounded-[2rem] font-bold text-sm flex items-center justify-center gap-3 transition-all"
                         style={{
                           fontFamily: "'KG Red Hands', sans-serif",
                           background: canNext[step] ? GOLD : "rgba(245,166,35,0.15)",
                           color: canNext[step] ? NAVY : "rgba(245,166,35,0.4)",
                           cursor: canNext[step] ? "pointer" : "not-allowed",
+                          padding: "8px 8px 8px 28px",
                         }}
                       >
                         {step < STEPS.length - 1 ? (
@@ -2178,9 +2109,9 @@ function Reservation() {
           </FadeUp>
         </div>
       </div>
-    </section>
-  );
-}
+      </section>
+    );
+  }
 
 // ─── Testimonials ─────────────────────────────────────────────────────────────
 const TESTIMONIALS = [
@@ -2286,8 +2217,8 @@ function ReviewModal({ onClose }: { onClose: () => void }) {
               <motion.button
                 whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}
                 onClick={onClose}
-                className="px-7 py-3 rounded-xl font-bold text-sm"
-                style={{ fontFamily: "'KG Red Hands', sans-serif", background: GOLD, color: NAVY }}
+                className="rounded-xl font-bold text-sm"
+                style={{ fontFamily: "'KG Red Hands', sans-serif", background: GOLD, color: NAVY, padding: "12px 28px" }}
               >
                 Fermer
               </motion.button>
@@ -2417,12 +2348,13 @@ function ReviewModal({ onClose }: { onClose: () => void }) {
                       setDone(true);
                     }
                   }}
-                  className="w-full py-4 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all"
+                  className="w-full rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all"
                   style={{
                     fontFamily: "'KG Red Hands', sans-serif",
                     background: canSubmit ? GOLD : "rgba(245,166,35,0.15)",
                     color: canSubmit ? NAVY : "rgba(245,166,35,0.4)",
                     cursor: canSubmit ? "pointer" : "not-allowed",
+                    padding: "16px",
                   }}
                 >
                   <Star size={15} fill={canSubmit ? NAVY : "rgba(245,166,35,0.4)"} color="transparent" />
@@ -2477,6 +2409,13 @@ function Testimonials() {
 
   const currentReviews = dbReviews.length > 0 ? formatReviews(dbReviews) : EXTENDED_TESTIMONIALS;
 
+  // ── Dynamic stats from real data ──
+  const totalCount = dbReviews.length > 0 ? dbReviews.length : 500;
+  const avgRating = dbReviews.length > 0
+    ? (dbReviews.reduce((sum, r) => sum + (r.rating || 5), 0) / dbReviews.length).toFixed(1)
+    : "4.9";
+  const filledStars = Math.round(parseFloat(String(avgRating)));
+
   // Double the array for seamless infinite scrolling
   const MARQUEE_ITEMS = [...currentReviews, ...currentReviews];
 
@@ -2506,37 +2445,96 @@ function Testimonials() {
         
         {/* ── Header ── */}
         <div className="max-w-7xl mx-auto px-6">
-          <FadeUp className="flex flex-col md:flex-row items-start md:items-end justify-between gap-8 mb-20 border-b pb-12" style={{ borderColor: "rgba(255,255,255,0.07)" }}>
-            <div>
-              <div className="flex items-center gap-4 mb-6">
-                <div className="h-px w-12" style={{ background: GOLD }} />
-                <span className="text-xs font-black tracking-[0.3em] uppercase" style={{ color: GOLD, fontFamily: "'KG Red Hands', sans-serif" }}>
-                  Avis vérifiés
-                </span>
-              </div>
-              <h2 className="font-black leading-none" style={{ fontFamily: "'KG Red Hands', sans-serif", fontSize: "clamp(3.5rem, 8vw, 5.5rem)", color: "#fff", letterSpacing: "-0.04em" }}>
-                Ce que disent<br />
-                <span style={{ color: "transparent", WebkitTextStroke: "2px rgba(255,255,255,0.2)" }}>nos clients</span>
-              </h2>
-            </div>
+          <FadeUp className="flex flex-col items-center text-center gap-10 mb-16">
             
-            {/* Stats & CTA */}
-            <div className="flex flex-col items-start md:items-end gap-6">
-              <div className="flex items-center gap-6">
-                <div className="text-right">
-                  <div className="font-black text-4xl leading-none text-white mb-1" style={{ fontFamily: "'KG Red Hands', sans-serif" }}>4.9</div>
-                  <div className="flex gap-1">{[...Array(5)].map((_, i) => <Star key={i} size={12} fill={GOLD} color={GOLD} />)}</div>
-                </div>
-                <div className="w-px h-12" style={{ background: "rgba(255,255,255,0.1)" }} />
-                <div>
-                  <div className="font-black text-4xl leading-none text-white mb-1" style={{ fontFamily: "'KG Red Hands', sans-serif" }}>500+</div>
-                  <div className="text-[11px] font-bold uppercase tracking-[0.2em]" style={{ fontFamily: "'KG Red Hands', sans-serif", color: "rgba(255,255,255,0.4)" }}>Avis clients</div>
-                </div>
-              </div>
-              <Button onClick={() => setReviewOpen(true)} icon={Star}>
-                Laisser un avis
-              </Button>
+            {/* Label */}
+            <div className="flex items-center gap-4">
+              <div className="h-px w-12" style={{ background: GOLD }} />
+              <span className="text-xs font-black tracking-[0.3em] uppercase" style={{ color: GOLD, fontFamily: "'KG Red Hands', sans-serif" }}>
+                Avis vérifiés
+              </span>
+              <div className="h-px w-12" style={{ background: GOLD }} />
             </div>
+
+            {/* Main headline */}
+            <h2 className="font-black leading-none" style={{ fontFamily: "'KG Red Hands', sans-serif", fontSize: "clamp(3rem, 8vw, 5.5rem)", color: "#fff", letterSpacing: "-0.04em" }}>
+              Ce que disent<br />
+              <span style={{ color: "transparent", WebkitTextStroke: "2px rgba(255,255,255,0.2)" }}>nos clients</span>
+            </h2>
+
+            {/* ── Stats cards: 2 on top, CTA below ── */}
+            <div className="flex flex-col items-center gap-3" style={{ width: "320px" }}>
+
+              {/* Top row: Rating + Count side by side, equal width */}
+              <div className="flex gap-3 w-full">
+
+                {/* Card 1 — Average Rating */}
+                <motion.div
+                  whileHover={{ y: -3, boxShadow: `0 12px 32px ${GOLD}30` }}
+                  className="flex flex-col items-center justify-center py-5 rounded-2xl gap-2 flex-1"
+                  style={{
+                    background: "linear-gradient(145deg, rgba(245,166,35,0.14) 0%, rgba(245,166,35,0.05) 100%)",
+                    border: `1.5px solid ${GOLD}35`,
+                    backdropFilter: "blur(12px)",
+                  }}
+                >
+                  <div className="font-black leading-none" style={{ fontFamily: "'KG Red Hands', sans-serif", fontSize: "2rem", color: "#fff" }}>
+                    {avgRating}
+                  </div>
+                  <div className="flex gap-0.5">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} size={11} fill={i < filledStars ? GOLD : "transparent"} color={GOLD} />
+                    ))}
+                  </div>
+                  <div className="text-[9px] font-bold uppercase tracking-[0.18em]" style={{ fontFamily: "'KG Red Hands', sans-serif", color: `${GOLD}90` }}>
+                    Note Moyenne
+                  </div>
+                </motion.div>
+
+                {/* Card 2 — Total Reviews */}
+                <motion.div
+                  whileHover={{ y: -3, boxShadow: "0 12px 32px rgba(255,255,255,0.06)" }}
+                  className="flex flex-col items-center justify-center py-5 rounded-2xl gap-2 flex-1"
+                  style={{
+                    background: "linear-gradient(145deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 100%)",
+                    border: "1.5px solid rgba(255,255,255,0.09)",
+                    backdropFilter: "blur(12px)",
+                  }}
+                >
+                  <div className="font-black leading-none" style={{ fontFamily: "'KG Red Hands', sans-serif", fontSize: "2rem", color: "#fff" }}>
+                    {totalCount >= 500 ? "500+" : `${totalCount}+`}
+                  </div>
+                  <div className="text-[9px] font-bold uppercase tracking-[0.18em]" style={{ fontFamily: "'KG Red Hands', sans-serif", color: "rgba(255,255,255,0.4)" }}>
+                    Avis Clients
+                  </div>
+                </motion.div>
+
+              </div>
+
+              {/* CTA full-width below */}
+              <motion.button
+                onClick={() => setReviewOpen(true)}
+                whileHover={{ scale: 1.02, boxShadow: `0 16px 40px ${GOLD}55` }}
+                whileTap={{ scale: 0.97 }}
+                className="w-full flex items-center justify-center gap-3 py-4 rounded-2xl font-black text-sm cursor-pointer"
+                style={{
+                  fontFamily: "'KG Red Hands', sans-serif",
+                  background: `linear-gradient(135deg, ${GOLD} 0%, #E8920A 100%)`,
+                  color: NAVY,
+                  boxShadow: `0 8px 24px ${GOLD}40`,
+                }}
+              >
+                <div
+                  className="w-7 h-7 rounded-xl flex items-center justify-center flex-shrink-0"
+                  style={{ background: "rgba(255,255,255,0.25)" }}
+                >
+                  <Star size={14} color={NAVY} fill={NAVY} />
+                </div>
+                Laisser un avis
+              </motion.button>
+
+            </div>
+
           </FadeUp>
         </div>
 
@@ -2607,37 +2605,37 @@ function Testimonials() {
 // ─── FAQ ──────────────────────────────────────────────────────────────────────
 const FAQS = [
   {
-    emoji: "🕗",
+    icon: Clock,
     q: "Quelles sont les heures d'ouvertures ?",
     a: "Yakoo Events est ouvert du mardi au dimanche de 8h00 à 18h00. Les réservations de groupes peuvent être organisées en dehors de ces horaires sur demande. Nous sommes fermés le lundi pour maintenance.",
     tag: "Horaires",
   },
   {
-    emoji: "🍹",
+    icon: Utensils,
     q: "Y a-t-il une buvette à Yakoo Events ?",
     a: "Oui, notre buvette est ouverte tous les jours d'exploitation. Elle propose des boissons fraîches et chaudes, des snacks et des repas légers. Pour les groupes importants, un service traiteur peut être organisé sur réservation.",
     tag: "Restauration",
   },
   {
-    emoji: "📅",
+    icon: CalendarDays,
     q: "Comment effectuer votre réservation ?",
     a: "Vous pouvez réserver directement via notre formulaire en ligne, par téléphone au +216 71 790 501, ou par email à promoscout.contact@gmail.com. Un acompte de 30% est requis pour confirmer la réservation.",
     tag: "Réservation",
   },
   {
-    emoji: "👕",
+    icon: Shirt,
     q: "Que dois-je prévoir comme vêtements ?",
     a: "Nous recommandons des vêtements confortables et adaptés aux activités de plein air : pantalon long, t-shirt à manches longues, et chaussures fermées et robustes. Évitez les sandales et les vêtements trop larges pour les activités en hauteur.",
     tag: "Équipement",
   },
   {
-    emoji: "👨‍👩‍👧",
+    icon: Users,
     q: "À partir de quel âge peut-on participer ?",
     a: "La plupart de nos activités sont accessibles dès 6 ans avec encadrement parental. Certaines activités comme le paintball sont réservées aux 12 ans et plus. Contactez-nous pour adapter le programme à votre groupe.",
     tag: "Âge & Accès",
   },
   {
-    emoji: "🚗",
+    icon: Map,
     q: "Y a-t-il un parking sur place ?",
     a: "Oui, Yakoo Events dispose d'un grand parking gratuit pouvant accueillir cars et véhicules individuels. Le parc est situé Avenue Jugurtha, Tunis, facilement accessible depuis le centre-ville.",
     tag: "Accès",
@@ -2669,218 +2667,99 @@ function FAQ() {
   const displayList = faqs.length > 0 ? faqs : FAQS;
 
   return (
-    <section className="relative overflow-hidden py-24" style={{ background: "#07101f" }}>
+    <section className="relative overflow-hidden py-32" style={{ background: "#050B14" }}>
 
-      {/* Subtle dot grid */}
-      <div className="absolute inset-0 opacity-[0.03]"
-        style={{ backgroundImage: "radial-gradient(circle at 1px 1px, white 1px, transparent 0)", backgroundSize: "36px 36px" }} />
+      {/* Subtle grid background */}
+      <div className="absolute inset-0 opacity-[0.02]"
+        style={{ backgroundImage: "linear-gradient(rgba(255,255,255,1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,1) 1px, transparent 1px)", backgroundSize: "56px 56px" }} />
 
       {/* Ambient glows */}
-      <div className="absolute bottom-0 right-0 w-[500px] h-[500px] rounded-full blur-[150px] opacity-[0.08] pointer-events-none" style={{ background: GOLD }} />
-      <div className="absolute top-1/2 left-0 w-[400px] h-[400px] rounded-full blur-[140px] opacity-[0.05] pointer-events-none" style={{ background: "#a78bfa" }} />
+      <div className="absolute top-1/4 left-1/4 w-[600px] h-[600px] rounded-full blur-[160px] opacity-[0.06] pointer-events-none" style={{ background: GOLD }} />
+      <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] rounded-full blur-[140px] opacity-[0.04] pointer-events-none" style={{ background: "#a78bfa" }} />
 
       <div className="relative max-w-7xl mx-auto px-6 z-10">
 
-        {/* ── Header ── */}
-        <FadeUp className="grid lg:grid-cols-2 gap-6 items-end mb-16">
-          <div>
-            <div className="flex items-center gap-4 mb-6">
-              <div className="h-px w-10" style={{ background: GOLD }} />
-              <span className="text-xs font-black tracking-[0.3em] uppercase"
-                style={{ fontFamily: "'KG Red Hands', sans-serif", color: GOLD }}>
-                Aide & Support
-              </span>
-            </div>
-            <h2 className="font-black leading-none"
-              style={{ fontFamily: "'KG Red Hands', sans-serif", fontSize: "clamp(2.5rem, 6vw, 4.5rem)", color: "#fff", letterSpacing: "-0.03em" }}>
-              Questions<br />
-              <span style={{ color: "transparent", WebkitTextStroke: `2px ${GOLD}` }}>fréquentes</span>
-            </h2>
+        {/* ── Center Header ── */}
+        <FadeUp className="text-center mb-20 max-w-2xl mx-auto">
+          <div className="flex items-center justify-center gap-4 mb-6">
+            <div className="h-px w-10" style={{ background: GOLD }} />
+            <span className="text-xs font-black tracking-[0.3em] uppercase"
+              style={{ fontFamily: "'KG Red Hands', sans-serif", color: GOLD }}>
+              Aide &amp; Support
+            </span>
+            <div className="h-px w-10" style={{ background: GOLD }} />
           </div>
-          <p className="text-base leading-relaxed lg:pb-3"
-            style={{ fontFamily: "'KG Red Hands', sans-serif", color: "rgba(255,255,255,0.60)", maxWidth: "420px" }}>
-            Tout ce que vous devez savoir avant de vivre votre aventure chez Yakoo Events. Une question spécifique ? Notre équipe est à votre écoute.
-          </p>
+          <h2 className="font-black leading-none"
+            style={{ fontFamily: "'KG Red Hands', sans-serif", fontSize: "clamp(2.5rem, 5vw, 3.8rem)", color: "#fff", letterSpacing: "-0.03em" }}>
+            Questions <span style={{ color: "transparent", WebkitTextStroke: `2px ${GOLD}` }}>Fréquentes</span>
+          </h2>
         </FadeUp>
 
-        {/* ── Two-column layout ── */}
-        <div className="grid lg:grid-cols-[1fr_400px] gap-8 items-start">
-
-          {/* Left — accordion list */}
-          <div className="flex flex-col gap-3">
-            {displayList.map((f, i) => {
-              const isOpen = open === i;
-              const question = f.question || f.q;
-              const answer = f.answer || f.a;
-              return (
-                <FadeUp key={i} delay={i * 0.05}>
-                  <motion.div
-                    animate={{
-                      borderColor: isOpen ? `rgba(245,166,35,0.25)` : "rgba(255,255,255,0.06)",
+        {/* ── Premium FAQ Cards Grid ── */}
+        <div className="grid md:grid-cols-2 gap-6 max-w-6xl mx-auto">
+          {displayList.map((f, i) => {
+            const question = f.question || f.q;
+            const answer = f.answer || f.a;
+            const emoji = f.emoji || "❓";
+            return (
+              <FadeUp key={i} delay={i * 0.06}>
+                <div
+                  className="rounded-3xl p-8 relative group transition-all duration-500 hover:-translate-y-2 flex flex-col gap-4 overflow-hidden h-full"
+                  style={{
+                    background: "linear-gradient(145deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%)",
+                    border: "1.5px solid rgba(255,255,255,0.06)",
+                    boxShadow: "0 15px 35px rgba(0,0,0,0.2)",
+                    backdropFilter: "blur(8px)",
+                  }}
+                >
+                  {/* Subtle gold border glow on hover */}
+                  <div
+                    className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl pointer-events-none"
+                    style={{
+                      border: `1.5px solid ${GOLD}40`,
+                      boxShadow: `inset 0 0 15px ${GOLD}10`,
                     }}
-                    transition={{ duration: 0.3 }}
-                    className="rounded-2xl overflow-hidden"
-                    style={{ border: "1px solid", background: isOpen ? "rgba(245,166,35,0.04)" : "transparent" }}
-                  >
-                    <button
-                      className="w-full flex items-center gap-5 p-5 md:p-6 text-left outline-none group"
-                      onClick={() => setOpen(isOpen ? null : i)}
-                    >
-                      {/* Number badge */}
-                      <motion.div
-                        animate={{
-                          background: isOpen ? GOLD : "rgba(255,255,255,0.04)",
-                          color: isOpen ? NAVY : "rgba(255,255,255,0.25)",
-                          borderColor: isOpen ? GOLD : "rgba(255,255,255,0.08)",
-                        }}
-                        transition={{ duration: 0.3 }}
-                        className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 text-sm font-black"
-                        style={{ fontFamily: "'KG Red Hands', sans-serif", border: "1px solid" }}
-                      >
-                        {String(i + 1).padStart(2, "0")}
-                      </motion.div>
+                  />
 
-                      {/* Question text */}
-                      <div className="flex-1 min-w-0">
-                        <span
-                          className="block font-bold text-[15px] md:text-base leading-snug transition-colors duration-300"
-                          style={{ fontFamily: "'KG Red Hands', sans-serif", color: isOpen ? "#fff" : "rgba(255,255,255,0.75)" }}
-                        >
-                          {question}
-                        </span>
-                      </div>
-
-                      {/* Chevron */}
-                      <motion.div
-                        animate={{ rotate: isOpen ? 180 : 0 }}
-                        transition={{ duration: 0.35, type: "spring", stiffness: 300, damping: 25 }}
-                        className="flex-shrink-0"
-                        style={{ color: isOpen ? GOLD : "rgba(255,255,255,0.3)" }}
-                      >
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                          <path d="m6 9 6 6 6-6"/>
-                        </svg>
-                      </motion.div>
-                    </button>
-
-                    <AnimatePresence initial={false}>
-                      {isOpen && (
-                        <motion.div
-                          initial={{ height: 0, opacity: 0 }}
-                          animate={{ height: "auto", opacity: 1 }}
-                          exit={{ height: 0, opacity: 0 }}
-                          transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-                          style={{ overflow: "hidden" }}
-                        >
-                          <div className="px-5 md:px-6 pb-6 pl-[4.5rem] md:pl-[5.25rem]">
-                            <p className="text-sm leading-relaxed"
-                              style={{ fontFamily: "'KG Red Hands', sans-serif", color: "rgba(255,255,255,0.6)" }}>
-                              {answer}
-                            </p>
-                          </div>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </motion.div>
-                </FadeUp>
-              );
-            })}
-          </div>
-
-          {/* Right — sticky contact card */}
-          <FadeUp delay={0.2} className="lg:sticky lg:top-32 flex flex-col gap-5">
-
-            {/* Still have questions card */}
-            <div
-              className="rounded-[32px] overflow-hidden relative group"
-              style={{ background: "rgba(255,255,255,0.02)", border: "1.5px solid rgba(255,255,255,0.05)", boxShadow: "0 20px 40px rgba(0,0,0,0.3)" }}
-            >
-              {/* Subtle hover gradient */}
-              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" style={{ background: `radial-gradient(circle at top right, rgba(245,166,35,0.1), transparent 60%)` }} />
-
-              {/* Image */}
-              <div className="relative h-48 overflow-hidden" style={{ background: "#0d1929" }}>
-                <img
-                  src={content['faq_contact_img'] || "https://images.unsplash.com/photo-1780733063138-8a847437ab96?w=600&h=300&fit=crop&auto=format"}
-                  alt="Equipe Yakoo Events"
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  style={{ opacity: 0.5 }}
-                />
-                <div className="absolute inset-0" style={{ background: `linear-gradient(to top, #07101f 0%, transparent 80%)` }} />
-                <div className="absolute bottom-5 left-6">
-                  <div className="flex -space-x-2 mb-2">
-                    {["#f97316", "#22c55e", "#38bdf8"].map((c) => (
-                      <div key={c} className="w-8 h-8 rounded-full border-[3px]" style={{ background: c, borderColor: "#07101f" }} />
-                    ))}
-                  </div>
-                  <p className="text-[11px] font-bold uppercase tracking-widest" style={{ fontFamily: "'KG Red Hands', sans-serif", color: GOLD }}>
-                    Notre équipe vous répond
-                  </p>
-                </div>
-              </div>
-
-              <div className="p-8 relative z-10">
-                <h3 className="font-black text-xl text-white mb-3 leading-snug" style={{ fontFamily: "'KG Red Hands', sans-serif" }}>
-                  Vous avez encore des questions ?
-                </h3>
-                <p className="text-sm leading-relaxed mb-6 font-medium" style={{ fontFamily: "'KG Red Hands', sans-serif", color: "rgba(255,255,255,0.60)" }}>
-                  Notre équipe est disponible du mardi au dimanche pour répondre à toutes vos demandes.
-                </p>
-                <div className="flex flex-col gap-3">
-                  <motion.a
-                    href="#contact"
-                    whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-                    className="flex items-center justify-center gap-2 py-4 rounded-2xl font-black text-sm uppercase tracking-wider transition-shadow"
-                    style={{ fontFamily: "'KG Red Hands', sans-serif", background: GOLD, color: NAVY, boxShadow: "0 10px 20px rgba(245,166,35,0.2)" }}
-                  >
-                    <Mail size={16} /> Nous écrire
-                  </motion.a>
-                  <motion.a
-                    href="tel:+21671790501"
-                    whileHover={{ scale: 1.02, background: "rgba(255,255,255,0.08)" }} whileTap={{ scale: 0.98 }}
-                    className="flex items-center justify-center gap-2 py-4 rounded-2xl font-bold text-sm transition-colors"
-                    style={{ fontFamily: "'KG Red Hands', sans-serif", background: "transparent", color: "rgba(255,255,255,0.8)", border: "1.5px solid rgba(255,255,255,0.1)" }}
-                  >
-                    <Phone size={16} /> +216 71 790 501
-                  </motion.a>
-                </div>
-              </div>
-            </div>
-
-            {/* Quick hours card */}
-            <div
-              className="rounded-3xl p-6 relative overflow-hidden"
-              style={{ background: "rgba(245,166,35,0.05)", border: "1.5px solid rgba(245,166,35,0.15)" }}
-            >
-              <div className="absolute top-0 right-0 w-32 h-32 rounded-full blur-[40px] opacity-[0.1]" style={{ background: GOLD }} />
-              <div className="flex items-center gap-3 mb-5 relative z-10">
-                <span className="text-xl">🕗</span>
-                <span className="text-xs font-black uppercase tracking-[0.2em]" style={{ fontFamily: "'KG Red Hands', sans-serif", color: GOLD }}>
-                  Horaires d'ouverture
-                </span>
-              </div>
-              <div className="flex flex-col gap-3 relative z-10">
-                {[
-                  { day: "Mardi → Dimanche", hours: "08:00 – 18:00", open: true },
-                  { day: "Lundi", hours: "Fermé", open: false },
-                ].map(({ day, hours, open: isOpen }) => (
-                  <div key={day} className="flex items-center justify-between">
-                    <span className="text-sm font-medium" style={{ fontFamily: "'KG Red Hands', sans-serif", color: "rgba(255,255,255,0.7)" }}>{day}</span>
-                    <span
-                      className="text-sm font-bold px-3 py-1 rounded-full"
-                      style={{ 
-                        fontFamily: "'KG Red Hands', sans-serif", 
-                        color: isOpen ? GOLD : "rgba(255,255,255,0.4)",
-                        background: isOpen ? "rgba(245,166,35,0.1)" : "rgba(255,255,255,0.05)"
+                  {/* Header Row */}
+                  <div className="flex items-start gap-4">
+                    {/* Icon bubble */}
+                    <div
+                      className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
+                      style={{
+                        background: "rgba(255,255,255,0.03)",
+                        border: "1.5px solid rgba(255,255,255,0.06)",
                       }}
                     >
-                      {hours}
-                    </span>
+                      {f.icon ? <f.icon size={20} style={{ color: GOLD }} /> : null}
+                    </div>
+
+                    {/* Question */}
+                    <h3
+                      className="font-black text-[15px] md:text-base leading-snug text-white flex-1 pt-1"
+                      style={{ fontFamily: "'KG Red Hands', sans-serif" }}
+                    >
+                      {question}
+                    </h3>
                   </div>
-                ))}
-              </div>
-            </div>
-          </FadeUp>
+
+                  {/* Answer */}
+                  <p
+                    className="text-xs md:text-sm leading-relaxed flex-1"
+                    style={{ fontFamily: "'KG Red Hands', sans-serif", color: "rgba(255,255,255,0.55)" }}
+                  >
+                    {answer}
+                  </p>
+
+                  {/* Decorative corner accent */}
+                  <div
+                    className="absolute bottom-0 right-0 h-1.5 w-12 rounded-tl-full opacity-30 transition-all duration-500 group-hover:w-20 group-hover:opacity-100"
+                    style={{ background: GOLD }}
+                  />
+                </div>
+              </FadeUp>
+            );
+          })}
         </div>
       </div>
     </section>
@@ -3197,6 +3076,24 @@ function TransitionFilmStrip() {
  * flanked by two smaller stats. Bold typographic editorial moment.
  */
 function TransitionStats() {
+  const [packCount, setPackCount] = useState(3);
+
+  useEffect(() => {
+    const fetchCount = async () => {
+      try {
+        const { count, error } = await supabase
+          .from('packs')
+          .select('*', { count: 'exact', head: true });
+        if (!error && count !== null) {
+          setPackCount(count);
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    };
+    fetchCount();
+  }, []);
+
   return (
     <div
       className="relative overflow-hidden"
@@ -3234,24 +3131,17 @@ function TransitionStats() {
                 letterSpacing: "-0.04em",
               }}
             >
-              3
+              {packCount}
             </div>
             <div className="font-black text-white text-base sm:text-lg uppercase tracking-[0.15em] -mt-2" style={{ fontFamily: "'KG Red Hands', sans-serif" }}>
               Packs disponibles
             </div>
-            <a
-              href="#packs"
-              className="inline-flex items-center gap-2 mt-4 px-5 sm:px-6 py-2.5 rounded-full text-sm font-bold"
-              style={{ fontFamily: "'KG Red Hands', sans-serif", background: GOLD, color: NAVY }}
-            >
-              Voir les offres <ArrowRight size={14} />
-            </a>
           </FadeUp>
 
           {/* Right stat — hidden on mobile */}
           <FadeUp delay={0.2} className="text-center hidden sm:block">
             <div className="font-black leading-none" style={{ fontFamily: "'KG Red Hands', sans-serif", fontSize: "clamp(2.5rem, 5vw, 4rem)", color: "rgba(255,255,255,0.22)" }}>
-              <span className="text-2xl"></span>
+               <span className="text-2xl"></span>
             </div>
             <div className="text-[11px] font-semibold uppercase tracking-[0.2em] mt-2" style={{ fontFamily: "'KG Red Hands', sans-serif", color: "rgba(255,255,255,0.3)" }}>
               
@@ -3269,58 +3159,7 @@ function TransitionStats() {
  * The most visually dramatic CTA on the page.
  */
 function TransitionBookCTA() {
-  const content = useContent();
-  return (
-    <div className="relative overflow-hidden" style={{ minHeight: "240px" }}>
-      {/* Background photo */}
-      <img
-        src={content['transition_book_img'] || "https://images.unsplash.com/photo-1758272959533-201492a5d36c?w=1600&h=400&fit=crop&auto=format"}
-        alt=""
-        className="absolute inset-0 w-full h-full object-cover"
-        style={{ opacity: 0.28 }}
-      />
-      {/* Gold gradient overlay */}
-      <div className="absolute inset-0" style={{ background: `linear-gradient(135deg, ${NAVY}f0 0%, rgba(27,42,74,0.82) 50%, #F5A62388 100%)` }} />
-
-      {/* Top + bottom gold lines */}
-      <div className="absolute top-0 left-0 right-0 h-0.5" style={{ background: GOLD }} />
-      <div className="absolute bottom-0 left-0 right-0 h-0.5" style={{ background: GOLD }} />
-
-      <div className="relative flex flex-col items-center justify-center text-center px-4 sm:px-6 py-12 sm:py-16 gap-5 sm:gap-6">
-        <FadeUp>
-          <p className="text-xs font-bold uppercase tracking-[0.28em] mb-2" style={{ fontFamily: "'KG Red Hands', sans-serif", color: GOLD }}>
-            Réservation en ligne · Réponse sous 24h
-          </p>
-          <h2
-            className="font-black leading-none"
-            style={{ fontFamily: "'KG Red Hands', sans-serif", fontSize: "clamp(1.6rem, 5vw, 3.8rem)", color: "#fff", letterSpacing: "-0.03em" }}
-          >
-            Prêt à vivre l'aventure ?
-          </h2>
-        </FadeUp>
-        <FadeUp delay={0.12} className="flex flex-wrap gap-3 justify-center">
-          <motion.a
-            href="#reservation"
-            whileHover={{ scale: 1.06, boxShadow: "0 12px 36px rgba(245,166,35,0.5)" }}
-            whileTap={{ scale: 0.97 }}
-            className="inline-flex items-center gap-2 px-5 sm:px-8 py-3 sm:py-4 rounded-2xl font-black text-sm sm:text-base"
-            style={{ fontFamily: "'KG Red Hands', sans-serif", background: GOLD, color: NAVY }}
-          >
-            Réserver maintenant <ArrowRight size={16} />
-          </motion.a>
-          <motion.a
-            href="tel:+21671790501"
-            whileHover={{ scale: 1.06 }}
-            whileTap={{ scale: 0.97 }}
-            className="inline-flex items-center gap-2 px-5 sm:px-8 py-3 sm:py-4 rounded-2xl font-bold text-sm sm:text-base"
-            style={{ fontFamily: "'KG Red Hands', sans-serif", background: "rgba(255,255,255,0.08)", color: "#fff", border: "1.5px solid rgba(255,255,255,0.2)" }}
-          >
-            <Phone size={15} /> +216 71 790 501
-          </motion.a>
-        </FadeUp>
-      </div>
-    </div>
-  );
+  return null;
 }
 
 
@@ -3674,103 +3513,179 @@ function HeroAboutSeparator() {
 
 // ─── Event Management Section ────────────────────────────────────────────────
 function EventManagementSection() {
-  const eventsServices: { title: string; desc: string; icon: React.ElementType; color: string }[] = [
+  const eventsServices = [
     {
       title: "Team Building & Corporate",
       desc: "Renforcez la cohésion de vos équipes avec des challenges sur mesure, des chasses au trésor et des parcours d'aventure en pleine nature.",
       icon: Building2,
-      color: "#3B82F6",
+      color: "#4FD1C5",
     },
     {
       title: "Anniversaires & Fêtes",
       desc: "Des formules complètes pour petits et grands : gâteau, animateurs dédiés, activités encadrées et moments inoubliables assurés.",
       icon: PartyPopper,
-      color: "#22C55E",
+      color: "#F6AD55",
     },
     {
       title: "Sorties Scolaires & Clubs",
       desc: "Sensibilisation à l'environnement et dépassement de soi à travers des ateliers scientifiques et des parcours sportifs adaptés à tous les âges.",
       icon: Bus,
-      color: "#8B5CF6",
+      color: "#FC8181",
     },
     {
       title: "Événements sur Mesure",
       desc: "Que ce soit pour une fête de famille, un enterrement de vie de célibataire ou un événement associatif, nous personnalisons chaque détail.",
       icon: Sparkles,
-      color: "#F5A623",
+      color: "#B794F4",
     },
   ];
 
+  const eventMarqueeWords = ["ÉVÉNEMENTS", "TEAM BUILDING", "CORPORATE", "ANNIVERSAIRES", "SORTIES", "SUR MESURE", "YAKOO EVENTS", "TUNISIE"];
+
   return (
-    <section id="evenements" className="relative overflow-hidden py-24" style={{ background: "#07101f" }}>
-      {/* Ambient glows */}
-      <div className="absolute top-1/2 right-0 w-[500px] h-[500px] rounded-full blur-[150px] opacity-[0.06] pointer-events-none" style={{ background: GOLD }} />
-      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full blur-[140px] opacity-[0.04] pointer-events-none" style={{ background: "#a78bfa" }} />
+    <section id="evenements" className="relative overflow-hidden py-24" style={{ background: "#F4F6F9" }}>
+
+      {/* ── Same animated marquee as About section ── */}
+      <style>{`
+        @keyframes ev-marquee { from { transform: translateX(0) } to { transform: translateX(-50%) } }
+        @keyframes ev-marquee-r { from { transform: translateX(-50%) } to { transform: translateX(0) } }
+        .ev-marquee-1 { animation: ev-marquee 28s linear infinite; }
+        .ev-marquee-2 { animation: ev-marquee-r 36s linear infinite; }
+      `}</style>
+
+      <div className="absolute inset-0 flex flex-col justify-center overflow-hidden pointer-events-none select-none" style={{ opacity: 0.04 }}>
+        <div className="ev-marquee-1 whitespace-nowrap flex gap-16 mb-6">
+          {[...eventMarqueeWords, ...eventMarqueeWords].map((w, i) => (
+            <span key={i} className="font-black text-[7vw]" style={{ fontFamily: "'KG Red Hands', sans-serif", color: NAVY, letterSpacing: "-0.03em" }}>
+              {w} •
+            </span>
+          ))}
+        </div>
+        <div className="ev-marquee-2 whitespace-nowrap flex gap-16">
+          {[...eventMarqueeWords, ...eventMarqueeWords].reverse().map((w, i) => (
+            <span key={i} className="font-black text-[7vw]" style={{ fontFamily: "'KG Red Hands', sans-serif", color: GOLD, letterSpacing: "-0.03em" }}>
+              {w} •
+            </span>
+          ))}
+        </div>
+      </div>
+
+      {/* Soft radial glows */}
+      <div className="absolute top-0 right-0 w-[700px] h-[700px] rounded-full blur-[130px] opacity-50 pointer-events-none" style={{ background: "radial-gradient(circle, rgba(245,166,35,0.1) 0%, transparent 70%)" }} />
+      <div className="absolute bottom-0 left-[-5%] w-[500px] h-[500px] rounded-full blur-[100px] opacity-30 pointer-events-none" style={{ background: "radial-gradient(circle, rgba(27,42,74,0.06) 0%, transparent 70%)" }} />
+
+      {/* Decorative floating shapes */}
+      <div className="absolute top-16 left-10 w-20 h-20 rounded-full border-2 opacity-10 pointer-events-none" style={{ borderColor: GOLD }} />
+      <div className="absolute top-32 left-24 w-10 h-10 rounded-full opacity-10 pointer-events-none" style={{ background: GOLD }} />
+      <div className="absolute bottom-20 right-16 w-28 h-28 rounded-full border-2 opacity-8 pointer-events-none" style={{ borderColor: NAVY }} />
+      <div className="absolute bottom-36 right-8 w-6 h-6 rounded-full opacity-15 pointer-events-none" style={{ background: "#4FD1C5" }} />
+      <div className="absolute top-1/2 left-[5%] w-16 h-16 rotate-45 border-2 opacity-8 pointer-events-none" style={{ borderColor: NAVY }} />
+      <div className="absolute top-1/3 right-[8%] w-12 h-12 rotate-12 border-2 opacity-10 pointer-events-none" style={{ borderColor: GOLD }} />
 
       <div className="relative max-w-7xl mx-auto px-6 z-10">
-        <FadeUp className="grid lg:grid-cols-2 gap-6 items-end mb-16">
-          <div>
-            <div className="flex items-center gap-4 mb-6">
-              <div className="h-px w-10" style={{ background: GOLD }} />
-              <span className="text-xs font-black tracking-[0.3em] uppercase"
-                style={{ fontFamily: "'KG Red Hands', sans-serif", color: GOLD }}>
-                Organisation d'Événements
-              </span>
-            </div>
-            <h2 className="font-black leading-none"
-              style={{ fontFamily: "'KG Red Hands', sans-serif", fontSize: "clamp(2.5rem, 6vw, 4.5rem)", color: "#fff", letterSpacing: "-0.03em" }}>
-              Nous gérons<br />
-              <span style={{ color: "transparent", WebkitTextStroke: "2px " + GOLD }}>vos événements</span>
-            </h2>
+        {/* Centered Header */}
+        <FadeUp className="text-center mb-16 max-w-2xl mx-auto">
+          <div className="flex items-center justify-center gap-4 mb-6">
+            <div className="h-px w-10" style={{ background: GOLD }} />
+            <span className="text-xs font-black tracking-[0.3em] uppercase"
+              style={{ fontFamily: "'KG Red Hands', sans-serif", color: GOLD }}>
+              Organisation d'Événements
+            </span>
+            <div className="h-px w-10" style={{ background: GOLD }} />
           </div>
-          <div>
-            <p className="text-base leading-relaxed lg:pb-3 mb-6"
-              style={{ fontFamily: "'KG Red Hands', sans-serif", color: "rgba(255,255,255,0.60)", maxWidth: "520px" }}>
-              Yakoo Events prend en charge l'organisation de vos rassemblements de A à Z. Logistique, animation, restauration, sécurité : notre équipe de professionnels s'occupe de tout pour faire de votre projet une réussite totale.
-            </p>
-            <Button href="#reservation" icon={ArrowRight}>
-              Organiser mon événement
-            </Button>
-          </div>
+          <h2 className="font-black leading-none mb-4"
+            style={{ fontFamily: "'KG Red Hands', sans-serif", fontSize: "clamp(2.2rem, 5vw, 3.8rem)", color: NAVY, letterSpacing: "-0.03em" }}>
+            Nous gérons <span style={{ color: GOLD }}>vos événements</span>
+          </h2>
         </FadeUp>
 
+        {/* Premium Cards Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {eventsServices.map((s, i) => (
-            <FadeUp key={s.title} delay={i * 0.1}>
-              <div
-                className="rounded-3xl p-8 h-full relative group transition-all duration-300"
-                style={{
-                  background: "rgba(255,255,255,0.02)",
-                  border: "1.5px solid rgba(255,255,255,0.05)",
-                  boxShadow: "0 10px 30px rgba(0,0,0,0.2)",
-                }}
-              >
+          {eventsServices.map((s, i) => {
+            const badgeText = i === 0 ? "Corporate" : i === 1 ? "Fun" : i === 2 ? "Découverte" : "Unique";
+            const num = ["01", "02", "03", "04"][i];
+            return (
+              <FadeUp key={s.title} delay={i * 0.1}>
                 <div
-                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl"
+                  className="rounded-3xl overflow-hidden relative group transition-all duration-500 hover:-translate-y-4 flex flex-col"
                   style={{
-                    background: "radial-gradient(circle at top right, " + s.color + "15, transparent 65%)",
-                  }}
-                />
-                {/* Icon badge */}
-                <div
-                  className="w-14 h-14 rounded-2xl flex items-center justify-center mb-6 relative overflow-hidden"
-                  style={{
-                    background: `linear-gradient(135deg, ${s.color}28 0%, ${s.color}10 100%)`,
-                    border: `1.5px solid ${s.color}40`,
-                    boxShadow: `0 0 24px ${s.color}20`,
+                    background: "#ffffff",
+                    border: "1px solid rgba(0,0,0,0.06)",
+                    boxShadow: "0 4px 24px rgba(27,42,74,0.08), 0 1px 4px rgba(0,0,0,0.04)",
                   }}
                 >
-                  <s.icon size={26} strokeWidth={1.8} style={{ color: s.color }} />
+                  {/* Colored top accent band with icon */}
+                  <div
+                    className="relative flex flex-col items-center justify-center py-8 overflow-hidden"
+                    style={{ background: `linear-gradient(135deg, ${s.color}18 0%, ${s.color}08 100%)` }}
+                  >
+                    {/* Huge watermark number */}
+                    <span
+                      className="absolute -right-3 -top-3 font-black select-none pointer-events-none"
+                      style={{
+                        fontFamily: "'KG Red Hands', sans-serif",
+                        fontSize: "6rem",
+                        lineHeight: 1,
+                        color: s.color,
+                        opacity: 0.07,
+                        letterSpacing: "-0.05em",
+                      }}
+                    >{num}</span>
+
+                    {/* Large icon circle */}
+                    <div
+                      className="w-20 h-20 rounded-2xl flex items-center justify-center relative z-10 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-6"
+                      style={{
+                        background: `linear-gradient(145deg, ${s.color}28, ${s.color}10)`,
+                        border: `2px solid ${s.color}40`,
+                        boxShadow: `0 8px 24px ${s.color}30`,
+                      }}
+                    >
+                      <s.icon size={32} strokeWidth={1.8} style={{ color: s.color }} />
+                    </div>
+
+                    {/* Category pill */}
+                    <span
+                      className="mt-4 text-[9px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full relative z-10"
+                      style={{
+                        background: `${s.color}20`,
+                        color: s.color,
+                        border: `1px solid ${s.color}35`,
+                      }}
+                    >{badgeText}</span>
+
+                    {/* Colored bottom wave divider */}
+                    <div className="absolute bottom-0 left-0 right-0 h-4 pointer-events-none"
+                      style={{ background: "linear-gradient(to top, #ffffff, transparent)" }} />
+                  </div>
+
+                  {/* Card Body */}
+                  <div className="px-6 pb-7 pt-5 flex flex-col flex-1 gap-3">
+                    <h3
+                      className="font-black text-base leading-snug"
+                      style={{ fontFamily: "'KG Red Hands', sans-serif", color: NAVY }}
+                    >{s.title}</h3>
+                    <p
+                      className="text-xs leading-relaxed flex-1"
+                      style={{ fontFamily: "'KG Red Hands', sans-serif", color: "rgba(27,42,74,0.6)", letterSpacing: "0.01em" }}
+                    >{s.desc}</p>
+
+                    {/* Colored accent line that expands on hover */}
+                    <div
+                      className="h-[3px] w-8 group-hover:w-full transition-all duration-700 ease-out rounded-full mt-2"
+                      style={{ background: `linear-gradient(to right, ${s.color}, ${s.color}40)` }}
+                    />
+                  </div>
+
+                  {/* Hover colored glow border overlay */}
+                  <div
+                    className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl pointer-events-none"
+                    style={{ border: `2px solid ${s.color}60`, boxShadow: `0 16px 48px ${s.color}25` }}
+                  />
                 </div>
-                <h3 className="text-lg font-black text-white mb-3" style={{ fontFamily: "'KG Red Hands', sans-serif" }}>
-                  {s.title}
-                </h3>
-                <p className="text-sm leading-relaxed" style={{ fontFamily: "'KG Red Hands', sans-serif", color: "rgba(255,255,255,0.55)" }}>
-                  {s.desc}
-                </p>
-              </div>
-            </FadeUp>
-          ))}
+              </FadeUp>
+            );
+          })}
         </div>
       </div>
     </section>
@@ -3780,142 +3695,309 @@ function EventManagementSection() {
 // ─── Equipment Showcase Section ──────────────────────────────────────────────
 function EquipmentShowcaseSection() {
   const [equipments, setEquipments] = useState([]);
+  const [selectedEq, setSelectedEq] = useState<any | null>(null);
 
   useEffect(() => {
     const fetchPublicMateriels = async () => {
-      const { data, error } = await supabase.from('materiels').select('*');
-      if (!error && data) {
-        setEquipments(data);
+      try {
+        const { data, error } = await supabase.from('materiels').select('*');
+        if (!error && data) setEquipments(data);
+      } catch (e) {
+        console.error(e);
       }
     };
     fetchPublicMateriels();
   }, []);
 
-  const displayList = equipments.length > 0 ? equipments.map(eq => ({
-    name: eq.name,
-    category: eq.category,
-    location: eq.location || "Non spécifié",
-    status: eq.condition || "Bon",
-    desc: eq.description || "",
-    icon: eq.category === "Escalade" ? "🧗" : eq.category === "Kayak" ? "🛶" : eq.category === "Paintball" ? "🔫" : "⛺"
-  })) : [
-    {
-      name: "Harnais & Mousquetons",
-      category: "Escalade",
-      location: "Entrepôt Principal — Zone A, Étagère 1",
-      status: "Excellent état",
-      icon: "🧗",
-      desc: "Équipement de sécurité individuel haut de gamme de marque Edelrid, inspecté mensuellement.",
-    },
-    {
-      name: "Kayaks & Gilets",
-      category: "Kayak",
-      location: "Hangar à Bateaux — Près du Lac",
-      status: "Bon état",
-      icon: "🛶",
-      desc: "Kayaks monoplaces et biplaces robustes, avec gilets de sauvetage certifiés pour tous les âges.",
-    },
-    {
-      name: "Marqueurs & Masques Paintball",
-      category: "Paintball",
-      location: "Armurerie Paintball — Stand de Tir",
-      status: "Excellent état",
-      icon: "🔫",
-      desc: "Lanceurs Tippmann 98, masques antibuée double écran pour une protection et une visibilité optimales.",
-    },
-    {
-      name: "Tentes & Matelas Camping",
-      category: "Camping",
-      location: "Entrepôt Logistique — Secteur B",
-      status: "Excellent état",
-      icon: "⛺",
-      desc: "Tentes étanches Quechua de 2 à 4 places et matelas isolants confortables pour vos nuitées en nature.",
-    },
-  ];
+  const toImg = (img: any) => {
+    if (!img || typeof img !== 'string') return null;
+    if (img.startsWith('http')) return img;
+    return `https://images.unsplash.com/${img}?auto=format&fit=crop&w=900&q=80`;
+  };
+
+  const catEmoji = (cat: any) => {
+    const c = String(cat || '');
+    if (c.includes('Escalade')) return '🧗';
+    if (c.includes('Kayak')) return '🛶';
+    if (c.includes('Paintball')) return '🔫';
+    if (c.includes('Tyrolienne')) return '🪂';
+    if (c.includes('Sécurité')) return '🛡️';
+    return '⛺';
+  };
+
+  const displayList = equipments.length > 0
+    ? equipments.map((eq: any) => ({
+        name: eq.name || 'Équipement sans nom',
+        category: eq.category || 'Général',
+        location: eq.location || 'Non spécifié',
+        status: eq.condition || 'Bon',
+        desc: eq.description || '',
+        image: toImg(eq.image),
+        totalQty: eq.total_qty || 0,
+        availableQty: eq.available_qty || 0,
+        price: eq.rental_price_per_day || 0,
+        serial: eq.serial_number || '',
+        purchaseDate: eq.purchase_date || '',
+      }))
+    : [
+        { name: 'Harnais & Mousquetons', category: 'Escalade', location: 'Entrepôt Principal — Zone A, Étagère 1', status: 'Excellent', image: 'https://images.unsplash.com/photo-1522163182402-834f871fd851?auto=format&fit=crop&w=900&q=80', desc: 'Équipement de sécurité individuel haut de gamme de marque Edelrid, inspecté mensuellement.', totalQty: 30, availableQty: 18, price: 8, serial: '', purchaseDate: 'Jan 2024' },
+        { name: 'Kayaks & Gilets', category: 'Kayak', location: 'Hangar à Bateaux — Près du Lac', status: 'Bon', image: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=900&q=80', desc: 'Kayaks monoplaces et biplaces robustes, avec gilets de sauvetage certifiés pour tous les âges.', totalQty: 12, availableQty: 7, price: 45, serial: '', purchaseDate: 'Mar 2023' },
+        { name: 'Marqueurs & Masques Paintball', category: 'Paintball', location: 'Armurerie Paintball — Stand de Tir', status: 'Excellent', image: 'https://images.unsplash.com/photo-1593697821252-0c213d7b4f3f?auto=format&fit=crop&w=900&q=80', desc: 'Lanceurs Tippmann 98, masques antibuée double écran pour une protection et une visibilité optimales.', totalQty: 25, availableQty: 25, price: 15, serial: '', purchaseDate: 'Nov 2023' },
+        { name: 'Tentes & Matelas Camping', category: 'Camping', location: 'Entrepôt Logistique — Secteur B', status: 'Excellent', image: 'https://images.unsplash.com/photo-1478131143081-80f7f84ca84d?auto=format&fit=crop&w=900&q=80', desc: 'Tentes étanches Quechua de 2 à 4 places et matelas isolants confortables pour vos nuitées en nature.', totalQty: 15, availableQty: 9, price: 20, serial: '', purchaseDate: 'Avr 2022' },
+      ];
+
+  const condColor = (s: string) => {
+    const val = String(s || '').toLowerCase();
+    if (val.includes('excell')) return '#22C55E';
+    if (val.includes('bon')) return '#3B82F6';
+    if (val.includes('usag') || val.includes('moyen')) return '#F5A623';
+    return '#EF4444';
+  };
 
   return (
-    <section id="equipements" className="relative overflow-hidden py-24" style={{ background: "#040914" }}>
-      {/* Subtle grid pattern */}
+    <section id="equipements" className="relative overflow-hidden py-24" style={{ background: '#040914' }}>
       <div className="absolute inset-0 opacity-[0.02]"
-        style={{ backgroundImage: "linear-gradient(rgba(255,255,255,1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,1) 1px, transparent 1px)", backgroundSize: "64px 64px" }} />
-      
-      {/* Ambient glows */}
+        style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,1) 1px, transparent 1px)', backgroundSize: '64px 64px' }} />
       <div className="absolute bottom-0 right-0 w-[600px] h-[600px] rounded-full blur-[180px] opacity-[0.04] pointer-events-none" style={{ background: GOLD }} />
-      
+
       <div className="relative max-w-7xl mx-auto px-6 z-10">
-        <FadeUp className="mb-16">
-          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8">
-            <div>
-              <div className="flex items-center gap-4 mb-6">
-                <div className="h-px w-12" style={{ background: GOLD }} />
-                <span className="text-[11px] font-black tracking-[0.3em] uppercase" style={{ fontFamily: "'KG Red Hands', sans-serif", color: GOLD }}>
-                  Sécurité & Logistique
-                </span>
-              </div>
-              <h2 className="font-black leading-none" style={{ fontFamily: "'KG Red Hands', sans-serif", fontSize: "clamp(2.5rem, 6vw, 4.5rem)", color: "#fff", letterSpacing: "-0.04em" }}>
-                Nos Matériels<br />
-                <span style={{ color: "transparent", WebkitTextStroke: "2px " + GOLD }}>& Équipements</span>
-              </h2>
-            </div>
-            <p className="text-base leading-relaxed max-w-md" style={{ fontFamily: "'KG Red Hands', sans-serif", color: "rgba(255,255,255,0.6)" }}>
-              Nous garantissons une sécurité maximale grâce à des équipements de premier choix. Tous nos matériels sont stockés dans des emplacements dédiés et inspectés quotidiennement par nos moniteurs qualifiés.
-            </p>
+        {/* Centered Header */}
+        <FadeUp className="text-center mb-16 max-w-2xl mx-auto">
+          <div className="flex items-center justify-center gap-4 mb-6">
+            <div className="h-px w-10" style={{ background: GOLD }} />
+            <span className="text-[11px] font-black tracking-[0.3em] uppercase"
+              style={{ fontFamily: "'KG Red Hands', sans-serif", color: GOLD }}>
+              Sécurité &amp; Logistique
+            </span>
+            <div className="h-px w-10" style={{ background: GOLD }} />
           </div>
+          <h2 className="font-black leading-none"
+            style={{ fontFamily: "'KG Red Hands', sans-serif", fontSize: 'clamp(2.2rem, 5vw, 3.8rem)', color: '#fff', letterSpacing: '-0.04em' }}>
+            Nos Matériels <span style={{ color: 'transparent', WebkitTextStroke: '2px ' + GOLD }}>&amp; Équipements</span>
+          </h2>
         </FadeUp>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
+        {/* Upgraded Cards Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {displayList.map((eq, i) => (
-            <FadeUp key={eq.name} delay={i * 0.1}>
-              <div
-                className="rounded-[32px] p-8 relative overflow-hidden group transition-all duration-300"
+            <FadeUp key={eq.name} delay={i * 0.08}>
+              <motion.div
+                onClick={() => setSelectedEq(eq)}
+                whileHover={{ y: -6, scale: 1.01 }}
+                transition={{ duration: 0.3 }}
+                className="rounded-3xl overflow-hidden cursor-pointer relative group flex flex-col"
                 style={{
-                  background: "rgba(255,255,255,0.02)",
-                  border: "1.5px solid rgba(255,255,255,0.05)",
+                  background: 'linear-gradient(145deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 100%)',
+                  border: '1.5px solid rgba(255,255,255,0.06)',
+                  boxShadow: '0 20px 40px rgba(0,0,0,0.4)',
+                  backdropFilter: 'blur(8px)',
                 }}
               >
-                <div className="flex items-start gap-5">
-                  <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl flex-shrink-0" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}>
-                    {eq.icon}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex flex-wrap items-center gap-2.5 mb-2">
-                      <h3 className="text-lg font-black text-white" style={{ fontFamily: "'KG Red Hands', sans-serif" }}>
-                        {eq.name}
-                      </h3>
-                      <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider" style={{ background: GOLD + "20", color: GOLD, border: "1px solid " + GOLD + "40" }}>
-                        {eq.category}
-                      </span>
-                    </div>
-                    
-                    <p className="text-sm leading-relaxed mb-5" style={{ fontFamily: "'KG Red Hands', sans-serif", color: "rgba(255,255,255,0.55)" }}>
-                      {eq.desc}
-                    </p>
+                {/* Gold border glow on hover */}
+                <div
+                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl pointer-events-none z-10"
+                  style={{
+                    border: `1.5px solid ${GOLD}`,
+                    boxShadow: `inset 0 0 15px ${GOLD}18, 0 0 20px ${GOLD}12`,
+                  }}
+                />
 
-                    <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 gap-3 sm:gap-4 pt-4 border-t" style={{ borderColor: "rgba(255,255,255,0.05)" }}>
-                      <div>
-                        <div className="text-[10px] font-black uppercase tracking-[0.1em] mb-1" style={{ fontFamily: "'KG Red Hands', sans-serif", color: "rgba(255,255,255,0.4)" }}>
-                          Emplacement
-                        </div>
-                        <div className="text-xs font-bold text-white flex items-center gap-1.5" style={{ fontFamily: "'KG Red Hands', sans-serif" }}>
-                          📍 {eq.location}
-                        </div>
-                      </div>
-                      <div>
-                        <div className="text-[10px] font-black uppercase tracking-[0.1em] mb-1" style={{ fontFamily: "'KG Red Hands', sans-serif", color: "rgba(255,255,255,0.4)" }}>
-                          État de fonctionnement
-                        </div>
-                        <div className="text-xs font-bold flex items-center gap-1.5" style={{ fontFamily: "'KG Red Hands', sans-serif", color: "#22C55E" }}>
-                          🛡️ {eq.status}
-                        </div>
-                      </div>
+                {/* Photo */}
+                <div className="relative h-48 overflow-hidden">
+                  {eq.image
+                    ? <img src={eq.image} alt={eq.name} className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110" />
+                    : <div className="w-full h-full flex items-center justify-center text-5xl" style={{ background: 'rgba(255,255,255,0.03)' }}>{catEmoji(eq.category)}</div>
+                  }
+                  {/* Gradient vignette */}
+                  <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(7,16,31,0.85) 0%, transparent 55%)' }} />
+
+                  {/* Category badge */}
+                  <span className="absolute top-3 left-3 px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-wider"
+                    style={{ background: 'rgba(4,9,20,0.75)', color: GOLD, border: '1px solid ' + GOLD + '35', backdropFilter: 'blur(6px)' }}>
+                    {eq.category}
+                  </span>
+
+                  {/* Availability */}
+                  {eq.availableQty !== undefined && (
+                    <span className="absolute top-3 right-3 px-2.5 py-1 rounded-full text-[9px] font-black"
+                      style={{
+                        background: eq.availableQty > 0 ? 'rgba(34,197,94,0.15)' : 'rgba(239,68,68,0.15)',
+                        color: eq.availableQty > 0 ? '#22C55E' : '#EF4444',
+                        border: `1px solid ${eq.availableQty > 0 ? 'rgba(34,197,94,0.3)' : 'rgba(239,68,68,0.3)'}`,
+                        backdropFilter: 'blur(6px)'
+                      }}>
+                      {eq.availableQty > 0 ? `${eq.availableQty} dispo` : 'Indispo'}
+                    </span>
+                  )}
+
+                  {/* View icon overlay */}
+                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <div
+                      className="w-11 h-11 rounded-full flex items-center justify-center scale-75 group-hover:scale-100 transition-transform duration-300"
+                      style={{ background: GOLD, boxShadow: `0 0 20px ${GOLD}60` }}
+                    >
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#040914" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+                      </svg>
                     </div>
                   </div>
                 </div>
-              </div>
+
+                {/* Info */}
+                <div className="p-5 flex flex-col gap-3 flex-1">
+                  <h3 className="font-black text-white text-sm leading-tight" style={{ fontFamily: "'KG Red Hands', sans-serif" }}>{eq.name}</h3>
+                  <p className="text-[11px] leading-relaxed line-clamp-2 flex-1" style={{ fontFamily: "'KG Red Hands', sans-serif", color: 'rgba(255,255,255,0.45)' }}>{eq.desc}</p>
+                  <div className="flex items-center justify-between pt-2" style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+                    <div className="flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full" style={{ background: condColor(eq.status) }} />
+                      <span className="text-[10px] font-semibold" style={{ fontFamily: "'KG Red Hands', sans-serif", color: 'rgba(255,255,255,0.45)' }}>{eq.status}</span>
+                    </div>
+                    {eq.price && (
+                      <span className="text-[10px] font-black" style={{ color: GOLD }}>{eq.price} TND/j</span>
+                    )}
+                  </div>
+                </div>
+              </motion.div>
             </FadeUp>
           ))}
         </div>
       </div>
+
+      {/* ── Equipment Detail Modal ── */}
+      {selectedEq && createPortal(
+        <AnimatePresence>
+          <motion.div
+            key="equipmentModal"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 z-[9999] flex items-center justify-center p-4"
+            style={{ background: 'rgba(4,9,20,0.9)', backdropFilter: 'blur(16px)' }}
+            onClick={() => setSelectedEq(null)}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.88, y: 32 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.92, y: 20 }}
+              transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
+              onClick={e => e.stopPropagation()}
+              className="relative w-full max-w-xl overflow-hidden rounded-3xl"
+              style={{ background: 'linear-gradient(160deg, #0d1f3c 0%, #07101f 100%)', border: '1.5px solid rgba(255,255,255,0.08)', boxShadow: '0 40px 80px rgba(0,0,0,0.6)' }}
+            >
+              {/* ── Photo header ── */}
+              <div className="relative h-64 overflow-hidden">
+                {selectedEq.image
+                  ? <img src={selectedEq.image} alt={selectedEq.name} className="w-full h-full object-cover" />
+                  : <div className="w-full h-full flex items-center justify-center text-8xl" style={{ background: 'rgba(255,255,255,0.03)' }}>{catEmoji(selectedEq.category)}</div>
+                }
+                {/* Gradient overlay */}
+                <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(7,16,31,1) 0%, rgba(7,16,31,0.5) 50%, rgba(7,16,31,0.15) 100%)' }} />
+
+                {/* Close */}
+                <button
+                  onClick={() => setSelectedEq(null)}
+                  className="absolute top-4 right-4 w-9 h-9 rounded-full flex items-center justify-center transition-colors hover:bg-white/10"
+                  style={{ background: 'rgba(0,0,0,0.45)', border: '1px solid rgba(255,255,255,0.12)', color: '#fff' }}
+                >
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+                </button>
+
+                {/* Badges */}
+                <div className="absolute top-4 left-4 flex gap-2 flex-wrap">
+                  <span className="px-3 py-1 rounded-full text-[11px] font-black uppercase tracking-wider"
+                    style={{ background: GOLD + '22', color: GOLD, border: '1px solid ' + GOLD + '50' }}>
+                    {selectedEq.category}
+                  </span>
+                  {selectedEq.availableQty !== undefined && (
+                    <span className="px-3 py-1 rounded-full text-[11px] font-black"
+                      style={{ background: selectedEq.availableQty > 0 ? 'rgba(34,197,94,0.18)' : 'rgba(239,68,68,0.18)', color: selectedEq.availableQty > 0 ? '#22C55E' : '#EF4444', border: `1px solid ${selectedEq.availableQty > 0 ? 'rgba(34,197,94,0.3)' : 'rgba(239,68,68,0.3)'}` }}>
+                      {selectedEq.availableQty > 0 ? `${selectedEq.availableQty} disponible${selectedEq.availableQty > 1 ? 's' : ''}` : 'Indisponible'}
+                    </span>
+                  )}
+                </div>
+
+                {/* Name on photo */}
+                <div className="absolute bottom-0 left-0 right-0 px-6 pb-5">
+                  <h2 className="text-2xl font-black text-white leading-tight" style={{ fontFamily: "'KG Red Hands', sans-serif" }}>
+                    {selectedEq.name}
+                  </h2>
+                </div>
+              </div>
+
+              {/* ── Content ── */}
+              <div className="px-6 pt-4 pb-6">
+                {/* Description */}
+                <p className="text-sm leading-relaxed mb-5" style={{ fontFamily: "'KG Red Hands', sans-serif", color: 'rgba(255,255,255,0.62)' }}>
+                  {selectedEq.desc}
+                </p>
+
+                {/* Specs grid */}
+                <div className="grid grid-cols-2 gap-3 mb-5">
+                  {/* État */}
+                  <div className="rounded-2xl p-3.5" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)' }}>
+                    <div className="text-[9px] font-black uppercase tracking-widest mb-1.5" style={{ fontFamily: "'KG Red Hands', sans-serif", color: 'rgba(255,255,255,0.3)' }}>État</div>
+                    <div className="flex items-center gap-1.5">
+                      <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: condColor(selectedEq.status) }} />
+                      <span className="text-sm font-bold" style={{ fontFamily: "'KG Red Hands', sans-serif", color: condColor(selectedEq.status) }}>{selectedEq.status || 'Non spécifié'}</span>
+                    </div>
+                  </div>
+
+                  {/* Prix */}
+                  <div className="rounded-2xl p-3.5" style={{ background: GOLD + '12', border: '1px solid ' + GOLD + '25' }}>
+                    <div className="text-[9px] font-black uppercase tracking-widest mb-1.5" style={{ fontFamily: "'KG Red Hands', sans-serif", color: 'rgba(255,255,255,0.3)' }}>Location / jour</div>
+                    <div className="text-sm font-black" style={{ fontFamily: "'KG Red Hands', sans-serif", color: GOLD }}>
+                      {selectedEq.price ? `${selectedEq.price} TND` : 'Gratuit / Inclus'}
+                    </div>
+                  </div>
+
+                  {/* Quantités */}
+                  <div className="rounded-2xl p-3.5" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)' }}>
+                    <div className="text-[9px] font-black uppercase tracking-widest mb-1.5" style={{ fontFamily: "'KG Red Hands', sans-serif", color: 'rgba(255,255,255,0.3)' }}>Stock</div>
+                    <div className="text-sm font-bold text-white" style={{ fontFamily: "'KG Red Hands', sans-serif" }}>
+                      {selectedEq.availableQty ?? 0} <span style={{ color: 'rgba(255,255,255,0.35)', fontWeight: 400 }}>/ {selectedEq.totalQty ?? 0} unités</span>
+                    </div>
+                  </div>
+
+                  {/* Emplacement */}
+                  <div className="rounded-2xl p-3.5" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)' }}>
+                    <div className="text-[9px] font-black uppercase tracking-widest mb-1.5" style={{ fontFamily: "'KG Red Hands', sans-serif", color: 'rgba(255,255,255,0.3)' }}>Emplacement</div>
+                    <div className="text-xs font-bold text-white leading-snug" style={{ fontFamily: "'KG Red Hands', sans-serif" }}>📍 {selectedEq.location || 'Non spécifié'}</div>
+                  </div>
+
+                  {/* Date d'achat */}
+                  <div className="rounded-2xl p-3.5" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)' }}>
+                    <div className="text-[9px] font-black uppercase tracking-widest mb-1.5" style={{ fontFamily: "'KG Red Hands', sans-serif", color: 'rgba(255,255,255,0.3)' }}>Date d'achat</div>
+                    <div className="text-xs font-bold text-white leading-snug" style={{ fontFamily: "'KG Red Hands', sans-serif" }}>📅 {selectedEq.purchaseDate || 'Non spécifiée'}</div>
+                  </div>
+
+                  {/* N° de série */}
+                  <div className="rounded-2xl p-3.5" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)' }}>
+                    <div className="text-[9px] font-black uppercase tracking-widest mb-1.5" style={{ fontFamily: "'KG Red Hands', sans-serif", color: 'rgba(255,255,255,0.3)' }}>N° de série</div>
+                    <div className="text-xs font-bold text-white font-mono" style={{ fontFamily: "'DM Mono', monospace" }}>{selectedEq.serial || 'N/A'}</div>
+                  </div>
+                </div>
+
+                {/* CTA */}
+                <motion.a
+                  href="#reservation"
+                  onClick={() => setSelectedEq(null)}
+                  whileHover={{ scale: 1.02, boxShadow: '0 12px 35px rgba(245,166,35,0.4)' }}
+                  whileTap={{ scale: 0.97 }}
+                  className="w-full flex items-center justify-center gap-3 rounded-2xl font-black text-sm"
+                  style={{ fontFamily: "'KG Red Hands', sans-serif", background: GOLD, color: NAVY, padding: '14px 24px', textDecoration: 'none' }}
+                >
+                  Réserver cet équipement
+                  <div className="w-7 h-7 rounded-full flex items-center justify-center" style={{ background: 'rgba(4,12,24,0.15)' }}>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                  </div>
+                </motion.a>
+              </div>
+            </motion.div>
+          </motion.div>
+        </AnimatePresence>,
+        document.body
+      )}
     </section>
   );
 }
