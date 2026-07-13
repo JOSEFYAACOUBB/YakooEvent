@@ -406,7 +406,7 @@ function Navbar() {
                 className="text-center text-xs mt-4"
                 style={{ fontFamily: "'KG Red Hands', sans-serif", color: "rgba(255,255,255,0.2)" }}
               >
-                +216 71 790 501 · Tunis, Tunisie
+                +216  56 501 005· Tunis, Tunisie
               </p>
             </div>
           </motion.div>
@@ -464,7 +464,6 @@ function Hero() {
   const content = useContent();
 
   const title = content['hero_title'] || "VOULEZ PLUS PRENEZ TOUT";
-  const subtitle = content['hero_subtitle'] || "Stage Adrénaline · Tunis, Tunisie";
   const overlayOpacity = content['hero_overlay'] ? Number(content['hero_overlay']) / 100 : 0.65;
   const titleWords = title.split(" ");
 
@@ -524,9 +523,7 @@ function Hero() {
           className="flex items-center gap-3 mb-8"
         >
           <div className="w-8 h-px" style={{ background: GOLD }} />
-          <span className="text-[11px] font-black tracking-[0.3em] uppercase" style={{ fontFamily: "'KG Red Hands', sans-serif", color: GOLD }}>
-            Agence Événementielle Nature
-          </span>
+        
         </motion.div>
 
         {/* ── HEADLINE ── */}
@@ -589,7 +586,7 @@ function Hero() {
               className="text-xs sm:text-sm font-semibold tracking-[0.2em] uppercase"
               style={{ fontFamily: "'KG Red Hands', sans-serif", color: "rgba(255,255,255,0.7)" }}
             >
-              {subtitle}
+              
             </span>
           </motion.div>
 
@@ -601,7 +598,7 @@ function Hero() {
             className="mt-6 text-sm sm:text-base leading-relaxed max-w-xl font-medium"
             style={{ fontFamily: "'KG Red Hands', sans-serif", color: "rgba(255,255,255,0.55)" }}
           >
-            Votre agence spécialisée en activités de plein air, team building de groupe et aventures sportives en pleine nature.
+            Chez Yakoo Event, les grands espaces deviennent vos terrains de jeu. Oubliez les salles impersonnelles : vivez une expérience qui sort du cadre, littéralement.
           </motion.p>
 
           {/* CTAs */}
@@ -623,32 +620,10 @@ function Hero() {
 
 
       {/* Scroll mouse indicator */}
-      <motion.div
-        className="absolute left-1/2 bottom-20 -translate-x-1/2 hidden lg:flex flex-col items-center gap-2"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 2 }}
-      >
-        <motion.div
-          animate={{ y: [0, 7, 0] }}
-          transition={{ duration: 1.4, repeat: Infinity, ease: "easeInOut" }}
-          className="w-5 h-8 rounded-full border-2 flex items-start justify-center pt-1.5"
-          style={{ borderColor: "rgba(255,255,255,0.2)" }}
-        >
-          <div className="w-1 h-1.5 rounded-full" style={{ background: GOLD }} />
-        </motion.div>
+    
 
-        <span
-          className="text-[9px] uppercase tracking-widest"
-          style={{
-            fontFamily: "'KG Red Hands', sans-serif",
-            color: "rgba(255,255,255,0.2)",
-            writingMode: "vertical-rl"
-          }}
-        >
-          Défiler
-        </span>
-      </motion.div>
+        
+     
     </section>
   );
 }
@@ -660,22 +635,22 @@ const ABOUT_PILLARS = [
   {
     icon: <Shield size={22} />,
     title: "Sécurité absolue",
-    desc: "Tous nos encadrants sont certifiés. Équipements homologués et contrôlés avant chaque session.",
+    desc: "Encadrement certifié, matériel homologué. Rien n'est laissé au hasard.",
   },
   {
     icon: <Trees size={22} />,
     title: "En pleine nature",
-    desc: "3 hectares de parc forestier préservé. Un cadre naturel unique à seulement quelques minutes de Tunis.",
+    desc: "Un parc forestier de 3 hectares, calme et préservé. Le cadre idéal pour vos événements.",
   },
   {
     icon: <Leaf size={22} />,
     title: "Éco-responsable",
-    desc: "Engagement fort pour la préservation de l'environnement naturel et des espèces locales.",
+    desc: "Une démarche durable pour protéger la faune, la flore et les paysages qui nous entourent.",
   },
   {
     icon: <Zap size={22} />,
     title: "Adrénaline garantie",
-    desc: "22 activités conçues pour dépasser vos limites et créer des souvenirs inoubliables.",
+    desc: "15+ activités pour vivre des moments forts en équipe et repartir avec des étoiles dans les yeux.",
   },
 ];
 
@@ -1175,7 +1150,7 @@ function Activities() {
       <div className="relative max-w-7xl mx-auto px-6 pt-24 pb-20">
         <Reveal>
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-black text-white mb-6 tracking-tight uppercase" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+            <h2 className="text-4xl md:text-5xl font-black text-white mb-6 tracking-tight uppercase" style={{  fontFamily: "'KG Red Hands', sans-serif"}}>
               Nos <span style={{ color: GOLD }}>Activités</span>
             </h2>
             <p className="text-lg max-w-2xl mx-auto" style={{ color: TEXT_MUTED }}>
@@ -1422,13 +1397,21 @@ const PACKS_DATA = [
 
 function Packs() {
   const [hovered, setHovered] = useState<string | null>(null);
-  const [packsData, setPacksData] = useState<any[]>(PACKS_DATA);
+  const [packsData, setPacksData] = useState<any[]>([]);
+  const [selectedPack, setSelectedPack] = useState<any | null>(null);
+  const [modalOpen, setModalOpen]       = useState(false);
+  
+  const [name, setName]                 = useState("");
+  const [phone, setPhone]               = useState("");
+  const [date, setDate]                 = useState("");
+  const [message, setMessage]           = useState("");
+  const [submitting, setSubmitting]     = useState(false);
+  const [success, setSuccess]           = useState(false);
 
   useEffect(() => {
     const fetchPacks = async () => {
       const { data } = await supabase.from('packs').select('*').order('price', { ascending: true });
       if (data && data.length > 0) {
-        // Merge with static styles based on tier name
         const styles: Record<string, any> = {
           "SILVER": { color: "#94a3b8", gradientFrom: "#94a3b8", gradientTo: "#cbd5e1" },
           "GOLD": { color: "#F5A623", gradientFrom: "#F5A623", gradientTo: "#f59e0b" },
@@ -1452,31 +1435,66 @@ function Packs() {
         });
         setPacksData(mappedPacks);
       } else {
-        setPacksData(PACKS_DATA); // fallback to original static data if db empty
+        setPacksData(PACKS_DATA);
       }
     };
     fetchPacks();
   }, []);
 
+  const handleOpenModal = (pack: any) => {
+    setSelectedPack(pack);
+    setModalOpen(true);
+    setSuccess(false);
+    setName("");
+    setPhone("");
+    setDate("");
+    setMessage("");
+  };
+
+  const handleBookPack = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!name || !phone || !date) {
+      alert("Veuillez remplir tous les champs obligatoires.");
+      return;
+    }
+
+    setSubmitting(true);
+    const dbNotes = `Réservation de Pack : ${selectedPack.tier} (${selectedPack.tagline}). Activités incluses: ${selectedPack.description || "—"}.${message ? ` Message client : ${message}` : ""}`;
+    
+    const { error } = await supabase.from('reservations').insert({
+      activity_name: `Pack ${selectedPack.tier}`,
+      group_size: selectedPack.gamesCount || 1,
+      reservation_date: date,
+      contact_name: name,
+      contact_phone: phone,
+      notes: dbNotes,
+      booking_details: { pack: selectedPack.tier, activities: selectedPack.description },
+      status: 'pending'
+    });
+
+    setSubmitting(false);
+    if (!error) {
+      setSuccess(true);
+    } else {
+      alert("Erreur lors de la réservation : " + error.message);
+    }
+  };
+
   return (
+    <>
     <section id="packs" className="py-32 relative overflow-hidden" style={{ background: "#07101f" }}>
-      {/* Background grid texture */}
       <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: "radial-gradient(circle at 1px 1px, white 1px, transparent 0)", backgroundSize: "48px 48px" }} />
-      
-      {/* Radial glow */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[400px] rounded-full opacity-[0.07] blur-[100px] pointer-events-none" style={{ background: GOLD }} />
       <div className="absolute bottom-0 right-0 w-[500px] h-[500px] rounded-full opacity-[0.05] blur-[80px] pointer-events-none" style={{ background: "#a78bfa" }} />
 
       <div className="relative max-w-7xl mx-auto px-6 z-10">
-
-        {/* ── Header ── */}
         <FadeUp className="mb-20">
           <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 border-b pb-12" style={{ borderColor: "rgba(255,255,255,0.07)" }}>
             <div>
               <div className="flex items-center gap-4 mb-6">
                 <div className="h-px w-12" style={{ background: GOLD }} />
                 <span className="text-xs font-black tracking-[0.3em] uppercase" style={{ color: GOLD, fontFamily: "'KG Red Hands', sans-serif" }}>
-                  Nos offres sur mesure
+                  Packs disponibles
                 </span>
               </div>
               <h2 className="font-black leading-none" style={{ fontFamily: "'KG Red Hands', sans-serif", fontSize: "clamp(3.5rem, 8vw, 6rem)", color: "#fff", letterSpacing: "-0.04em" }}>
@@ -1484,11 +1502,9 @@ function Packs() {
                 <span style={{ color: "transparent", WebkitTextStroke: "2px rgba(255,255,255,0.2)" }}>votre Pack</span>
               </h2>
             </div>
-            
           </div>
         </FadeUp>
 
-        {/* ── Pack Cards ── */}
         <div className="grid md:grid-cols-3 gap-6 lg:gap-8">
           {packsData.map((pack, i) => {
             const isHov = hovered === pack.tier;
@@ -1512,7 +1528,6 @@ function Packs() {
                     boxShadow: isHov ? `0 40px 80px -20px ${pack.color}40` : isGold ? `0 20px 60px -20px ${pack.color}25` : "none",
                   }}
                 >
-                  {/* Popular badge */}
                   {pack.badge && (
                     <div className="absolute top-5 right-5 z-10">
                       <span
@@ -1524,16 +1539,12 @@ function Packs() {
                     </div>
                   )}
 
-                  {/* Top colour band */}
                   <div
                     className="relative h-2 w-full flex-shrink-0"
                     style={{ background: `linear-gradient(90deg, ${pack.gradientFrom}, ${pack.gradientTo})` }}
                   />
 
-                  {/* Card Body */}
                   <div className="p-8 flex flex-col flex-1">
-
-                    {/* Tier label */}
                     <div className="flex items-start justify-between mb-8">
                       <div>
                         <p className="text-[10px] font-black uppercase tracking-[0.3em] mb-2" style={{ color: pack.color, fontFamily: "'KG Red Hands', sans-serif" }}>
@@ -1547,7 +1558,6 @@ function Packs() {
                         </p>
                       </div>
 
-                      {/* Big number accent */}
                       <div className="text-right flex-shrink-0">
                         <span className="font-black leading-none" style={{ fontFamily: "'KG Red Hands', sans-serif", fontSize: "4rem", color: pack.color, opacity: 0.15 }}>
                           {pack.gamesCount}
@@ -1555,7 +1565,6 @@ function Packs() {
                       </div>
                     </div>
 
-                    {/* Activities chips */}
                     <div className="mb-6">
                       <p className="text-[10px] font-black uppercase tracking-[0.2em] mb-3" style={{ color: pack.color, fontFamily: "'KG Red Hands', sans-serif" }}>
                         {pack.gamesCount > 0 ? `${pack.gamesCount} activités incluses` : "Activités incluses"}
@@ -1578,9 +1587,8 @@ function Packs() {
                       </div>
                     </div>
 
-                    {/* Feature list */}
                     <ul className="flex flex-col gap-3 flex-1 mb-8">
-                      {pack.features.map((f) => (
+                      {pack.features.map((f: any) => (
                         <li
                           key={f.label}
                           className="flex items-center gap-3 text-sm"
@@ -1604,32 +1612,174 @@ function Packs() {
                       ))}
                     </ul>
 
-                    {/* CTA */}
-                    <motion.a
-                      href="#reservation"
-                      whileHover={{ scale: 1.03 }}
-                      whileTap={{ scale: 0.97 }}
-                      className="w-full py-4 rounded-2xl font-black text-sm text-center block tracking-widest uppercase"
+                     {/* CTA */}
+                     <motion.button
+                       onClick={() => handleOpenModal(pack)}
+                       whileHover={{ scale: 1.02, boxShadow: `0 16px 40px ${pack.color}50` }}
+                       whileTap={{ scale: 0.97 }}
+                       className="w-full flex items-center justify-between gap-3 font-black text-sm tracking-widest uppercase cursor-pointer rounded-2xl"
+                       style={{
+                         fontFamily: "'KG Red Hands', sans-serif",
+                         background: `linear-gradient(135deg, ${pack.gradientFrom}, ${pack.gradientTo})`,
+                         color: pack.tier === "GOLD" ? NAVY : "#fff",
+                         border: "none",
+                         padding: "14px 18px 14px 24px",
+                         boxShadow: `0 8px 24px ${pack.color}30`,
+                       }}
+                     >
+                       <span>Réserver ce pack</span>
+                       <div
+                         className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0"
+                         style={{ background: pack.tier === "GOLD" ? "rgba(27,42,74,0.15)" : "rgba(255,255,255,0.2)" }}
+                       >
+                         <ArrowRight size={16} strokeWidth={2.5} />
+                       </div>
+                     </motion.button>
+                   </div>
+                 </motion.div>
+               </FadeUp>
+             );
+           })}
+         </div>
+       </div>
+
+      {/* ─── MODAL DE RESERVATION DE PACK (via portal) ─── */}
+      </section>
+      {modalOpen && selectedPack && createPortal(
+        <AnimatePresence>
+          {modalOpen && selectedPack && (
+            <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
+              {/* Overlay */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={() => setModalOpen(false)}
+                className="absolute inset-0 backdrop-blur-md"
+                style={{ background: "rgba(4,9,20,0.85)" }}
+              />
+
+              {/* Modal Body */}
+              <motion.div
+                initial={{ scale: 0.9, opacity: 0, y: 24 }}
+                animate={{ scale: 1, opacity: 1, y: 0 }}
+                exit={{ scale: 0.9, opacity: 0, y: 24 }}
+                transition={{ type: "spring", damping: 28, stiffness: 260 }}
+                className="relative w-full max-w-lg rounded-3xl z-10 p-8"
+                style={{
+                  background: "#0d1929",
+                  border: `1.5px solid ${selectedPack.color}50`,
+                  boxShadow: `0 32px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.04)`,
+                }}
+              >
+                {/* Colour accent top bar */}
+                <div className="absolute top-0 left-0 right-0 h-1 rounded-t-3xl" style={{ background: `linear-gradient(90deg, ${selectedPack.gradientFrom}, ${selectedPack.gradientTo})` }} />
+
+                {/* Close Button */}
+                <button
+                  onClick={() => setModalOpen(false)}
+                  className="absolute top-5 right-5 w-8 h-8 rounded-full flex items-center justify-center transition-all hover:scale-110 border-none cursor-pointer"
+                  style={{ background: "rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.6)" }}
+                >
+                  <X size={14} />
+                </button>
+
+                {success ? (
+                  /* Success Message */
+                  <div className="text-center py-8">
+                    <div
+                      className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6"
+                      style={{ background: `${selectedPack.color}20`, border: `2px solid ${selectedPack.color}` }}
+                    >
+                      <span style={{ color: selectedPack.color, fontSize: "24px", fontWeight: "bold" }}>✓</span>
+                    </div>
+                    <h3 className="font-black text-2xl text-white mb-2" style={{ fontFamily: "'KG Red Hands', sans-serif" }}>
+                      Demande envoyée !
+                    </h3>
+                    <p className="text-sm text-white/60 mb-6" style={{ fontFamily: "'KG Red Hands', sans-serif" }}>
+                      Votre demande de réservation pour le <strong style={{ color: selectedPack.color }}>Pack {selectedPack.tier}</strong> a bien été transmise à notre équipe.
+                    </p>
+                    <button
+                      onClick={() => setModalOpen(false)}
+                      className="px-6 py-3 rounded-xl font-bold text-sm cursor-pointer"
+                      style={{ background: selectedPack.color, color: selectedPack.tier === "GOLD" ? NAVY : "#fff", fontFamily: "'KG Red Hands', sans-serif", border: "none" }}
+                    >
+                      Fermer
+                    </button>
+                  </div>
+                ) : (
+                  /* Booking Form */
+                  <form onSubmit={handleBookPack} className="flex flex-col gap-4">
+                    <div>
+                      <span className="text-[10px] font-black uppercase tracking-[0.2em]" style={{ color: selectedPack.color }}>
+                        Option sélectionnée
+                      </span>
+                      <h3 className="font-black text-3xl text-white mt-1" style={{ fontFamily: "'KG Red Hands', sans-serif" }}>
+                        Pack {selectedPack.tier}
+                      </h3>
+                      <p className="text-xs text-white/50 mt-1" style={{ fontFamily: "'KG Red Hands', sans-serif" }}>
+                        {selectedPack.tagline} — {selectedPack.gamesCount} activités
+                      </p>
+                    </div>
+
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-[10px] font-black uppercase tracking-wider text-white/50" style={{ fontFamily: "'KG Red Hands', sans-serif" }}>Nom complet *</label>
+                      <input type="text" required placeholder="Votre nom" value={name} onChange={e => setName(e.target.value)}
+                        style={{ ...inputCls, background: "rgba(255,255,255,0.04)" }} />
+                    </div>
+
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-[10px] font-black uppercase tracking-wider text-white/50" style={{ fontFamily: "'KG Red Hands', sans-serif" }}>Téléphone *</label>
+                      <input type="tel" required placeholder="+216 XX XXX XXX" value={phone} onChange={e => setPhone(e.target.value)}
+                        style={{ ...inputCls, background: "rgba(255,255,255,0.04)" }} />
+                    </div>
+
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-[10px] font-black uppercase tracking-wider text-white/50" style={{ fontFamily: "'KG Red Hands', sans-serif" }}>Date souhaitée *</label>
+                      <input type="date" required value={date} onChange={e => setDate(e.target.value)}
+                        style={{ ...inputCls, background: "rgba(255,255,255,0.04)", color: "#fff", colorScheme: "dark" }} />
+                    </div>
+
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-[10px] font-black uppercase tracking-wider text-white/50" style={{ fontFamily: "'KG Red Hands', sans-serif" }}>Message (Optionnel)</label>
+                      <textarea rows={2} placeholder="Précisions..." value={message} onChange={e => setMessage(e.target.value)}
+                        style={{ ...inputCls, background: "rgba(255,255,255,0.04)", resize: "none" }} />
+                    </div>
+
+                    <motion.button
+                      type="submit"
+                      disabled={submitting}
+                      whileHover={!submitting ? { scale: 1.02, boxShadow: `0 16px 40px ${selectedPack.color}50` } : {}}
+                      whileTap={!submitting ? { scale: 0.97 } : {}}
+                      className="w-full flex items-center justify-between gap-3 rounded-2xl font-black text-sm tracking-widest uppercase cursor-pointer mt-2"
                       style={{
                         fontFamily: "'KG Red Hands', sans-serif",
-                        background: isHov || isGold
-                          ? `linear-gradient(135deg, ${pack.gradientFrom}, ${pack.gradientTo})`
-                          : "rgba(255,255,255,0.06)",
-                        color: (isHov || isGold) ? (pack.tier === "GOLD" ? NAVY : "#fff") : "rgba(255,255,255,0.4)",
-                        boxShadow: (isHov || isGold) ? `0 12px 32px ${pack.color}40` : "none",
-                        transition: "all 0.3s ease",
+                        background: `linear-gradient(135deg, ${selectedPack.gradientFrom}, ${selectedPack.gradientTo})`,
+                        color: selectedPack.tier === "GOLD" ? NAVY : "#fff",
+                        border: "none",
+                        padding: "14px 18px 14px 24px",
+                        boxShadow: `0 8px 24px ${selectedPack.color}30`,
+                        opacity: submitting ? 0.7 : 1,
                       }}
                     >
-                      Réserver ce pack
-                    </motion.a>
-                  </div>
-                </motion.div>
-              </FadeUp>
-            );
-          })}
-        </div>
-      </div>
-    </section>
+                      <span>{submitting ? "Traitement..." : "Confirmer la réservation"}</span>
+                      {!submitting && (
+                        <div className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0"
+                          style={{ background: selectedPack.tier === "GOLD" ? "rgba(27,42,74,0.15)" : "rgba(255,255,255,0.2)" }}
+                        >
+                          <ArrowRight size={16} strokeWidth={2.5} />
+                        </div>
+                      )}
+                    </motion.button>
+                  </form>
+                )}
+              </motion.div>
+            </div>
+          )}
+        </AnimatePresence>,
+        document.body
+      )}
+    </>
   );
 }
 
@@ -1640,7 +1790,7 @@ function Packs() {
 
 
 // ─── Reservation ──────────────────────────────────────────────────────────────
-const BOOKING_CATEGORIES = [
+const DEFAULT_BOOKING_CATEGORIES = [
   {
     title: "Activités & Loisirs",
     options: [
@@ -1665,6 +1815,8 @@ const BOOKING_CATEGORIES = [
     ]
   }
 ];
+
+type BookingCategory = { title: string; options: string[] };
 
 const STEPS = ["Votre Choix", "Groupe & Date", "Vos infos"];
 
@@ -1703,15 +1855,53 @@ function Reservation() {
   const [name, setName]               = useState("");
   const [phone, setPhone]             = useState("");
   const [message, setMessage]         = useState("");
+  const [bookingCategories, setBookingCategories] = useState<BookingCategory[]>(DEFAULT_BOOKING_CATEGORIES);
+
+  useEffect(() => {
+    const fetchBookingOptions = async () => {
+      const { data } = await supabase.from('booking_options').select('category, name').order('category').order('name');
+      if (data && data.length > 0) {
+        const grouped: Record<string, string[]> = {};
+        data.forEach((row: { category: string; name: string }) => {
+          if (!grouped[row.category]) grouped[row.category] = [];
+          grouped[row.category].push(row.name);
+        });
+        const cats: BookingCategory[] = Object.entries(grouped).map(([title, options]) => ({ title, options }));
+        // Keep the canonical order: Activités first, then Location, then Événements
+        const order = ["Activités & Loisirs", "Location de Matériels", "Organisation d'Événements"];
+        cats.sort((a, b) => {
+          const ai = order.indexOf(a.title);
+          const bi = order.indexOf(b.title);
+          return (ai === -1 ? 99 : ai) - (bi === -1 ? 99 : bi);
+        });
+        setBookingCategories(cats);
+      }
+    };
+    fetchBookingOptions();
+  }, []);
   const [submitted, setSubmitted]     = useState(false);
+  // Per-event-item location ("où")
+  const [eventLocations, setEventLocations]   = useState<Record<string, string>>({});
+  // Per-item date ("quand") – shared across activity & rental, per-item for events
+  const [itemDates, setItemDates]             = useState<Record<string, string>>({});
+  
+  // Step 1 pagination: 3 elements per sub-page
+  const [activeSubPage, setActiveSubPage]     = useState(0);
+  const itemsPerPage = 3;
+  const totalSubPages = Math.ceil(selectedItems.length / itemsPerPage);
+  const currentSubPageItems = selectedItems.slice(activeSubPage * itemsPerPage, (activeSubPage + 1) * itemsPerPage);
+
+
+  const rentalOptions = bookingCategories[1]?.options ?? [];
+  const eventOptions = bookingCategories[2]?.options ?? [];
 
   useEffect(() => {
     setItemQuantities(prev => {
       const next = { ...prev };
       selectedItems.forEach(item => {
         if (next[item] === undefined) {
-          const isRentalItem = BOOKING_CATEGORIES[1].options.includes(item);
-          const isEventItem = BOOKING_CATEGORIES[2].options.includes(item);
+          const isRentalItem = rentalOptions.includes(item);
+          const isEventItem = eventOptions.includes(item);
           next[item] = isRentalItem ? 1 : (isEventItem ? 10 : 20);
         }
       });
@@ -1722,12 +1912,12 @@ function Reservation() {
       });
       return next;
     });
-  }, [selectedItems]);
+  }, [selectedItems, bookingCategories]);
 
   const updateQty = (item: string, delta: number) => {
     setItemQuantities(prev => {
-      const isRentalItem = BOOKING_CATEGORIES[1].options.includes(item);
-      const isEventItem = BOOKING_CATEGORIES[2].options.includes(item);
+      const isRentalItem = rentalOptions.includes(item);
+      const isEventItem = eventOptions.includes(item);
       const minVal = isRentalItem ? 1 : (isEventItem ? 10 : 1);
       const currentVal = prev[item] || 0;
       const nextVal = Math.max(minVal, currentVal + delta);
@@ -1737,9 +1927,12 @@ function Reservation() {
 
   const canNext = [
     selectedItems.length > 0,
-    date !== "",
+    // Step 1: all items on the current subpage must have a date; event items on current subpage must have location
+    currentSubPageItems.every(item => (itemDates[item] || date) !== "") &&
+    currentSubPageItems.filter(i => eventOptions.includes(i)).every(i => (eventLocations[i] || "").trim() !== ""),
     name !== "" && phone !== "",
   ];
+
 
   const toggleItem = (opt: string) => {
     setSelectedItems(prev =>
@@ -1747,43 +1940,53 @@ function Reservation() {
     );
   };
 
-  const hasType = (categoryIndex: number) => {
-    return selectedItems.some(item => BOOKING_CATEGORIES[categoryIndex].options.includes(item));
-  };
-
-  const isRental = hasType(1);
-  const isEvent = hasType(2);
+  const isRental = selectedItems.some(item => rentalOptions.includes(item));
+  const isEvent = selectedItems.some(item => eventOptions.includes(item));
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const handleSubmit = async () => {
     setIsSubmitting(true);
     
     // Compute group size: max activity/event participants, or sum of rental items, or 1
+    const activityOptions = bookingCategories[0]?.options ?? [];
     const maxActivityPeople = selectedItems
-      .filter(item => BOOKING_CATEGORIES[0].options.includes(item) || BOOKING_CATEGORIES[2].options.includes(item))
+      .filter(item => activityOptions.includes(item) || eventOptions.includes(item))
       .reduce((max, item) => Math.max(max, itemQuantities[item] || 0), 0);
 
     const totalRentalItems = selectedItems
-      .filter(item => BOOKING_CATEGORIES[1].options.includes(item))
+      .filter(item => rentalOptions.includes(item))
       .reduce((sum, item) => sum + (itemQuantities[item] || 0), 0);
 
     const dbGroupSize = maxActivityPeople > 0 ? maxActivityPeople : (totalRentalItems > 0 ? totalRentalItems : 1);
 
-    // Format detailed list for notes (makes it readable in admin without dashboard updates)
-    const detailsText = selectedItems
-      .map(item => `${item} (${itemQuantities[item] || 1} ${BOOKING_CATEGORIES[1].options.includes(item) ? "unités" : BOOKING_CATEGORIES[2].options.includes(item) ? "invités" : "pers."})`)
-      .join(', ');
+    // Prefer first specific item date; fall back to global date
+    const primaryDate = selectedItems.map(i => itemDates[i]).find(d => d) || date;
 
-    const dbNotes = `Détails : ${detailsText}.${message ? ` Message client : ${message}` : ''}`;
+    // Format detailed notes with all contextual info
+    const detailsLines = selectedItems.map(item => {
+      const isRentalItem = rentalOptions.includes(item);
+      const isEventItem  = eventOptions.includes(item);
+      const qty = itemQuantities[item] || 1;
+      const unitLabel = isRentalItem ? "unités" : isEventItem ? "invités" : "pers.";
+      const itemDate = itemDates[item] || date;
+      const location = isEventItem ? (eventLocations[item] || "lieu non précisé") : null;
+      return [
+        `${item} (${qty} ${unitLabel})`,
+        itemDate ? `quand : ${itemDate}` : null,
+        location  ? `où : ${location}` : null,
+      ].filter(Boolean).join(" · ");
+    });
+
+    const dbNotes = `Détails : ${detailsLines.join(" | ")}.${message ? ` Message client : ${message}` : ''}`;
 
     const { error } = await supabase.from('reservations').insert({
       activity_name: selectedItems.join(', '),
       group_size: dbGroupSize,
-      reservation_date: date,
+      reservation_date: primaryDate,
       contact_name: name,
       contact_phone: phone,
       notes: dbNotes,
-      booking_details: itemQuantities,
+      booking_details: { quantities: itemQuantities, dates: itemDates, locations: eventLocations },
       status: 'pending'
     });
     
@@ -1864,7 +2067,19 @@ function Reservation() {
                   <motion.button
                     whileHover={{ scale: 1.04 }}
                     whileTap={{ scale: 0.97 }}
-                    onClick={() => { setSubmitted(false); setStep(0); setSelectedItems([]); setDate(""); setName(""); setPhone(""); setMessage(""); }}
+                    onClick={() => {
+                        setSubmitted(false);
+                        setStep(0);
+                        setActiveSubPage(0);
+                        setSelectedItems([]);
+                        setItemQuantities({});
+                        setItemDates({});
+                        setEventLocations({});
+                        setDate("");
+                        setName("");
+                        setPhone("");
+                        setMessage("");
+                      }}
                     className="rounded-xl font-bold text-sm"
                     style={{ fontFamily: "'KG Red Hands', sans-serif", background: GOLD, color: NAVY, padding: "12px 28px" }}
                   >
@@ -1936,7 +2151,7 @@ function Reservation() {
 
                           {/* Grouped selector (Multi-select) */}
                           <div className="flex flex-col gap-6 max-h-[340px] overflow-y-auto pr-2" style={{ scrollbarWidth: "thin" }}>
-                            {BOOKING_CATEGORIES.map((cat) => (
+                            {bookingCategories.map((cat) => (
                               <div key={cat.title} className="flex flex-col gap-2">
                                 <div className="text-[10px] font-black uppercase tracking-[0.2em] mb-1" style={{ fontFamily: "'KG Red Hands', sans-serif", color: GOLD }}>
                                   {cat.title}
@@ -1986,7 +2201,7 @@ function Reservation() {
                         </motion.div>
                       )}
                       
-                      {/* Step 1 — Details & quantities per element */}
+                      {/* Step 1 — Details & contextual fields per item */}
                       {step === 1 && (
                         <motion.div
                           key="step1-details"
@@ -1994,76 +2209,159 @@ function Reservation() {
                           animate={{ opacity: 1, x: 0 }}
                           exit={{ opacity: 0, x: -30 }}
                           transition={{ duration: 0.35 }}
-                          className="flex flex-col gap-6"
+                          className="flex flex-col gap-4"
                         >
                           <div>
                             <h3 className="font-black text-xl text-white mb-1" style={{ fontFamily: "'KG Red Hands', sans-serif" }}>Détails de votre projet</h3>
-                            <p className="text-xs" style={{ fontFamily: "'KG Red Hands', sans-serif", color: "rgba(255,255,255,0.55)" }}>
-                              Ajustez les quantités pour chaque option sélectionnée :
+                            <p className="text-xs" style={{ fontFamily: "'KG Red Hands', sans-serif", color: "rgba(255,255,255,0.45)" }}>
+                              Ajustez les informations (Page {activeSubPage + 1} / {totalSubPages || 1})
                             </p>
                           </div>
 
-                          <div className="flex flex-col gap-3 max-h-[300px] overflow-y-auto pr-2" style={{ scrollbarWidth: "thin" }}>
-                            {selectedItems.map((item) => {
-                              const isRentalItem = BOOKING_CATEGORIES[1].options.includes(item);
-                              const isEventItem = BOOKING_CATEGORIES[2].options.includes(item);
-                              
-                              const typeLabel = isRentalItem ? "Location de Matériels" : isEventItem ? "Organisation d'Événements" : "Activités & Loisirs";
-                              const unitLabel = isRentalItem ? "unités" : isEventItem ? "invités" : "pers.";
+                          <div className="flex flex-col gap-3 max-h-[550px] overflow-y-auto" style={{ scrollbarWidth: "thin" }}>
+                            {currentSubPageItems.map((item) => {
+                              const isRentalItem = rentalOptions.includes(item);
+                              const isEventItem  = eventOptions.includes(item);
+
+                              const catColor  = isRentalItem ? "#3B82F6" : isEventItem ? "#8B5CF6" : GOLD;
+                              const catEmoji  = isRentalItem ? "📦" : isEventItem ? "🎉" : "🎯";
+                              const catLabel  = isRentalItem ? "Location" : isEventItem ? "Événement" : "Activité";
+                              const qtyLabel  = isRentalItem ? "Qté" : isEventItem ? "Invités" : "Pers.";
+                              const stepDelta = isRentalItem ? 1 : isEventItem ? 5 : 1;
+                              const minQty    = isRentalItem ? 1 : isEventItem ? 10 : 1;
+                              const qty       = itemQuantities[item] ?? minQty;
 
                               return (
                                 <div
                                   key={item}
-                                  className="flex items-center justify-between p-3 rounded-2xl gap-3"
-                                  style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)" }}
+                                  className="rounded-2xl overflow-hidden"
+                                  style={{
+                                    background: "rgba(255,255,255,0.03)",
+                                    border: `1.5px solid ${catColor}30`,
+                                  }}
                                 >
-                                  <div className="flex flex-col min-w-0">
-                                    <span className="font-black text-xs text-white truncate" style={{ fontFamily: "'KG Red Hands', sans-serif" }}>{item}</span>
-                                    <span className="text-[9px] uppercase tracking-wider mt-0.5" style={{ color: GOLD, fontFamily: "'KG Red Hands', sans-serif" }}>
-                                      {typeLabel}
-                                    </span>
-                                  </div>
-                                  <div className="flex items-center rounded-xl overflow-hidden flex-shrink-0" style={{ border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.03)" }}>
-                                    <motion.button
-                                      whileTap={{ scale: 0.9 }}
-                                      type="button"
-                                      onClick={() => updateQty(item, isRentalItem ? -1 : (isEventItem ? -5 : -1))}
-                                      className="px-3 py-1.5 text-xs font-bold hover:bg-white/10 text-white/50 transition-colors"
+                                  {/* ── Header row: emoji · name · category · counter ── */}
+                                  <div
+                                    className="flex items-center gap-3 px-4 py-3"
+                                    style={{ background: `${catColor}10`, borderBottom: `1px solid ${catColor}20` }}
+                                  >
+                                    {/* Icon */}
+                                    <div
+                                      className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 text-base"
+                                      style={{ background: `${catColor}20` }}
                                     >
-                                      −
-                                    </motion.button>
-                                    <div className="px-3 text-center min-w-[55px]">
-                                      <span className="font-black text-sm text-white" style={{ fontFamily: "'KG Red Hands', sans-serif" }}>
-                                        {itemQuantities[item] || 0}
-                                      </span>
-                                      <p className="text-[8px] text-white/30" style={{ fontFamily: "'KG Red Hands', sans-serif" }}>{unitLabel}</p>
+                                      {catEmoji}
                                     </div>
-                                    <motion.button
-                                      whileTap={{ scale: 0.9 }}
-                                      type="button"
-                                      onClick={() => updateQty(item, isRentalItem ? 1 : (isEventItem ? 5 : 1))}
-                                      className="px-3 py-1.5 text-xs font-bold hover:bg-white/10 text-amber-500 transition-colors"
-                                    >
-                                      +
-                                    </motion.button>
+
+                                    {/* Name + category */}
+                                    <div className="flex-1 min-w-0">
+                                      <div className="font-black text-sm text-white leading-tight truncate" style={{ fontFamily: "'KG Red Hands', sans-serif" }}>
+                                        {item}
+                                      </div>
+                                      <div className="text-[9px] font-bold uppercase tracking-widest mt-0.5" style={{ color: catColor, fontFamily: "'KG Red Hands', sans-serif" }}>
+                                        {catLabel}
+                                      </div>
+                                    </div>
+
+                                    {/* Compact stepper */}
+                                    <div className="flex items-center gap-0 flex-shrink-0 rounded-xl overflow-hidden" style={{ border: `1px solid ${catColor}40`, background: "rgba(0,0,0,0.25)" }}>
+                                      <motion.button
+                                        whileTap={{ scale: 0.85 }}
+                                        type="button"
+                                        onClick={() => updateQty(item, -stepDelta)}
+                                        className="w-8 h-8 flex items-center justify-center text-sm font-black transition-colors hover:bg-white/10"
+                                        style={{ color: "rgba(255,255,255,0.5)", fontFamily: "'KG Red Hands', sans-serif" }}
+                                      >−</motion.button>
+                                      <div className="flex flex-col items-center justify-center px-2 min-w-[42px]">
+                                        <span className="font-black text-sm leading-tight text-white" style={{ fontFamily: "'KG Red Hands', sans-serif" }}>
+                                          {qty}
+                                        </span>
+                                        <span className="text-[8px] leading-tight" style={{ color: `${catColor}99`, fontFamily: "'KG Red Hands', sans-serif" }}>
+                                          {qtyLabel}
+                                        </span>
+                                      </div>
+                                      <motion.button
+                                        whileTap={{ scale: 0.85 }}
+                                        type="button"
+                                        onClick={() => updateQty(item, stepDelta)}
+                                        className="w-8 h-8 flex items-center justify-center text-sm font-black transition-colors hover:bg-white/10"
+                                        style={{ color: catColor, fontFamily: "'KG Red Hands', sans-serif" }}
+                                      >+</motion.button>
+                                    </div>
+                                  </div>
+
+                                  {/* ── Fields row: WHERE (events only) + WHEN ── */}
+                                  <div className={`px-4 py-3 grid gap-3 ${isEventItem ? "grid-cols-2" : "grid-cols-1"}`} style={{ display: "grid" }}>
+
+                                    {/* WHERE — events only */}
+                                    {isEventItem && (
+                                      <div className="flex flex-col gap-1.5">
+                                        <label className="text-[9px] font-black uppercase tracking-[0.18em] flex items-center gap-1"
+                                          style={{ fontFamily: "'KG Red Hands', sans-serif", color: "rgba(255,255,255,0.4)" }}>
+                                          <span>📍</span> Lieu
+                                        </label>
+                                        <input
+                                          type="text"
+                                          placeholder="Ex : Yakoo, salle…"
+                                          value={eventLocations[item] || ""}
+                                          onChange={e => setEventLocations(prev => ({ ...prev, [item]: e.target.value }))}
+                                          style={{
+                                            fontFamily: "'KG Red Hands', sans-serif",
+                                            background: "rgba(255,255,255,0.04)",
+                                            border: `1.5px solid ${eventLocations[item] ? catColor + "80" : "rgba(255,255,255,0.08)"}`,
+                                            borderRadius: "10px",
+                                            color: "#fff",
+                                            padding: "8px 12px",
+                                            fontSize: "12px",
+                                            outline: "none",
+                                            width: "100%",
+                                            transition: "border-color 0.2s",
+                                          }}
+                                        />
+                                      </div>
+                                    )}
+
+                                    {/* WHEN — date */}
+                                    <div className="flex flex-col gap-1.5">
+                                      <label className="text-[9px] font-black uppercase tracking-[0.18em] flex items-center gap-1"
+                                        style={{ fontFamily: "'KG Red Hands', sans-serif", color: "rgba(255,255,255,0.4)" }}>
+                                        <span>📅</span> {isRentalItem ? "Début location" : isEventItem ? "Date" : "Date"}
+                                      </label>
+                                      <input
+                                        type="date"
+                                        value={itemDates[item] || ""}
+                                        onChange={e => {
+                                          const val = e.target.value;
+                                          setItemDates(prev => ({ ...prev, [item]: val }));
+                                          setDate(val);
+                                        }}
+                                        style={{
+                                          fontFamily: "'KG Red Hands', sans-serif",
+                                          background: "rgba(255,255,255,0.04)",
+                                          border: `1.5px solid ${itemDates[item] ? catColor + "80" : "rgba(255,255,255,0.08)"}`,
+                                          borderRadius: "10px",
+                                          color: "#fff",
+                                          padding: "8px 12px",
+                                          fontSize: "12px",
+                                          outline: "none",
+                                          width: "100%",
+                                          transition: "border-color 0.2s",
+                                          colorScheme: "dark",
+                                        }}
+                                      />
+                                    </div>
+
+
                                   </div>
                                 </div>
                               );
                             })}
                           </div>
-
-                          <Field label={isRental ? "Date de début de location" : isEvent ? "Date de l'événement" : "Date souhaitée"}>
-                            <input
-                              type="date"
-                              value={date}
-                              onChange={(e) => setDate(e.target.value)}
-                              style={inputCls}
-                            />
-                          </Field>
                         </motion.div>
                       )}
 
                       {/* Step 2 — Contact info */}
+
                       {step === 2 && (
                         <motion.div
                           key="step2"
@@ -2076,7 +2374,15 @@ function Reservation() {
                           <div>
                             <h3 className="font-black text-xl text-white mb-1" style={{ fontFamily: "'KG Red Hands', sans-serif" }}>Vos coordonnées</h3>
                             <p className="text-xs" style={{ fontFamily: "'KG Red Hands', sans-serif", color: "rgba(255,255,255,0.55)" }}>
-                              {selectedItems.join(', ')} · {Object.values(itemQuantities).reduce((a, b) => a + b, 0)} {isRental ? "unités" : isEvent ? "invités" : "pers."} · {date || "date à confirmer"}
+                              {selectedItems.map(item => {
+                                const isEventItem = eventOptions.includes(item);
+                                const isRentalItem = rentalOptions.includes(item);
+                                const qty = itemQuantities[item] || 1;
+                                const unit = isRentalItem ? "unités" : isEventItem ? "invités" : "pers.";
+                                const itemDate = itemDates[item] || date || "date à confirmer";
+                                const loc = isEventItem ? (eventLocations[item] ? ` · 📍${eventLocations[item]}` : "") : "";
+                                return `${item} (${qty} ${unit} · 📅${itemDate}${loc})`;
+                              }).join(" | ")}
                             </p>
                           </div>
 
@@ -2101,10 +2407,20 @@ function Reservation() {
 
                     {/* Navigation buttons */}
                     <div className="flex gap-3 mt-7">
-                      {step > 0 && (
+                      {(step > 0 || (step === 1 && activeSubPage > 0)) && (
                         <Button
                           variant="secondary"
-                          onClick={() => setStep(step - 1)}
+                          onClick={() => {
+                            if (step === 1 && activeSubPage > 0) {
+                              setActiveSubPage(prev => prev - 1);
+                            } else {
+                              if (step === 2) {
+                                // when coming back to step 1, go to last subpage
+                                setActiveSubPage(totalSubPages - 1);
+                              }
+                              setStep(step - 1);
+                            }
+                          }}
                           className="flex-shrink-0"
                         >
                           ← Retour
@@ -2115,7 +2431,16 @@ function Reservation() {
                         whileTap={canNext[step] ? { scale: 0.97 } : {}}
                         type="button"
                         disabled={!canNext[step]}
-                        onClick={() => step < STEPS.length - 1 ? setStep(step + 1) : handleSubmit()}
+                        onClick={() => {
+                          if (step === 1 && activeSubPage < totalSubPages - 1) {
+                            setActiveSubPage(prev => prev + 1);
+                          } else {
+                            if (step === 0) {
+                              setActiveSubPage(0);
+                            }
+                            step < STEPS.length - 1 ? setStep(step + 1) : handleSubmit();
+                          }
+                        }}
                         className="group flex-1 rounded-[2rem] font-bold text-sm flex items-center justify-center gap-3 transition-all"
                         style={{
                           fontFamily: "'KG Red Hands', sans-serif",
@@ -2125,9 +2450,16 @@ function Reservation() {
                           padding: "8px 8px 8px 28px",
                         }}
                       >
-                        {step < STEPS.length - 1 ? (
+                        {(step < STEPS.length - 1 && !(step === 1 && activeSubPage < totalSubPages - 1)) ? (
                           <>
                             <span>Étape suivante</span>
+                            <div className="w-9 h-9 rounded-full flex items-center justify-center transition-transform duration-300 group-hover:translate-x-1" style={{ background: "rgba(4,12,24,0.12)" }}>
+                              <ArrowRight size={15} />
+                            </div>
+                          </>
+                        ) : (step === 1 && activeSubPage < totalSubPages - 1) ? (
+                          <>
+                            <span>Continuer ({activeSubPage + 2} / {totalSubPages})</span>
                             <div className="w-9 h-9 rounded-full flex items-center justify-center transition-transform duration-300 group-hover:translate-x-1" style={{ background: "rgba(4,12,24,0.12)" }}>
                               <ArrowRight size={15} />
                             </div>
@@ -2659,7 +2991,7 @@ const FAQS = [
   {
     icon: CalendarDays,
     q: "Comment effectuer votre réservation ?",
-    a: "Vous pouvez réserver directement via notre formulaire en ligne, par téléphone au +216 71 790 501, ou par email à promoscout.contact@gmail.com. Un acompte de 30% est requis pour confirmer la réservation.",
+    a: "Vous pouvez réserver directement via notre formulaire en ligne, par téléphone au +216 56 501 005, ou par email à yakoo.event@gmail.com Un acompte de 30% est requis pour confirmer la réservation.",
     tag: "Réservation",
   },
   {
@@ -2828,8 +3160,8 @@ function Contact() {
   };
 
   const INFOS = [
-    { icon: <Phone size={22} />, label: "Appelez-nous", value: "+216 71 790 501", href: "tel:+21671790501", colSpan: "col-span-1" },
-    { icon: <Mail size={22} />, label: "Écrivez-nous", value: "contact@yakoo.tn", href: "mailto:promoscout.contact@gmail.com", colSpan: "col-span-1" },
+    { icon: <Phone size={22} />, label: "Appelez-nous", value: "+216 56 501 005", href: "tel:+21656501005", colSpan: "col-span-1" },
+    { icon: <Mail size={22} />, label: "Écrivez-nous", value: "yakoo.event@gmail.com", href: "mailto:yakoo.event@gmail.com", colSpan: "col-span-1" },
   ];
 
   return (
@@ -3000,115 +3332,136 @@ function Contact() {
 
 /**
  * T1 — About → Activities
- * Full-bleed film-strip: scrolling mini activity photo cards over a dark overlay.
- * Teases the activities section visually before the user reaches it.
+ * Letter-by-letter marquee: each character of "YAKOO EVENT" scrolls as its own card.
  */
 function TransitionFilmStrip() {
-  const frames = [
-    { img: "https://images.unsplash.com/photo-1648853070657-6d58398bee93?w=400&h=300&fit=crop&auto=format", label: "Accrobranche" },
-    { img: "https://images.unsplash.com/photo-1480480565647-1c4385c7c0bf?w=400&h=300&fit=crop&auto=format", label: "Kayak" },
-    { img: "https://images.unsplash.com/photo-1637511077877-3c6a00eb32ba?w=400&h=300&fit=crop&auto=format", label: "Tyrolienne" },
-    { img: "https://images.unsplash.com/photo-1624410722888-eeb4f0c99905?w=400&h=300&fit=crop&auto=format", label: "Escalade" },
-    { img: "https://images.unsplash.com/photo-1771525552094-ce394cf95343?w=400&h=300&fit=crop&auto=format", label: "Tir à l'arc" },
-    { img: "https://images.unsplash.com/photo-1780733063138-8a847437ab96?w=400&h=300&fit=crop&auto=format", label: "Team Building" },
-    { img: "https://images.unsplash.com/photo-1774599661355-327e322f53c2?w=400&h=300&fit=crop&auto=format", label: "Paintball" },
-    { img: "https://images.unsplash.com/photo-1521336575822-6da63fb45455?w=400&h=300&fit=crop&auto=format", label: "Séminaire" },
+  // Each letter is its own card. Space becomes a thin divider card.
+  const WORD_1 = "YAKOO";
+  const WORD_2 = "EVENT";
+
+  // Build card list: letters from word1, a separator, letters from word2
+  type LetterCard = { char: string; isSep?: boolean; wordIndex: number; charIndex: number };
+  const buildCards = (): LetterCard[] => {
+    const cards: LetterCard[] = [];
+    [...WORD_1].forEach((c, i) => cards.push({ char: c, wordIndex: 0, charIndex: i }));
+    cards.push({ char: "·", isSep: true, wordIndex: -1, charIndex: -1 });
+    [...WORD_2].forEach((c, i) => cards.push({ char: c, wordIndex: 1, charIndex: i }));
+    return cards;
+  };
+  const cards = buildCards();
+
+  // Color palette per letter position (cycling)
+  const palettes = [
+    { bg: "rgba(245,166,35,0.12)",  border: "rgba(245,166,35,0.55)",  text: "#F5A623" },
+    { bg: "rgba(255,255,255,0.04)", border: "rgba(255,255,255,0.12)", text: "#ffffff" },
+    { bg: "rgba(245,166,35,0.06)",  border: "rgba(245,166,35,0.25)",  text: "rgba(245,166,35,0.7)" },
+    { bg: "rgba(255,255,255,0.07)", border: "rgba(255,255,255,0.18)", text: "#F5A623" },
+    { bg: "rgba(245,166,35,0.18)",  border: GOLD,                     text: "#040c18" },
   ];
 
   return (
-    <div className="relative overflow-hidden py-16" style={{ background: "#040c18" }}>
+    <div className="relative overflow-hidden py-14" style={{ background: "#040c18" }}>
       <style>{`
-        @keyframes marquee-scroll { 
-          from { transform: translateX(0) } 
-          to { transform: translateX(calc(-50% - 0.75rem)) } 
+        @keyframes letter-scroll {
+          from { transform: translateX(0) }
+          to   { transform: translateX(calc(-50% - 1rem)) }
         }
-        .marquee-track:hover {
-          animation-play-state: paused;
-        }
+        .letter-track { animation: letter-scroll 22s linear infinite; }
+        .letter-track:hover { animation-play-state: paused; }
       `}</style>
 
-      {/* Background Decorative Typography */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-5">
-        <span className="font-black whitespace-nowrap text-[12vw]" style={{ fontFamily: "'KG Red Hands', sans-serif", color: "#fff" }}>
-          EXPLOREZ L'AVENTURE
+      {/* Huge watermark text behind */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden">
+        <span
+          className="font-black whitespace-nowrap leading-none"
+          style={{
+            fontFamily: "'KG Red Hands', sans-serif",
+            fontSize: "22vw",
+            color: "transparent",
+            WebkitTextStroke: "1px rgba(245,166,35,0.06)",
+            letterSpacing: "0.05em",
+          }}
+        >
+          YAKOO
         </span>
       </div>
 
-      {/* Edge fades for smooth entry/exit */}
-      <div className="absolute left-0 top-0 bottom-0 w-32 z-10 pointer-events-none"
+      {/* Edge fades */}
+      <div className="absolute left-0 top-0 bottom-0 w-24 z-10 pointer-events-none"
         style={{ background: "linear-gradient(to right, #040c18, transparent)" }} />
-      <div className="absolute right-0 top-0 bottom-0 w-32 z-10 pointer-events-none"
+      <div className="absolute right-0 top-0 bottom-0 w-24 z-10 pointer-events-none"
         style={{ background: "linear-gradient(to left, #040c18, transparent)" }} />
 
-      {/* Scrolling Marquee */}
+      {/* Scrolling track — duplicated for seamless loop */}
       <div className="relative z-20 w-full overflow-hidden flex items-center">
         <div
-          className="marquee-track flex gap-6 w-max cursor-pointer"
-          style={{ animation: "marquee-scroll 35s linear infinite", willChange: "transform" }}
+          className="letter-track flex gap-4 w-max"
+          style={{ willChange: "transform" }}
         >
           {[1, 2].map((group) => (
-            <div key={group} className="flex gap-6 w-max">
-              {frames.map((f, i) => (
-                <div
-                  key={i}
-                  className="group relative flex-shrink-0 overflow-hidden rounded-[24px] transition-all duration-500 ease-out hover:scale-[1.02] hover:shadow-2xl"
-                  style={{ width: "280px", height: "180px", background: "#0d1929" }}
-                >
-                  <img 
-                    src={f.img} 
-                    alt={f.label} 
-                    className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110" 
-                    style={{ opacity: 0.8 }} 
-                  />
-                  
-                  {/* Premium dark gradient overlay */}
-                  <div 
-                    className="absolute inset-0 transition-opacity duration-500" 
-                    style={{ background: "linear-gradient(to top, rgba(4,12,24,0.95) 0%, rgba(4,12,24,0.1) 60%, transparent 100%)" }} 
-                  />
-                  
-                  {/* Text label */}
-                  <div className="absolute bottom-0 left-0 w-full p-6 flex items-end justify-between">
-                    <span
-                      className="text-sm font-bold uppercase tracking-widest transition-transform duration-300 group-hover:-translate-y-1"
-                      style={{ fontFamily: "'KG Red Hands', sans-serif", color: "#fff" }}
+            <div key={group} className="flex gap-4">
+              {cards.map((card, i) => {
+                if (card.isSep) {
+                  // Separator dot
+                  return (
+                    <div
+                      key={`sep-${group}-${i}`}
+                      className="flex-shrink-0 flex items-center justify-center"
+                      style={{ width: "48px", height: "140px" }}
                     >
-                      {f.label}
-                    </span>
-                    
-                    {/* Arrow icon that appears on hover */}
-                    <div 
-                      className="w-8 h-8 rounded-full flex items-center justify-center opacity-0 translate-x-4 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0"
-                      style={{ background: GOLD, color: "#040c18" }}
-                    >
-                      <ArrowRight size={14} strokeWidth={3} />
+                      <div
+                        className="w-3 h-3 rounded-full"
+                        style={{ background: "rgba(245,166,35,0.4)" }}
+                      />
                     </div>
+                  );
+                }
+
+                const palette = palettes[(card.wordIndex * 10 + card.charIndex) % palettes.length];
+                const isGold = palette.text === "#040c18"; // filled gold card
+
+                return (
+                  <div
+                    key={`${group}-w${card.wordIndex}-c${card.charIndex}`}
+                    className="group flex-shrink-0 flex items-center justify-center rounded-[20px] transition-all duration-500 ease-out cursor-default select-none"
+                    style={{
+                      width: "130px",
+                      height: "140px",
+                      background: isGold ? GOLD : palette.bg,
+                      border: `2px solid ${palette.border}`,
+                      boxShadow: isGold
+                        ? `0 0 40px rgba(245,166,35,0.25)`
+                        : `0 4px 20px rgba(0,0,0,0.3)`,
+                    }}
+                  >
+                    <span
+                      className="font-black leading-none select-none transition-transform duration-300 group-hover:scale-110"
+                      style={{
+                        fontFamily: "'KG Red Hands', sans-serif",
+                        fontSize: "80px",
+                        color: palette.text,
+                        letterSpacing: "-0.04em",
+                        textShadow: isGold ? "none" : `0 0 40px ${palette.border}`,
+                      }}
+                    >
+                      {card.char}
+                    </span>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           ))}
         </div>
       </div>
 
-      {/* Central Floating Pill */}
+      {/* Central floating pill */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 pointer-events-none">
-        <div 
-          className="px-6 py-3 rounded-full flex items-center gap-3 text-xs font-black uppercase tracking-[0.15em] shadow-2xl backdrop-blur-md transition-all"
-          style={{ 
-            background: "rgba(4,12,24,0.5)", 
-            color: "#fff", 
-            border: "1px solid rgba(255,255,255,0.15)",
-            fontFamily: "'KG Red Hands', sans-serif" 
-          }}
-        >
-          <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: GOLD }} />
-          Découvrez
-        </div>
+       
       </div>
     </div>
   );
 }
+
 
 /**
  * T2 — Activities → Packs
@@ -3281,8 +3634,8 @@ const SOCIALS = [
 
 function Footer() {
   const content = useContent();
-  const phone = content['footer_phone'] || "+216 71 790 501";
-  const email = content['footer_email'] || "promoscout.contact@gmail.com";
+  const phone = content['footer_phone'] || "+216 56 501 005";
+  const email = content['footer_email'] || "yakoo.event@gmail.com";
   const address = content['footer_address'] || "Avenue Jugurtha, Tunis, Tunisie";
   const tagline = content['footer_tagline'] || "Un parc modèle en pleine nature, est un vécu précieux. Explorez sans limites avec Yakoo Events.";
 
@@ -3291,10 +3644,10 @@ function Footer() {
   const youtube = content['footer_youtube'] || "youtube.com/@yakooevents";
 
   const footerSocials = [
-    { Icon: Facebook,  href: facebook.startsWith('http') ? facebook : `https://${facebook}`, label: "Facebook" },
-    { Icon: Instagram, href: instagram.startsWith('http') ? instagram : `https://${instagram}`, label: "Instagram" },
+    { Icon: Facebook,  href: facebook.startsWith('http') ? facebook : `https://www.facebook.com/profile.php?id=100069291234200`, label: "Facebook" },
+    { Icon: Instagram, href: instagram.startsWith('http') ? instagram : `https://www.instagram.com/yakoo_event/`, label: "Instagram" },
     { Icon: Twitter,   href: "#", label: "Twitter" },
-    { Icon: Youtube,   href: youtube.startsWith('http') ? youtube : `https://${youtube}`, label: "Youtube" },
+    { Icon: Youtube,   href: youtube.startsWith('http') ? youtube : `https://www.youtube.com/channel/UCLV5_t570clyh7s9R6P3vVA`, label: "Youtube" },
   ];
 
   return (
@@ -4088,11 +4441,11 @@ export default function App() {
         <About />
         <TransitionFilmStrip />
         <Activities />
+        <EquipmentShowcaseSection />
+        <EventManagementSection />
         <TransitionStats />
         <Packs />
         <TransitionBookCTA />
-        <EventManagementSection />
-        <EquipmentShowcaseSection />
         <Reservation />
         <Testimonials />
         <TransitionNatureQuote />

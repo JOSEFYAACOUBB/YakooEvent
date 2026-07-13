@@ -81,217 +81,9 @@ async function compressImage(
 }
 
 // ─── Translation System ───────────────────────────────────────────────────────
-type Lang = "fr" | "ar";
 
-const AR: Record<string, string> = {
-  // Nav
-  "Tableau de bord": "لوحة التحكم", "Réservations": "الحجوزات", "Gestion des Activités": "إدارة الأنشطة",
-  "Packs & Tarifs": "الباقات والأسعار", "Avis Clients": "آراء العملاء", "FAQ": "الأسئلة الشائعة",
-  "Contenu du site": "محتوى الموقع", "Sponsors": "الرعاة", "Statistiques": "الإحصائيات",
-  "Utilisateurs": "المستخدمون", "Paramètres": "الإعدادات", "Gestion Financière": "الإدارة المالية",
-  "Liste des Contacts": "قائمة جهات الاتصال", "Gestion des Matériels": "إدارة المعدات",
-  "Calendrier de travail": "تقويم العمل", "Liste des Tâches": "قائمة المهام",
-  "Tickets Support": "تذاكر الدعم", "Carte de Fidélité": "بطاقة الولاء",
-  "Services Offerts": "الخدمات المقدمة", "Réseaux Sociaux": "وسائل التواصل الاجتماعي",
-  "Finances": "المالية", "Contacts": "جهات الاتصال", "Matériels": "المعدات",
-  "Calendrier": "التقويم", "Tâches": "المهام", "Fidélité": "الولاء", "Services": "الخدمات",
-  "Agence Événementielle": "وكالة الأحداث", "Yakoo Events": "ياكو إيفنتس",
-  // Common actions
-  "Ajouter": "إضافة", "Modifier": "تعديل", "Supprimer": "حذف", "Enregistrer": "حفظ",
-  "Annuler": "إلغاء", "Confirmer": "تأكيد", "Fermer": "إغلاق", "Créer": "إنشاء",
-  "Rechercher...": "بحث...", "Exporter": "تصدير", "Enregistrer les modifications": "حفظ التغييرات",
-  "Voir toutes →": "عرض الكل ←", "Voir toutes les réservations →": "عرض جميع الحجوزات ←",
-  "Déconnexion": "تسجيل الخروج", "Se connecter": "تسجيل الدخول",
-  "Connexion": "تسجيل الدخول", "Accédez à votre espace administrateur": "الوصول إلى لوحة الإدارة",
-  "Accès démo": "وصول تجريبي", "Super Admin": "مدير عام",
-  "Tout marquer lu": "تعليم الكل كمقروء", "Voir toutes les notifications": "عرض جميع الإشعارات",
-  "Notifications": "الإشعارات", "Profil": "الملف الشخصي",
-  // Common labels
-  "Statut": "الحالة", "Date": "التاريخ", "Actions": "الإجراءات", "Nom": "الاسم",
-  "Téléphone": "الهاتف", "Notes": "ملاحظات", "Description": "الوصف", "Tous": "الكل",
-  "Actif": "نشط", "Inactif": "غير نشط", "Activité": "النشاط", "Client": "العميل",
-  "Total": "المجموع", "Catégorie": "الفئة", "Pack": "الباقة", "Priorité": "الأولوية",
-  "Aucune donnée trouvée": "لا توجد بيانات",
-  // Status
-  "Confirmée": "مؤكدة", "En attente": "قيد الانتظار", "Annulée": "ملغاة",
-  "En cours": "جارٍ", "Terminé": "مكتمل", "Annulé": "ملغى", "À faire": "للقيام به",
-  "Ouvert": "مفتوح", "Résolu": "محلول", "Fermé": "مغلق",
-  "Publié": "منشور", "Haute": "عالية", "Moyenne": "متوسطة", "Basse": "منخفضة",
-  "Excellent": "ممتاز", "Bon": "جيد", "Usagé": "مستعمل", "En réparation": "قيد الإصلاح",
-  "Payé": "مدفوع",
-  // Dashboard
-  "Réservations du mois": "حجوزات الشهر", "Activités actives": "الأنشطة النشطة",
-  "Revenus estimés": "الإيرادات المقدرة", "sur 22 disponibles": "من 22 متاحة",
-  "Réservations par mois": "الحجوزات حسب الشهر", "Cette semaine": "هذا الأسبوع",
-  "Ce mois": "هذا الشهر", "Cette année": "هذه السنة", "Personnalisé": "مخصص",
-  "Réservations par catégorie": "الحجوزات حسب الفئة", "total": "المجموع",
-  "Dernières Réservations": "آخر الحجوزات", "Activités les plus demandées": "الأنشطة الأكثر طلبًا",
-  "Réservations récentes": "الحجوزات الأخيرة", "il y a 2h": "منذ ساعتين",
-  "Aventure": "مغامرة", "Team Building": "بناء الفريق", "Hébergement": "إقامة",
-  "Anniversaires": "أعياد الميلاد", "Formation": "تدريب",
-  // Reservations
-  "Gestion des Réservations": "إدارة الحجوزات", "Rechercher un client...": "بحث عن عميل...",
-  "Toutes les activités": "جميع الأنشطة", "Exporter CSV": "تصدير CSV",
-  "Nouvelle Réservation": "حجز جديد", "Créer manuellement une réservation": "إنشاء حجز يدويًا",
-  "Informations client": "معلومات العميل", "Détails de la réservation": "تفاصيل الحجز",
-  "Statut initial": "الحالة الأولية", "Créer la réservation": "إنشاء الحجز",
-  "Nom complet": "الاسم الكامل", "Nombre de personnes": "عدد الأشخاص",
-  "Date souhaitée": "التاريخ المطلوب", "Message du client": "رسالة العميل",
-  "Informations supplémentaires...": "معلومات إضافية...",
-  "Affichage": "عرض", "sur": "من", "Voir détail": "عرض التفاصيل",
-  "Activité choisie": "النشاط المختار", "Pack sélectionné": "الباقة المختارة",
-  "Date de soumission": "تاريخ التقديم", "Statut actuel": "الحالة الحالية",
-  "Changer le statut": "تغيير الحالة", "Mettre à jour": "تحديث",
-  "Envoyer confirmation": "إرسال التأكيد", "Imprimer": "طباعة",
-  "Note interne": "ملاحظة داخلية", "Enregistrer la note": "حفظ الملاحظة",
-  "Pers.": "أشخاص", "Reçu le": "تاريخ الاستلام",
-  "Cette réservation sera supprimée définitivement. Cette action est irréversible.": "سيتم حذف هذا الحجز نهائيًا. هذا الإجراء لا يمكن التراجع عنه.",
-  "Aucune réservation trouvée.": "لا توجد حجوزات.",
-  "Impression en cours...": "جارٍ الطباعة...", "Note enregistrée !": "تم حفظ الملاحظة!",
-  // Activities
-  "Ajouter une activité": "إضافة نشاط", "Modifier l'activité": "تعديل النشاط",
-  "Nouvelle activité": "نشاط جديد", "Nom de l'activité": "اسم النشاط",
-  "Image principale": "الصورة الرئيسية", "Aucune activité dans cette catégorie.": "لا توجد أنشطة في هذه الفئة.",
-  "Hébergement & Camping": "الإقامة والتخييم", "Scientifiques": "علمية",
-  // Packs
-  "Tarif groupe": "سعر المجموعة", "Prix (TND / personne)": "السعر (دينار / شخص)",
-  "Taille min. du groupe": "الحد الأدنى لحجم المجموعة", "Durée": "المدة",
-  "½ journée": "نصف يوم", "Journée complète": "يوم كامل", "Inclusions": "المشمولات",
-  "Fonctionnalités": "الميزات", "Ajouter une fonctionnalité": "إضافة ميزة",
-  "Statut actif": "الحالة النشطة", "Enregistrer ce pack": "حفظ هذه الباقة",
-  "Accrobranche": "تسلق الأشجار", "Tyrolienne": "تيروليان", "Animation": "ترفيه",
-  "Matériel": "معدات", "Encadrement": "إشراف",
-  // Reviews
-  "Note moyenne": "متوسط التقييم", "Total avis": "إجمالي الآراء",
-  "Titre/Métier": "المسمى/المهنة", "Avis": "الرأي", "Note": "التقييم",
-  // Finances
-  "Revenus encaissés": "الإيرادات المحصلة", "Dépenses totales": "إجمالي المصروفات",
-  "Bénéfice net": "صافي الربح", "Revenus vs Dépenses": "الإيرادات مقابل المصروفات",
-  "Répartition dépenses": "توزيع المصروفات", "Transactions": "المعاملات",
-  "Recettes": "إيرادات", "Dépenses": "مصروفات", "Libellé": "البيان", "Montant": "المبلغ",
-  "Nouvelle Transaction": "معاملة جديدة", "Recette": "إيراد", "Dépense": "مصروف",
-  "Taux remplissage": "نسبة الإشغال", "Revenus": "الإيرادات",
-  "Salaires": "الرواتب", "Entretien": "صيانة", "Marketing": "تسويق", "Fournitures": "لوازم",
-  "Autre": "أخرى", "Marquer payé": "تعليم كمدفوع",
-  "Total recettes filtrées:": "إجمالي الإيرادات المصفاة:", "Total dépenses filtrées:": "إجمالي المصروفات المصفاة:",
-  "Libellé et montant requis.": "البيان والمبلغ مطلوبان.",
-  // Sponsors
-  "Ajouter un sponsor": "إضافة راعٍ", "Niveau": "المستوى", "Or": "ذهب", "Argent": "فضة",
-  "Bronze": "برونز", "Partenaire": "شريك", "Sponsor depuis": "راعٍ منذ",
-  "Modifier le sponsor": "تعديل الراعي", "Nouveau sponsor": "راعٍ جديد",
-  // Calendar
-  "Sélectionnez un jour": "اختر يومًا", "Aucun événement": "لا توجد أحداث",
-  "Ajouter un événement": "إضافة حدث", "Titre de l'événement": "عنوان الحدث",
-  "CE MOIS": "هذا الشهر", "Rappel": "تذكير", "Événement": "حدث", "Tâche": "مهمة",
-  "Cliquez sur un jour pour voir les événements": "انقر على يوم لرؤية الأحداث",
-  // Tasks
-  "Nouvelle tâche": "مهمة جديدة", "Titre *": "العنوان *", "Assigné à": "مُسند إلى",
-  "Échéance": "تاريخ الاستحقاق", "En retard": "متأخرة", "Aucune tâche": "لا توجد مهام",
-  "Supprimer cette tâche ?": "حذف هذه المهمة؟", "Titre requis.": "العنوان مطلوب.",
-  // Tickets
-  "Nouveau ticket": "تذكرة جديدة", "Sujet du ticket *": "موضوع التذكرة *",
-  "Nom client *": "اسم العميل *", "Sujet": "الموضوع", "Mis à jour": "محدث",
-  "Aucun message": "لا توجد رسائل", "Répondre...": "الرد...",
-  "Réponse envoyée !": "تم إرسال الرد!", "Rechercher un ticket...": "بحث عن تذكرة...",
-  "Sujet et client requis.": "الموضوع والعميل مطلوبان.",
-  "Technique": "تقني", "Information": "معلومة", "Paiement": "دفع",
-  // Loyalty
-  "Membres actifs": "الأعضاء النشطون", "Points en circulation": "النقاط المتداولة",
-  "Membres Platinum": "أعضاء بلاتينيوم", "Membres Gold": "أعضاء ذهبيون",
-  "Niveaux de fidélité": "مستويات الولاء", "Membres du programme": "أعضاء البرنامج",
-  "Points": "النقاط", "Dernière activité": "آخر نشاط",
-  "+ Points": "+ نقاط", "Échanger": "استبدال", "Catalogue récompenses": "كتالوج المكافآت",
-  "Ajouter des points": "إضافة نقاط", "Échanger des points": "استبدال النقاط",
-  "Points à ajouter": "النقاط المضافة", "Raison": "السبب", "Nouveau solde :": "الرصيد الجديد:",
-  "Parrainage": "إحالة", "Anniversaire": "عيد ميلاد", "Promotion": "ترقية", "Manuel": "يدوي",
-  "Réduction 10%": "خصم 10%", "Activité offerte": "نشاط مجاني",
-  "Pack Silver offert": "باقة فضية مجانية", "Weekend Aventure": "عطلة مغامرة",
-  "Nombre de points invalide.": "عدد النقاط غير صالح.",
-  // Services
-  "Ajouter un service": "إضافة خدمة", "Modifier le service": "تعديل الخدمة",
-  "Nouveau service": "خدمة جديدة", "Groupe min.": "الحد الأدنى للمجموعة",
-  "Groupe max.": "الحد الأقصى للمجموعة", "Tags": "الوسوم", "Ajouter un tag...": "إضافة وسم...",
-  "Nom requis.": "الاسم مطلوب.", "/ pers.": "/ شخص", "Groupe :": "المجموعة:",
-  // Social
-  "Instagram Business": "إنستغرام بزنس", "Connecté": "متصل", "Déconnecté": "غير متصل",
-  "Abonnés": "المتابعون", "Publications": "المنشورات", "Portée moy.": "متوسط الوصول",
-  "Reconnecter": "إعادة الاتصال", "Connecter Instagram": "ربط إنستغرام",
-  "Facebook Page": "صفحة فيسبوك", "J'aime": "إعجابات", "Check-ins": "تسجيلات الحضور",
-  "Connecter Facebook": "ربط فيسبوك",
-  "Automatisation & Synchronisation": "الأتمتة والمزامنة",
-  "Publication automatique": "نشر تلقائي", "Synchroniser les avis": "مزامنة الآراء",
-  "Enregistrer la configuration": "حفظ الإعدادات",
-  "Aperçu flux Instagram": "معاينة خلاصة إنستغرام", "Voir le profil": "عرض الملف الشخصي",
-  "Composer une publication": "إنشاء منشور", "Rédigez votre publication...": "اكتب منشورك...",
-  "Aperçu Facebook": "معاينة فيسبوك", "Publier maintenant": "نشر الآن", "Programmer": "جدولة",
-  // Settings
-  "Général": "عام", "Sécurité": "الأمان",
-  "Apparence": "المظهر", "Intégrations": "التكاملات", "Sauvegardes": "النسخ الاحتياطية",
-  "Informations du site": "معلومات الموقع", "Nom du site": "اسم الموقع",
-  "Tagline / Slogan": "الشعار", "Langue par défaut": "اللغة الافتراضية",
-  "Fuseau horaire": "المنطقة الزمنية", "Contact & localisation": "الاتصال والموقع",
-  "Email de contact": "البريد الإلكتروني للتواصل", "Téléphone principal": "الهاتف الرئيسي",
-  "Adresse physique": "العنوان الفعلي", "Horaires d'ouverture": "أوقات العمل",
-  "Changer le mot de passe": "تغيير كلمة المرور", "Mot de passe actuel": "كلمة المرور الحالية",
-  "Nouveau mot de passe": "كلمة المرور الجديدة",
-  "Authentification à deux facteurs (2FA)": "المصادقة الثنائية",
-  "Délai d'expiration de session": "مهلة انتهاء الجلسة",
-  "Historique des connexions": "سجل تسجيلات الدخول",
-  "Déconnecter toutes les sessions": "قطع جميع الجلسات",
-  "Notifications par email": "إشعارات البريد الإلكتروني",
-  "Rapport hebdomadaire": "تقرير أسبوعي", "Couleurs & thème": "الألوان والثيم",
-  "Mode sombre": "الوضع الداكن", "Mode compact": "الوضع المضغوط",
-  "Aperçu en temps réel": "معاينة في الوقت الفعلي", "Logo & médias": "الشعار والوسائط",
-  "Appliquer le thème": "تطبيق الثيم", "Zone dangereuse": "منطقة خطرة",
-  "Sauvegarde automatique": "نسخ احتياطي تلقائي", "Fréquence": "التكرار",
-  "Lancer une sauvegarde maintenant": "بدء نسخ احتياطي الآن",
-  "Historique des sauvegardes": "سجل النسخ الاحتياطية", "Succès": "ناجح", "Échec": "فاشل",
-  // Users
-  "Total utilisateurs": "إجمالي المستخدمين", "Administrateurs": "المديرون",
-  "Actifs": "النشطون", "Suspendus": "الموقوفون",
-  "Rechercher un utilisateur...": "بحث عن مستخدم...",
-  "Nouvel utilisateur": "مستخدم جديد", "Modifier l'utilisateur": "تعديل المستخدم",
-  "Matrice des rôles et permissions": "مصفوفة الأدوار والصلاحيات",
-  "Jamais": "أبدًا", "Créé le": "تاريخ الإنشاء", "Dernière connexion": "آخر تسجيل دخول",
-  "Admin": "مدير", "Éditeur": "محرر", "Modérateur": "مشرف", "Lecteur": "قارئ",
-  // Contacts
-  "Ajouter un contact": "إضافة جهة اتصال", "Modifier le contact": "تعديل جهة الاتصال",
-  "Nouveau contact": "جهة اتصال جديدة", "Type de contact": "نوع جهة الاتصال",
-  "Fournisseur": "مورد", "Moniteur": "مشرف", "Staff": "موظف",
-  "Dernier contact :": "آخر تواصل:", "Aucun contact trouvé.": "لا توجد جهات اتصال.",
-  // Materiels
-  "Total articles": "إجمالي المقالات", "Disponibles": "متاح",
-  "En location/usage": "في الإيجار", "Rechercher un matériel...": "بحث عن معدة...",
-  "Ajouter un matériel": "إضافة معدة", "Modifier le matériel": "تعديل المعدة",
-  "Nouveau matériel": "معدة جديدة", "N° de série": "الرقم التسلسلي",
-  "Date d'achat": "تاريخ الشراء", "Emplacement de stockage": "موقع التخزين",
-  "Attribuer le matériel": "تخصيص المعدة", "Attribué à": "مخصص لـ",
-  "Quantité": "الكمية", "Date de retour prévue": "تاريخ الإرجاع المتوقع",
-  "Estimation du coût": "تقدير التكلفة", "Confirmer l'attribution": "تأكيد التخصيص",
-  "Retour": "إرجاع", "Disponibilité": "التوفر", "Attribuer": "تخصيص",
-  "Aucune attribution active": "لا توجد تخصيصات نشطة",
-  "Escalade": "تسلق", "Kayak": "كاياك", "Paintball": "بينتبول", "Camping": "تخييم",
-  "Prix d'achat (TND)": "سعر الشراء (دينار)", "Prix de location (TND/jour)": "سعر الإيجار (دينار/يوم)",
-  // FAQ / Content
-  "Éditeur FAQ": "محرر الأسئلة الشائعة", "Ajouter une question": "إضافة سؤال",
-  "Enregistrer la FAQ": "حفظ الأسئلة الشائعة", "Aucune question pour le moment.": "لا توجد أسئلة حاليًا.",
-  "Éditeur Hero": "محرر الصفحة الرئيسية", "Titre principal": "العنوان الرئيسي",
-  "Sous-titre": "العنوان الفرعي", "Image de fond": "صورة الخلفية",
-  "Opacité overlay :": "عتامة التغطية:", "Aperçu mobile": "معاينة الجوال",
-  "Éditeur À propos": "محرر قسم حول", "Mission": "المهمة",
-  "Gestion des Témoignages": "إدارة الشهادات", "Éditeur Footer": "محرر التذييل",
-  "Paramètres SEO": "إعدادات SEO", "Enregistrer SEO": "حفظ SEO",
-  "Enregistrer Footer": "حفظ التذييل", "Hero": "الرئيسية", "À propos": "حول",
-  "Témoignages": "الشهادات", "Footer": "التذييل",
-  // General
-  "Confirmer la suppression": "تأكيد الحذف",
-};
 
-interface LangCtx {
-  lang: Lang;
-  setLang: (l: Lang) => void;
-  tr: (text: string) => string;
-}
+
 const LanguageContext = createContext<LangCtx>({
   lang: "fr", setLang: () => { },
   tr: (t) => t,
@@ -302,7 +94,7 @@ type Page =
   | "dashboard" | "reservations" | "activities" | "packs"
   | "reviews" | "faq" | "content" | "sponsors" | "stats"
   | "users" | "settings" | "finances" | "contacts" | "materiel"
-  | "calendar" | "tasks" | "tickets" | "loyalty" | "services" | "social";
+  | "calendar" | "tasks" | "tickets" | "loyalty" | "services" | "social" | "booking";
 
 type ReservationStatus = "Confirmée" | "En attente" | "Annulée";
 
@@ -608,11 +400,12 @@ const navItems: { icon: React.ReactNode; label: string; page: Page; badge?: numb
   { icon: <CalendarCheck size={18} />, label: "Réservations", page: "reservations", badge: 12 },
   { icon: <Target size={18} />, label: "Activités", page: "activities" },
   { icon: <Package size={18} />, label: "Packs & Tarifs", page: "packs" },
+  { icon: <ClipboardList size={18} />, label: "Options Réservation", page: "booking" },
   { icon: <MessageSquare size={18} />, label: "Avis Clients", page: "reviews" },
-  { icon: <HelpCircle size={18} />, label: "FAQ", page: "faq" },
-  { icon: <FileEdit size={18} />, label: "Contenu du site", page: "content" },
+  
+
   // { icon: <Megaphone size={18} />, label: "Sponsors", page: "sponsors" },         // TODO: à activer
-  { icon: <BarChart2 size={18} />, label: "Statistiques", page: "stats" },
+
   { icon: <Wallet size={18} />, label: "Finances", page: "finances" },
   // { icon: <Users size={18} />, label: "Utilisateurs", page: "users" },             // TODO: à activer
   { icon: <BookOpen size={18} />, label: "Contacts", page: "contacts" },
@@ -621,9 +414,9 @@ const navItems: { icon: React.ReactNode; label: string; page: Page; badge?: numb
   // { icon: <CheckSquare size={18} />, label: "Tâches", page: "tasks" },             // TODO: à activer
   // { icon: <Ticket size={18} />, label: "Tickets Support", page: "tickets" },       // TODO: à activer
   // { icon: <Gift size={18} />, label: "Fidélité", page: "loyalty" },                // TODO: à activer
-  { icon: <Sparkles size={18} />, label: "Services", page: "services" },
+ 
   // { icon: <Share2 size={18} />, label: "Réseaux Sociaux", page: "social" },        // TODO: à activer
-  { icon: <Settings size={18} />, label: "Paramètres", page: "settings" },
+  
 ];
 
 function Sidebar({ activePage, onNavigate, onLogout, isOpen, onClose }: {
@@ -659,7 +452,6 @@ function Sidebar({ activePage, onNavigate, onLogout, isOpen, onClose }: {
             <div className="w-9 h-9 rounded-lg flex items-center justify-center font-bold text-sm" style={{ background: "#F5A623", color: "#0F1C30" }}>YE</div>
             <div>
               <div className="font-bold text-white text-sm leading-tight">Yakoo Events</div>
-              <div className="text-xs" style={{ color: "#F5A623" }}>Agence Événementielle</div>
             </div>
           </div>
           {/* Close button for mobile screens */}
@@ -669,15 +461,6 @@ function Sidebar({ activePage, onNavigate, onLogout, isOpen, onClose }: {
           >
             <X size={18} />
           </button>
-        </div>
-        <div className="mx-4 mb-4 rounded-lg px-3 py-3" style={{ background: "rgba(255,255,255,0.05)" }}>
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-full flex items-center justify-center font-semibold text-sm" style={{ background: "#F5A623", color: "#0F1C30" }}>AY</div>
-            <div className="flex-1 min-w-0">
-              <div className="text-sm font-medium text-white truncate">Admin Yakoo</div>
-              <div className="text-xs px-2 py-0.5 rounded-full inline-block mt-0.5" style={{ background: "rgba(245,166,35,0.2)", color: "#F5A623" }}>{tr("Super Admin")}</div>
-            </div>
-          </div>
         </div>
         <div className="h-px mx-4 mb-3" style={{ background: "rgba(255,255,255,0.08)" }} />
         <nav className="flex-1 px-3 overflow-y-auto">
@@ -689,7 +472,6 @@ function Sidebar({ activePage, onNavigate, onLogout, isOpen, onClose }: {
                 style={{ background: active ? "rgba(245,166,35,0.12)" : "transparent", borderLeft: active ? "3px solid #F5A623" : "3px solid transparent", color: active ? "#F5A623" : "rgba(255,255,255,0.65)" }}>
                 <span style={{ color: active ? "#F5A623" : "rgba(255,255,255,0.5)" }}>{item.icon}</span>
                 <span className="text-sm font-medium flex-1">{item.label}</span>
-                {item.badge && <span className="text-xs px-1.5 py-0.5 rounded-full font-semibold" style={{ background: "#F5A623", color: "#0F1C30" }}>{item.badge}</span>}
               </button>
             );
           })}
@@ -743,70 +525,11 @@ function Header({ page, onNavigate, onLogout, onToggleSidebar }: { page: Page; o
       </button>
       <h1 className="text-base font-semibold flex-1 truncate" style={{ color: "#1B2A4A" }}>{pageTitles[page]}</h1>
       <div className="flex items-center gap-3">
-        <div className="relative hidden md:block">
-          <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: "#6B7A99" }} />
-          <input placeholder="Rechercher..." className="pl-9 pr-4 py-2 text-sm rounded-lg outline-none" style={{ background: "#F0F2F5", color: "#1B2A4A", width: 200, border: "none" }} />
-        </div>
+        
 
-        {/* Notifications */}
-        <div className="relative">
-          <button onClick={() => { setShowNotifs(!showNotifs); setShowProfile(false); }}
-            className="relative w-9 h-9 rounded-lg flex items-center justify-center" style={{ background: "#F0F2F5" }}>
-            <Bell size={17} style={{ color: "#1B2A4A" }} />
-            {unreadCount > 0 && <span className="absolute top-1 right-1 w-4 h-4 rounded-full text-xs flex items-center justify-center font-bold" style={{ background: "#EF4444", color: "white", fontSize: 10 }}>{unreadCount}</span>}
-          </button>
-          {showNotifs && (
-            <div className="absolute right-0 top-full mt-2 w-80 rounded-xl shadow-xl z-50 overflow-hidden" style={{ background: "white", border: "1px solid rgba(27,42,74,0.1)" }}>
-              <div className="px-4 py-3 flex items-center justify-between border-b" style={{ borderColor: "rgba(27,42,74,0.08)" }}>
-                <span className="text-sm font-semibold" style={{ color: "#1B2A4A" }}>Notifications</span>
-                <button onClick={() => setNotifs(n => n.map(x => ({ ...x, read: true })))} className="text-xs" style={{ color: "#F5A623" }}>Tout marquer lu</button>
-              </div>
-              {notifs.map(n => (
-                <div key={n.id} className="px-4 py-3 flex gap-3 hover:bg-gray-50 cursor-pointer border-b" style={{ borderColor: "rgba(27,42,74,0.05)", background: n.read ? "white" : "rgba(245,166,35,0.04)" }} onClick={() => setNotifs(prev => prev.map(x => x.id === n.id ? { ...x, read: true } : x))}>
-                  <div className="w-2 h-2 rounded-full mt-1.5 flex-shrink-0" style={{ background: n.read ? "transparent" : "#F5A623" }} />
-                  <div className="flex-1 min-w-0">
-                    <p className="text-xs leading-relaxed" style={{ color: "#1B2A4A", fontWeight: n.read ? 400 : 500 }}>{n.text}</p>
-                    <p className="text-xs mt-0.5" style={{ color: "#6B7A99" }}>{n.time}</p>
-                  </div>
-                </div>
-              ))}
-              <div className="px-4 py-2.5 text-center">
-                <button className="text-xs font-medium" style={{ color: "#6B7A99" }}>Voir toutes les notifications</button>
-              </div>
-            </div>
-          )}
-        </div>
+       
 
-        {/* Lang toggle */}
-        <div className="flex text-xs font-medium rounded-lg overflow-hidden border" style={{ borderColor: "rgba(27,42,74,0.15)" }}>
-          {(["fr", "ar"] as Lang[]).map(l => (
-            <button key={l} onClick={() => setLang(l)} className="px-2.5 py-1.5 transition-colors"
-              style={{ background: lang === l ? "#1B2A4A" : "white", color: lang === l ? "white" : "#6B7A99" }}>
-              {l === "fr" ? "FR" : "AR"}
-            </button>
-          ))}
-        </div>
-
-        {/* Profile dropdown */}
-        <div className="relative">
-          <button onClick={() => { setShowProfile(!showProfile); setShowNotifs(false); }}
-            className="flex items-center gap-2 rounded-lg px-2 py-1.5 transition-colors"
-            style={{ background: showProfile ? "#F0F2F5" : "transparent" }}>
-            <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold" style={{ background: "#F5A623", color: "#0F1C30" }}>AY</div>
-            <ChevronDown size={14} style={{ color: "#6B7A99" }} />
-          </button>
-          {showProfile && (
-            <div className="absolute right-0 top-full mt-2 w-44 rounded-xl shadow-lg py-2 z-50" style={{ background: "white", border: "1px solid rgba(27,42,74,0.1)" }}>
-              <button onClick={() => { setShowProfile(false); toast.info("Page profil en cours de développement."); }}
-                className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50 transition-colors" style={{ color: "#1B2A4A" }}>Profil</button>
-              <button onClick={() => { setShowProfile(false); onNavigate("settings"); }}
-                className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50 transition-colors" style={{ color: "#1B2A4A" }}>Paramètres</button>
-              <div className="h-px mx-3 my-1" style={{ background: "rgba(27,42,74,0.08)" }} />
-              <button onClick={() => { setShowProfile(false); onLogout(); }}
-                className="w-full text-left px-4 py-2 text-sm hover:bg-red-50 transition-colors" style={{ color: "#EF4444" }}>Déconnexion</button>
-            </div>
-          )}
-        </div>
+       
       </div>
     </header>
   );
@@ -1088,13 +811,14 @@ function DashboardPage({ reservations, onNavigate, onConfirm, onDelete }: {
 // ─── Reservations Page ────────────────────────────────────────────────────────
 const emptyForm = { client: "", phone: "", email: "", activity: "Accrobranche", date: "", persons: 1, pack: "Bronze" as "Bronze" | "Silver" | "Gold", message: "", status: "En attente" as ReservationStatus };
 
-function ReservationsPage({ reservations, onConfirm, onCancel, onDelete, onUpdateStatus, onAdd }: {
+function ReservationsPage({ reservations, onConfirm, onCancel, onDelete, onUpdateStatus, onAdd, onUpdateDetails }: {
   reservations: Reservation[];
   onConfirm: (id: string) => void;
   onCancel: (id: string) => void;
   onDelete: (id: string) => void;
   onUpdateStatus: (id: string, status: ReservationStatus) => void;
   onAdd: (r: Reservation) => void;
+  onUpdateDetails: (id: string, updatedFields: Partial<Reservation>) => Promise<boolean>;
 }) {
   const [selected, setSelected] = useState<Reservation | null>(null);
   const [newStatus, setNewStatus] = useState<ReservationStatus>("En attente");
@@ -1106,6 +830,52 @@ function ReservationsPage({ reservations, onConfirm, onCancel, onDelete, onUpdat
   const [showAddModal, setShowAddModal] = useState(false);
   const [addForm, setAddForm] = useState(emptyForm);
   const [addErrors, setAddErrors] = useState<Record<string, string>>({});
+
+  const [editClient, setEditClient] = useState("");
+  const [editPhone, setEditPhone] = useState("");
+  const [editActivity, setEditActivity] = useState("");
+  const [editDate, setEditDate] = useState("");
+  const [editPersons, setEditPersons] = useState(1);
+  const [editPack, setEditPack] = useState("");
+
+  const [dbActivities, setDbActivities] = useState<string[]>([]);
+
+  useEffect(() => {
+    const fetchActs = async () => {
+      const { data } = await supabase.from('activities').select('title');
+      if (data && data.length > 0) {
+        setDbActivities(data.map((a: any) => a.title));
+      } else {
+        setDbActivities(["Accrobranche", "Kayak", "Paintball", "Tyrolienne", "Team Building", "Formation", "Anniversaire", "Hébergement"]);
+      }
+    };
+    fetchActs();
+  }, []);
+
+  useEffect(() => {
+    if (selected) {
+      setNewStatus(selected.status);
+      setEditClient(selected.client);
+      setEditPhone(selected.phone);
+      setEditActivity(selected.activity);
+      
+      let parsedDate = "";
+      if (selected.date) {
+        const parts = selected.date.split("/");
+        if (parts.length === 3) {
+          parsedDate = `${parts[2]}-${parts[1].padStart(2, "0")}-${parts[0].padStart(2, "0")}`;
+        } else {
+          const d = new Date(selected.date);
+          if (!isNaN(d.getTime())) {
+            parsedDate = d.toISOString().split("T")[0];
+          }
+        }
+      }
+      setEditDate(parsedDate);
+      setEditPersons(selected.persons);
+      setEditPack(selected.pack);
+    }
+  }, [selected]);
 
   const validateAdd = () => {
     const errs: Record<string, string> = {};
@@ -1379,52 +1149,83 @@ function ReservationsPage({ reservations, onConfirm, onCancel, onDelete, onUpdat
               <h2 className="font-semibold text-base" style={{ color: "#1B2A4A" }}>Réservation {selected.id}</h2>
               <button onClick={() => setSelected(null)} className="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-gray-100"><X size={16} style={{ color: "#6B7A99" }} /></button>
             </div>
-            <div className="p-6 space-y-5 flex-1">
-              <div className="rounded-xl p-4 flex items-center gap-4" style={{ background: "#F0F2F5" }}>
-                <div className="w-12 h-12 rounded-full flex items-center justify-center text-sm font-bold text-white" style={{ background: avatarColor(selected.client) }}>{initials(selected.client)}</div>
+            <div className="p-6 space-y-4 flex-1">
+              <div className="space-y-3">
                 <div>
-                  <div className="font-semibold" style={{ color: "#1B2A4A" }}>{selected.client}</div>
-                  <div className="text-sm" style={{ color: "#6B7A99" }}>{selected.phone}</div>
-                  <div className="text-sm" style={{ color: "#6B7A99" }}>client@email.com</div>
+                  <label className="block text-xs font-semibold mb-1" style={{ color: "#6B7A99" }}>Nom du client</label>
+                  <input type="text" value={editClient} onChange={e => setEditClient(e.target.value)} className="w-full px-3 py-2 text-sm rounded-lg outline-none" style={{ background: "#F0F2F5", border: "none", color: "#1B2A4A" }} />
                 </div>
-              </div>
-              <div className="grid grid-cols-2 gap-3">
-                {[["Activité", selected.activity], ["Date souhaitée", selected.date], ["Nombre de personnes", String(selected.persons)], ["Pack sélectionné", selected.pack], ["Date de soumission", selected.received], ["Statut actuel", selected.status]].map(([label, val]) => (
-                  <div key={label} className="rounded-lg p-3" style={{ background: "#F8F9FB" }}>
-                    <div className="text-xs mb-1" style={{ color: "#6B7A99" }}>{label}</div>
-                    <div className="text-sm font-semibold" style={{ color: "#1B2A4A" }}>{val}</div>
+                <div>
+                  <label className="block text-xs font-semibold mb-1" style={{ color: "#6B7A99" }}>Téléphone</label>
+                  <input type="text" value={editPhone} onChange={e => setEditPhone(e.target.value)} className="w-full px-3 py-2 text-sm rounded-lg outline-none" style={{ background: "#F0F2F5", border: "none", color: "#1B2A4A" }} />
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-semibold mb-1" style={{ color: "#6B7A99" }}>Activité</label>
+                    <select value={editActivity} onChange={e => setEditActivity(e.target.value)} className="w-full px-3 py-2.5 text-sm rounded-lg outline-none" style={{ background: "#F0F2F5", border: "none", color: "#1B2A4A" }}>
+                      {dbActivities.map(a => <option key={a} value={a}>{a}</option>)}
+                    </select>
                   </div>
-                ))}
-              </div>
-              <div>
-                <div className="text-xs font-medium mb-2" style={{ color: "#6B7A99" }}>Message du client</div>
-                <div className="text-sm p-3 rounded-lg" style={{ background: "#F8F9FB", color: "#1B2A4A" }}>
-                  Bonjour, je souhaite organiser un événement pour notre équipe de {selected.persons} personnes. Merci de confirmer la disponibilité.
+                  <div>
+                    <label className="block text-xs font-semibold mb-1" style={{ color: "#6B7A99" }}>Pack</label>
+                    <select value={editPack} onChange={e => setEditPack(e.target.value)} className="w-full px-3 py-2.5 text-sm rounded-lg outline-none" style={{ background: "#F0F2F5", border: "none", color: "#1B2A4A" }}>
+                      {["Bronze", "Silver", "Gold"].map(p => <option key={p} value={p}>{p}</option>)}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold mb-1" style={{ color: "#6B7A99" }}>Date</label>
+                    <input type="date" value={editDate} onChange={e => setEditDate(e.target.value)} className="w-full px-3 py-2 text-sm rounded-lg outline-none" style={{ background: "#F0F2F5", border: "none", color: "#1B2A4A" }} />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold mb-1" style={{ color: "#6B7A99" }}>Personnes</label>
+                    <input type="number" min={1} value={editPersons} onChange={e => setEditPersons(Number(e.target.value))} className="w-full px-3 py-2 text-sm rounded-lg outline-none" style={{ background: "#F0F2F5", border: "none", color: "#1B2A4A" }} />
+                  </div>
                 </div>
-              </div>
-              <div>
-                <div className="text-xs font-medium mb-2" style={{ color: "#6B7A99" }}>Changer le statut</div>
-                <div className="flex gap-2">
-                  <select value={newStatus} onChange={e => setNewStatus(e.target.value as ReservationStatus)} className="flex-1 px-3 py-2 text-sm rounded-lg outline-none" style={{ background: "#F0F2F5", border: "none", color: "#1B2A4A" }}>
+                <div>
+                  <label className="block text-xs font-semibold mb-1" style={{ color: "#6B7A99" }}>Statut</label>
+                  <select value={newStatus} onChange={e => setNewStatus(e.target.value as ReservationStatus)} className="w-full px-3 py-2 text-sm rounded-lg outline-none" style={{ background: "#F0F2F5", border: "none", color: "#1B2A4A" }}>
                     <option>En attente</option><option>Confirmée</option><option>Annulée</option>
                   </select>
-                  <button onClick={() => { onUpdateStatus(selected.id, newStatus); setSelected(null); }} className="px-4 py-2 text-sm font-medium rounded-lg text-white" style={{ background: "#1B2A4A" }}>Mettre à jour</button>
                 </div>
               </div>
+
+              <div>
+                <button
+                  onClick={async () => {
+                    const success = await onUpdateDetails(selected.id, {
+                      client: editClient,
+                      phone: editPhone,
+                      activity: editActivity,
+                      date: editDate,
+                      persons: editPersons,
+                      pack: editPack,
+                      status: newStatus
+                    });
+                    if (success) {
+                      setSelected(null);
+                    }
+                  }}
+                  className="w-full py-2.5 text-sm font-bold rounded-lg text-white"
+                  style={{ background: "#1B2A4A" }}
+                >
+                  Enregistrer les modifications
+                </button>
+              </div>
+
               <div className="flex gap-2">
-                <button onClick={() => toast.success(`Email de confirmation envoyé à ${selected.client} !`)}
-                  className="flex-1 flex items-center justify-center gap-2 py-2.5 text-sm font-medium rounded-lg border" style={{ borderColor: "rgba(27,42,74,0.15)", color: "#1B2A4A" }}>
+                <button onClick={() => toast.success(`Email de confirmation envoyé à ${editClient} !`)}
+                  className="flex-1 flex items-center justify-center gap-2 py-2 text-sm font-medium rounded-lg border" style={{ borderColor: "rgba(27,42,74,0.15)", color: "#1B2A4A" }}>
                   <Mail size={14} /> Envoyer confirmation
                 </button>
                 <button onClick={() => toast.info("Impression en cours...")}
-                  className="flex-1 flex items-center justify-center gap-2 py-2.5 text-sm font-medium rounded-lg border" style={{ borderColor: "rgba(27,42,74,0.15)", color: "#1B2A4A" }}>
+                  className="flex-1 flex items-center justify-center gap-2 py-2 text-sm font-medium rounded-lg border" style={{ borderColor: "rgba(27,42,74,0.15)", color: "#1B2A4A" }}>
                   <Printer size={14} /> Imprimer
                 </button>
               </div>
-              <div>
-                <div className="text-xs font-medium mb-2" style={{ color: "#6B7A99" }}>Note interne</div>
-                <textarea value={note} onChange={e => setNote(e.target.value)} placeholder="Ajouter une note interne..." className="w-full p-3 text-sm rounded-lg resize-none outline-none" rows={3} style={{ background: "#F0F2F5", border: "none", color: "#1B2A4A" }} />
-                <button onClick={() => { toast.success("Note enregistrée !"); }} className="mt-2 px-4 py-2 text-sm font-medium rounded-lg text-white" style={{ background: "#1B2A4A" }}>Enregistrer la note</button>
+              <div className="pt-2 border-t" style={{ borderColor: "rgba(27,42,74,0.08)" }}>
+                <div className="text-xs font-medium mb-1.5" style={{ color: "#6B7A99" }}>Note interne</div>
+                <textarea value={note} onChange={e => setNote(e.target.value)} placeholder="Ajouter une note interne..." className="w-full p-3 text-sm rounded-lg resize-none outline-none" rows={2} style={{ background: "#F0F2F5", border: "none", color: "#1B2A4A" }} />
+                <button onClick={() => { toast.success("Note enregistrée !"); }} className="mt-1.5 w-full py-2 text-sm font-medium rounded-lg text-white" style={{ background: "#6B7A99" }}>Enregistrer la note</button>
               </div>
             </div>
           </div>
@@ -1684,21 +1485,184 @@ function ActivitiesPage() {
   );
 }
 
+// ─── Booking Options Page ──────────────────────────────────────────────────────
+const BOOKING_CAT_TITLES = ["Activités & Loisirs", "Location de Matériels", "Organisation d'Événements"];
+
+function BookingOptionsPage() {
+  const [categories, setCategories] = useState<{ title: string; options: string[] }[]>(
+    BOOKING_CAT_TITLES.map(title => ({ title, options: [] }))
+  );
+  const [loading, setLoading] = useState(true);
+  const [newItemInputs, setNewItemInputs] = useState<Record<string, string>>(
+    Object.fromEntries(BOOKING_CAT_TITLES.map(t => [t, ""]))
+  );
+  const [saving, setSaving] = useState<Record<string, boolean>>({});
+
+  useEffect(() => {
+    const fetchOptions = async () => {
+      const { data, error } = await supabase.from('booking_options').select('category, name').order('category').order('name');
+      if (error) {
+        toast.error("Erreur de chargement: " + error.message);
+        // Use default data if table doesn't exist yet
+        setCategories(BOOKING_CAT_TITLES.map(title => ({ title, options: [] })));
+      } else if (data) {
+        const grouped: Record<string, string[]> = {};
+        BOOKING_CAT_TITLES.forEach(t => { grouped[t] = []; });
+        data.forEach((row: { category: string; name: string }) => {
+          if (!grouped[row.category]) grouped[row.category] = [];
+          grouped[row.category].push(row.name);
+        });
+        setCategories(BOOKING_CAT_TITLES.map(title => ({ title, options: grouped[title] || [] })));
+      }
+      setLoading(false);
+    };
+    fetchOptions();
+  }, []);
+
+  const handleAddOption = async (catTitle: string) => {
+    const name = (newItemInputs[catTitle] || "").trim();
+    if (!name) return toast.error("Le nom est requis.");
+    const allOptions = categories.flatMap(c => c.options);
+    if (allOptions.includes(name)) return toast.error("Cette option existe déjà.");
+
+    setSaving(prev => ({ ...prev, [catTitle]: true }));
+    const { error } = await supabase.from('booking_options').insert([{ category: catTitle, name }]);
+    setSaving(prev => ({ ...prev, [catTitle]: false }));
+
+    if (error) {
+      toast.error("Erreur d'ajout: " + error.message);
+    } else {
+      setCategories(prev => prev.map(c =>
+        c.title === catTitle ? { ...c, options: [...c.options, name] } : c
+      ));
+      setNewItemInputs(prev => ({ ...prev, [catTitle]: "" }));
+      toast.success(`"${name}" ajouté à ${catTitle}`);
+    }
+  };
+
+  const handleDeleteOption = async (catTitle: string, optionName: string) => {
+    const confirmed = window.confirm(`Supprimer "${optionName}" du formulaire de réservation ?`);
+    if (!confirmed) return;
+
+    const { error } = await supabase.from('booking_options').delete().eq('name', optionName).eq('category', catTitle);
+    if (error) {
+      toast.error("Erreur de suppression: " + error.message);
+    } else {
+      setCategories(prev => prev.map(c =>
+        c.title === catTitle ? { ...c, options: c.options.filter(o => o !== optionName) } : c
+      ));
+      toast.success(`"${optionName}" supprimé.`);
+    }
+  };
+
+  if (loading) return <div className="text-center py-12 text-gray-400">Chargement des options...</div>;
+
+  const catIcons: Record<string, { emoji: string; color: string; bg: string; border: string }> = {
+    "Activités & Loisirs":       { emoji: "🎯", color: "#F5A623", bg: "rgba(245,166,35,0.08)", border: "rgba(245,166,35,0.3)" },
+    "Location de Matériels":      { emoji: "📦", color: "#3B82F6", bg: "rgba(59,130,246,0.08)", border: "rgba(59,130,246,0.3)" },
+    "Organisation d'Événements":  { emoji: "🎉", color: "#8B5CF6", bg: "rgba(139,92,246,0.08)", border: "rgba(139,92,246,0.3)" },
+  };
+
+  return (
+    <div style={{ fontFamily: "Inter, sans-serif" }} className="space-y-4">
+      <div className="rounded-xl p-4 flex items-start gap-3" style={{ background: "rgba(245,166,35,0.06)", border: "1.5px solid rgba(245,166,35,0.2)" }}>
+        <div className="mt-0.5"><Info size={16} style={{ color: "#F5A623" }} /></div>
+        <div>
+          <p className="text-sm font-semibold" style={{ color: "#1B2A4A" }}>Gestion du formulaire de réservation public</p>
+          <p className="text-xs mt-0.5" style={{ color: "#6B7A99" }}>
+            Les options ci-dessous sont affichées dans le formulaire <strong>"Votre Réservation"</strong> sur le site public. Ajoutez ou supprimez des options par catégorie.
+          </p>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+        {categories.map(cat => {
+          const style = catIcons[cat.title] || { emoji: "📋", color: "#1B2A4A", bg: "#F0F2F5", border: "#E8EBF0" };
+          return (
+            <div key={cat.title} className="bg-white rounded-[10px] shadow-[0_2px_12px_rgba(0,0,0,0.08)] overflow-hidden flex flex-col">
+              {/* Header */}
+              <div className="px-5 py-4 border-b" style={{ background: style.bg, borderColor: style.border }}>
+                <div className="flex items-center gap-2.5">
+                  <span className="text-2xl">{style.emoji}</span>
+                  <div>
+                    <div className="font-bold text-sm" style={{ color: style.color }}>{cat.title}</div>
+                    <div className="text-xs mt-0.5" style={{ color: "#6B7A99" }}>{cat.options.length} option{cat.options.length !== 1 ? "s" : ""}</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Add input */}
+              <div className="px-4 pt-4 pb-2">
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    placeholder="Nouvelle option..."
+                    value={newItemInputs[cat.title] || ""}
+                    onChange={e => setNewItemInputs(prev => ({ ...prev, [cat.title]: e.target.value }))}
+                    onKeyDown={e => { if (e.key === "Enter") handleAddOption(cat.title); }}
+                    className="flex-1 px-3 py-2 text-sm rounded-lg outline-none"
+                    style={{ background: "#F0F2F5", border: `1.5px solid ${style.border}`, color: "#1B2A4A" }}
+                  />
+                  <button
+                    onClick={() => handleAddOption(cat.title)}
+                    disabled={saving[cat.title]}
+                    className="w-9 h-9 rounded-lg flex items-center justify-center text-white flex-shrink-0 transition-opacity hover:opacity-80"
+                    style={{ background: style.color }}
+                    title="Ajouter"
+                  >
+                    {saving[cat.title] ? <RefreshCw size={14} className="animate-spin" /> : <Plus size={15} />}
+                  </button>
+                </div>
+              </div>
+
+              {/* Options list */}
+              <div className="px-4 pb-4 flex-1 overflow-y-auto" style={{ maxHeight: "320px" }}>
+                {cat.options.length === 0 ? (
+                  <div className="text-center py-8 text-xs" style={{ color: "#9BA3AF" }}>
+                    <div className="text-2xl mb-2">📭</div>
+                    Aucune option. Ajoutez-en une ci-dessus.
+                  </div>
+                ) : (
+                  <div className="flex flex-col gap-1.5">
+                    {cat.options.map(opt => (
+                      <div
+                        key={opt}
+                        className="flex items-center justify-between gap-2 px-3 py-2 rounded-lg group"
+                        style={{ background: "#F8F9FB", border: "1px solid rgba(27,42,74,0.05)" }}
+                      >
+                        <div className="flex items-center gap-2 min-w-0">
+                          <div className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: style.color }} />
+                          <span className="text-sm truncate" style={{ color: "#1B2A4A" }}>{opt}</span>
+                        </div>
+                        <button
+                          onClick={() => handleDeleteOption(cat.title, opt)}
+                          className="w-6 h-6 rounded flex items-center justify-center opacity-0 group-hover:opacity-100 hover:bg-red-50 transition-all flex-shrink-0"
+                          title="Supprimer"
+                        >
+                          <Trash2 size={12} style={{ color: "#EF4444" }} />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 function PacksPage() {
   const [packStates, setPackStates] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [showAddModal, setShowAddModal] = useState(false);
   const [newPackForm, setNewPackForm] = useState({ tier: "", tagline: "", description: "", selectedActivities: [] as string[], price: 0, badge: "" });
 
-  const ACTIVITIES_LIST = [
-    "Accrobranche", "Tyrolienne", "Kayak", "Paintball",
-    "Mur d'escalade", "Tir à l'arc", "Team Building", "Séminaire",
-    "Geo-searching", "Billards Japonais", "Twister Géant", "Jeu d'équilibre",
-    "Atelier Robotique", "Jeux des fléchettes", "Jeux de labyrinthe", "Animation",
-    "Camping", "Jeu d'entonnoire", "Jeu d'écrou"
-  ];
+  const [activitiesList, setActivitiesList] = useState<string[]>([]);
+  const [newActivityInput, setNewActivityInput] = useState("");
 
-  // Mapping styling based on pack name since it's hardcoded on the UI side
   const packStyles: Record<string, any> = {
     "SILVER": { emoji: "🥈", color: "#94a3b8", bg: "rgba(148,163,184,0.08)", border: "rgba(148,163,184,0.25)" },
     "GOLD": { emoji: "🥇", color: "#F5A623", bg: "rgba(245,166,35,0.08)", border: "rgba(245,166,35,0.35)" },
@@ -1706,35 +1670,94 @@ function PacksPage() {
     "BRONZE": { emoji: "🥉", color: "#CD7F32", bg: "rgba(205,127,50,0.08)", border: "rgba(205,127,50,0.25)" }
   };
 
-  useEffect(() => {
-    const fetchPacks = async () => {
-      const { data } = await supabase.from('packs').select('*').order('price', { ascending: true });
-      if (data && data.length > 0) {
-        setPackStates(data.map(p => ({
+  const fetchPacksAndActivities = async () => {
+    // Fetch packs
+    const { data } = await supabase.from('packs').select('*').order('price', { ascending: true });
+    if (data && data.length > 0) {
+      setPackStates(data.map(p => ({
+        ...p,
+        style: packStyles[p.tier.toUpperCase()] || { emoji: "📦", color: "#1B2A4A", bg: "#F0F2F5", border: "#E8EBF0" },
+        features: Array.isArray(p.features) ? p.features : []
+      })));
+    } else {
+      const defaults = [
+        { tier: "SILVER", tagline: "L'essentiel pour s'amuser", price: 150, games_count: 3, badge: "", features: [{ label: "3 jeux de team building", included: true }, { label: "Photographe", included: false }] },
+        { tier: "GOLD", tagline: "L'expérience complète", price: 250, games_count: 5, badge: "POPULAIRE", features: [{ label: "5 jeux de team building", included: true }, { label: "Photographe", included: true }] },
+        { tier: "PLATINUM", tagline: "Le sur-mesure absolu", price: 400, games_count: 8, badge: "PREMIUM", features: [{ label: "8 jeux de team building", included: true }, { label: "Photographe", included: true }] }
+      ];
+      const { data: inserted } = await supabase.from('packs').insert(defaults).select();
+      if (inserted) {
+        setPackStates(inserted.map((p: any) => ({
           ...p,
           style: packStyles[p.tier.toUpperCase()] || { emoji: "📦", color: "#1B2A4A", bg: "#F0F2F5", border: "#E8EBF0" },
-          features: Array.isArray(p.features) ? p.features : []
+          features: p.features || []
         })));
-      } else {
-        // Fallback if db empty, insert default packs
-        const defaults = [
-          { tier: "SILVER", tagline: "L'essentiel pour s'amuser", price: 150, games_count: 3, badge: "", features: [{ label: "3 jeux de team building", included: true }, { label: "Photographe", included: false }] },
-          { tier: "GOLD", tagline: "L'expérience complète", price: 250, games_count: 5, badge: "POPULAIRE", features: [{ label: "5 jeux de team building", included: true }, { label: "Photographe", included: true }] },
-          { tier: "PLATINUM", tagline: "Le sur-mesure absolu", price: 400, games_count: 8, badge: "PREMIUM", features: [{ label: "8 jeux de team building", included: true }, { label: "Photographe", included: true }] }
-        ];
-        const { data: inserted } = await supabase.from('packs').insert(defaults).select();
-        if (inserted) {
-          setPackStates(inserted.map((p: any) => ({
-            ...p,
-            style: packStyles[p.tier.toUpperCase()] || { emoji: "📦", color: "#1B2A4A", bg: "#F0F2F5", border: "#E8EBF0" },
-            features: p.features || []
-          })));
-        }
       }
-      setLoading(false);
-    };
-    fetchPacks();
+    }
+
+    // Fetch activities
+    const { data: acts } = await supabase.from('activities').select('title');
+    if (acts && acts.length > 0) {
+      const uniqueTitles = Array.from(new Set(acts.map((a: any) => a.title).filter(Boolean))) as string[];
+      setActivitiesList(uniqueTitles);
+    } else {
+      const defaults = [
+        "Accrobranche", "Tyrolienne", "Kayak", "Paintball",
+        "Mur d'escalade", "Tir à l'arc", "Team Building", "Séminaire",
+        "Geo-searching", "Billards Japonais", "Twister Géant", "Jeu d'équilibre",
+        "Atelier Robotique", "Jeux des fléchettes", "Jeux de labyrinthe", "Animation",
+        "Camping", "Jeu d'entonnoire", "Jeu d'écrou"
+      ];
+      setActivitiesList(defaults);
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    fetchPacksAndActivities();
   }, []);
+
+  const handleAddNewActivity = async () => {
+    const actName = newActivityInput.trim();
+    if (!actName) return toast.error("Le nom de l'activité est requis.");
+    if (activitiesList.includes(actName)) return toast.error("Cette activité existe déjà.");
+
+    const { error } = await supabase.from('activities').insert([{
+      title: actName,
+      category: 'Aventure',
+      description: 'Activité ajoutée depuis la page des packs'
+    }]);
+
+    if (error) {
+      toast.error("Erreur lors de l'ajout : " + error.message);
+    } else {
+      setActivitiesList(prev => [...prev, actName]);
+      setNewActivityInput("");
+      toast.success(`Activité "${actName}" ajoutée.`);
+    }
+  };
+
+  const handleDeleteActivity = async (activityName: string) => {
+    const confirmed = window.confirm(`Supprimer l'activité "${activityName}" de la base de données ?`);
+    if (!confirmed) return;
+
+    const { error } = await supabase.from('activities').delete().eq('title', activityName);
+    if (error) {
+      toast.error("Erreur de suppression : " + error.message);
+    } else {
+      setActivitiesList(prev => prev.filter(a => a !== activityName));
+      // Remove from selected packs description if it was there
+      setPackStates(prev => prev.map(p => {
+        const current = (p.description || "").split(" + ").filter(Boolean);
+        if (current.includes(activityName)) {
+          const updated = current.filter(a => a !== activityName);
+          return { ...p, description: updated.join(" + ") };
+        }
+        return p;
+      }));
+      toast.success(`Activité "${activityName}" supprimée.`);
+    }
+  };
 
   const updateFeatureLabel = (packIdx: number, featIdx: number, val: string) => {
     setPackStates(prev => prev.map((p, i) => i === packIdx ? { ...p, features: p.features.map((f: any, fi: number) => fi === featIdx ? { ...f, label: val } : f) } : p));
@@ -1874,18 +1897,47 @@ function PacksPage() {
               </div>
               <div>
                 <label className="block text-xs font-semibold mb-2" style={{ color: "#6B7A99" }}>Types d'activités incluses</label>
-                <div className="grid grid-cols-2 gap-1.5 p-3 rounded-lg" style={{ background: "#F0F2F5" }}>
-                  {ACTIVITIES_LIST.map(act => {
+                
+                {/* Form to add custom activity */}
+                <div className="flex gap-1.5 mb-2.5">
+                  <input
+                    type="text"
+                    placeholder="Nouvelle activité..."
+                    value={newActivityInput}
+                    onChange={e => setNewActivityInput(e.target.value)}
+                    className="flex-1 px-2.5 py-1.5 text-xs rounded-lg outline-none"
+                    style={{ background: "#F0F2F5", border: "1px solid rgba(27,42,74,0.1)", color: "#1B2A4A" }}
+                  />
+                  <button
+                    onClick={handleAddNewActivity}
+                    className="px-3 py-1.5 text-xs font-bold rounded-lg text-white"
+                    style={{ background: "#1B2A4A" }}
+                  >
+                    + Ajouter
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-2 gap-1.5 p-3 rounded-lg max-h-48 overflow-y-auto" style={{ background: "#F0F2F5" }}>
+                  {activitiesList.map(act => {
                     const selected = (pack.description || "").split(" + ").filter(Boolean).includes(act);
                     return (
-                      <label key={act} className="flex items-center gap-2 text-xs cursor-pointer rounded-md px-2 py-1.5 transition-colors" style={{ background: selected ? pack.style.color + "25" : "transparent", color: selected ? pack.style.color : "#6B7A99", fontWeight: selected ? 600 : 400 }}>
-                        <input type="checkbox" checked={selected} onChange={() => {
-                          const current = (pack.description || "").split(" + ").filter(Boolean);
-                          const updated = selected ? current.filter((a) => a !== act) : [...current, act];
-                          setPackStates(prev => prev.map((p, i) => i === packIdx ? { ...p, description: updated.join(" + ") } : p));
-                        }} style={{ accentColor: pack.style.color }} />
-                        {act}
-                      </label>
+                      <div key={act} className="flex items-center justify-between gap-1.5 p-1 rounded transition-colors" style={{ background: selected ? pack.style.color + "20" : "transparent" }}>
+                        <label className="flex items-center gap-1.5 text-xs cursor-pointer select-none truncate flex-1" style={{ color: selected ? pack.style.color : "#6B7A99", fontWeight: selected ? 600 : 400 }}>
+                          <input type="checkbox" checked={selected} onChange={() => {
+                            const current = (pack.description || "").split(" + ").filter(Boolean);
+                            const updated = selected ? current.filter((a) => a !== act) : [...current, act];
+                            setPackStates(prev => prev.map((p, i) => i === packIdx ? { ...p, description: updated.join(" + ") } : p));
+                          }} style={{ accentColor: pack.style.color }} />
+                          <span className="truncate">{act}</span>
+                        </label>
+                        <button
+                          onClick={() => handleDeleteActivity(act)}
+                          className="w-5 h-5 rounded flex items-center justify-center hover:bg-red-50 text-red-500 opacity-60 hover:opacity-100 transition-opacity flex-shrink-0"
+                          title="Supprimer cette activité"
+                        >
+                          <Trash2 size={10} />
+                        </button>
+                      </div>
                     );
                   })}
                 </div>
@@ -1951,19 +2003,28 @@ function PacksPage() {
               </div>
               <div>
                 <label className="block text-xs font-semibold mb-2" style={{ color: "#6B7A99" }}>Types d'activités incluses</label>
-                <div className="grid grid-cols-2 gap-1.5 p-3 rounded-lg" style={{ background: "#F0F2F5" }}>
-                  {ACTIVITIES_LIST.map(act => {
+                <div className="grid grid-cols-2 gap-1.5 p-3 rounded-lg max-h-48 overflow-y-auto" style={{ background: "#F0F2F5" }}>
+                  {activitiesList.map(act => {
                     const selected = newPackForm.selectedActivities.includes(act);
                     return (
-                      <label key={act} className="flex items-center gap-2 text-xs cursor-pointer rounded-md px-2 py-1.5 transition-colors" style={{ background: selected ? "rgba(245,166,35,0.15)" : "transparent", color: selected ? "#F5A623" : "#6B7A99", fontWeight: selected ? 600 : 400 }}>
-                        <input type="checkbox" checked={selected} onChange={() => {
-                          const updated = selected
-                            ? newPackForm.selectedActivities.filter(a => a !== act)
-                            : [...newPackForm.selectedActivities, act];
-                          setNewPackForm({ ...newPackForm, selectedActivities: updated });
-                        }} style={{ accentColor: "#F5A623" }} />
-                        {act}
-                      </label>
+                      <div key={act} className="flex items-center justify-between gap-1.5 p-1 rounded transition-colors" style={{ background: selected ? "rgba(245,166,35,0.15)" : "transparent" }}>
+                        <label className="flex items-center gap-1.5 text-xs cursor-pointer select-none truncate flex-1" style={{ color: selected ? "#F5A623" : "#6B7A99", fontWeight: selected ? 600 : 400 }}>
+                          <input type="checkbox" checked={selected} onChange={() => {
+                            const updated = selected
+                              ? newPackForm.selectedActivities.filter(a => a !== act)
+                              : [...newPackForm.selectedActivities, act];
+                            setNewPackForm({ ...newPackForm, selectedActivities: updated });
+                          }} style={{ accentColor: "#F5A623" }} />
+                          <span className="truncate">{act}</span>
+                        </label>
+                        <button
+                          onClick={() => handleDeleteActivity(act)}
+                          className="w-5 h-5 rounded flex items-center justify-center hover:bg-red-50 text-red-500 opacity-60 hover:opacity-100 transition-opacity flex-shrink-0"
+                          title="Supprimer cette activité"
+                        >
+                          <Trash2 size={10} />
+                        </button>
+                      </div>
                     );
                   })}
                 </div>
@@ -6910,8 +6971,72 @@ function AppInner() {
     setReservations(prev => prev.map(r => r.id === id ? { ...r, status } : r));
     toast.success(`Statut mis à jour : ${status}`);
   };
-  const addReservation = (r: Reservation) => {
-    setReservations(prev => [r, ...prev]);
+  const updateReservationDetails = async (id: string, updatedFields: Partial<Reservation>) => {
+    const updates: any = {};
+    if (updatedFields.client !== undefined) updates.contact_name = updatedFields.client;
+    if (updatedFields.phone !== undefined) updates.contact_phone = updatedFields.phone;
+    if (updatedFields.activity !== undefined) updates.activity_name = updatedFields.activity;
+    if (updatedFields.persons !== undefined) updates.group_size = updatedFields.persons;
+    if (updatedFields.pack !== undefined) updates.notes = updatedFields.pack;
+    if (updatedFields.status !== undefined) {
+      updates.status = updatedFields.status === "Confirmée" ? 'confirmed' : updatedFields.status === "Annulée" ? 'cancelled' : 'pending';
+    }
+    if (updatedFields.date !== undefined) {
+      updates.reservation_date = updatedFields.date;
+    }
+
+    const { error } = await supabase.from('reservations').update(updates).eq('id', id);
+    if (error) {
+      toast.error("Erreur lors de la mise à jour : " + error.message);
+      return false;
+    } else {
+      toast.success("Réservation mise à jour avec succès !");
+      setReservations(prev => prev.map(r => {
+        if (r.id === id) {
+          let displayDate = r.date;
+          if (updatedFields.date) {
+            displayDate = new Date(updatedFields.date).toLocaleDateString('fr-FR');
+          }
+          return {
+            ...r,
+            ...updatedFields,
+            date: displayDate
+          };
+        }
+        return r;
+      }));
+      return true;
+    }
+  };
+  const addReservation = async (r: Reservation) => {
+    const dbStatus = r.status === "Confirmée" ? 'confirmed' : r.status === "Annulée" ? 'cancelled' : 'pending';
+    const { data, error } = await supabase.from('reservations').insert([{
+      contact_name: r.client,
+      contact_phone: r.phone,
+      activity_name: r.activity,
+      reservation_date: r.date,
+      group_size: r.persons,
+      notes: r.pack,
+      status: dbStatus
+    }]).select().single();
+
+    if (error) {
+      toast.error("Erreur lors de la création : " + error.message);
+    } else if (data) {
+      toast.success("Réservation créée avec succès !");
+      const newMapped = {
+        id: data.id,
+        client: data.contact_name || 'Anonyme',
+        phone: data.contact_phone || '',
+        activity: data.activity_name || '',
+        date: data.reservation_date ? new Date(data.reservation_date).toLocaleDateString('fr-FR') : '',
+        persons: data.group_size || 0,
+        pack: data.notes || '',
+        status: (data.status === 'confirmed' ? 'Confirmée' : data.status === 'cancelled' ? 'Annulée' : 'En attente') as ReservationStatus,
+        received: new Date(data.created_at).toLocaleDateString('fr-FR')
+      };
+      setReservations(prev => [newMapped, ...prev]);
+    }
   };
 
   if (!isLoggedIn) {
@@ -6926,10 +7051,11 @@ function AppInner() {
   const renderPage = () => {
     switch (page) {
       case "dashboard": return <DashboardPage reservations={reservations} onNavigate={setPage} onConfirm={confirmReservation} onDelete={deleteReservation} />;
-      case "reservations": return <ReservationsPage reservations={reservations} onConfirm={confirmReservation} onCancel={cancelReservation} onDelete={deleteReservation} onUpdateStatus={updateReservationStatus} onAdd={addReservation} />;
+      case "reservations": return <ReservationsPage reservations={reservations} onConfirm={confirmReservation} onCancel={cancelReservation} onDelete={deleteReservation} onUpdateStatus={updateReservationStatus} onAdd={addReservation} onUpdateDetails={updateReservationDetails} />;
       case "finances": return <FinancesPage />;
       case "activities": return <ActivitiesPage />;
       case "packs": return <PacksPage />;
+      case "booking": return <BookingOptionsPage />;
       case "reviews": return <ReviewsPage />;
       case "faq": return <FAQPage />;
       case "content": return <ContentPage />;
