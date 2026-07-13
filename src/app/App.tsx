@@ -3654,45 +3654,7 @@ function Footer() {
     <footer className="relative overflow-hidden" style={{ background: "#040c18" }}>
 
       {/* Top CTA band */}
-      <div className="relative overflow-hidden" style={{ background: NAVY, borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
-        {/* Diagonal gold stripe */}
-        <div
-          className="absolute top-0 right-0 h-full w-64 opacity-10"
-          style={{ background: `linear-gradient(135deg, transparent 40%, ${GOLD} 100%)` }}
-        />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-10 flex flex-col md:flex-row items-center justify-between gap-4 sm:gap-6">
-          <div className="text-center md:text-left">
-            <h3
-              className="font-black text-white leading-tight"
-              style={{ fontFamily: "'KG Red Hands', sans-serif", fontSize: "clamp(1.3rem, 3vw, 2.4rem)", letterSpacing: "-0.02em" }}
-            >
-              Prêt pour votre prochaine<br />
-              <span style={{ color: GOLD }}>aventure ?</span>
-            </h3>
-            <p className="text-sm mt-2" style={{ fontFamily: "'KG Red Hands', sans-serif", color: "rgba(255,255,255,0.65)" }}>
-              Réservez dès aujourd'hui et vivez une expérience inoubliable.
-            </p>
-          </div>
-          <div className="flex flex-wrap gap-3 justify-center md:justify-end w-full md:w-auto">
-            <motion.a
-              href="#reservation"
-              whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}
-              className="inline-flex items-center gap-2 px-5 sm:px-7 py-3 sm:py-3.5 rounded-2xl font-bold text-sm"
-              style={{ fontFamily: "'KG Red Hands', sans-serif", background: GOLD, color: NAVY, boxShadow: `0 8px 24px rgba(245,166,35,0.35)` }}
-            >
-              Réserver maintenant <ArrowRight size={15} />
-            </motion.a>
-            <motion.a
-              href={`tel:${phone.replace(/\s+/g, '')}`}
-              whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}
-              className="inline-flex items-center gap-2 px-5 sm:px-7 py-3 sm:py-3.5 rounded-2xl font-bold text-sm"
-              style={{ fontFamily: "'KG Red Hands', sans-serif", background: "rgba(255,255,255,0.08)", color: "#fff", border: "1px solid rgba(255,255,255,0.12)" }}
-            >
-              <Phone size={14} /> {phone}
-            </motion.a>
-          </div>
-        </div>
-      </div>
+      
 
       {/* Main footer body */}
       <div className="relative max-w-7xl mx-auto px-6 pt-16 pb-8">
@@ -3760,23 +3722,7 @@ function Footer() {
           </div>
 
           {/* Activities */}
-          <div>
-            <p className="text-[10px] font-black uppercase tracking-[0.22em] mb-5" style={{ fontFamily: "'KG Red Hands', sans-serif", color: GOLD }}>Activités</p>
-            <ul className="flex flex-col gap-2.5">
-              {FOOTER_ACTIVITIES.map((act) => (
-                <li key={act}>
-                  <a
-                    href="#activites"
-                    className="text-sm group flex items-center gap-2 transition-colors"
-                    style={{ fontFamily: "'KG Red Hands', sans-serif", color: "rgba(255,255,255,0.60)" }}
-                  >
-                    <span className="w-0 h-px transition-all duration-300 group-hover:w-4" style={{ background: GOLD }} />
-                    <span className="group-hover:text-white transition-colors duration-200">{act}</span>
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
+          
 
           {/* Contact */}
           <div>
