@@ -298,7 +298,7 @@ function Navbar() {
             <div className="flex items-center gap-3">
               <div className="hidden lg:block">
                 <Button href="#" icon={ArrowRight}>
-                  Comming soon
+                  Coming soon
                 </Button>
               </div>
 
