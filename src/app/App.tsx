@@ -3733,14 +3733,14 @@ function Footer() {
           {/* Brand column */}
           <div className="col-span-1 sm:col-span-2 lg:col-span-1">
             {/* Logo */}
-            <div className="flex items-center gap-3 mb-5">
-              <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: GOLD }}>
-                <span className="font-black text-base leading-none" style={{ fontFamily: "'KG Red Hands', sans-serif", color: NAVY }}>Y∞</span>
-              </div>
-              <div className="flex flex-col leading-none">
-                <span className="font-black text-xl tracking-wide text-white" style={{ fontFamily: "'KG Red Hands', sans-serif" }}>YAKOO</span>
-                <span className="text-[8px] font-semibold tracking-[0.22em] uppercase" style={{ fontFamily: "'KG Red Hands', sans-serif", color: GOLD }}>EVENTS</span>
-              </div>
+            <div className="mb-5">
+              <a href="#accueil">
+                <img
+                  src={logoImg}
+                  alt="Yakoo Events"
+                  style={{ height: "140px", width: "auto", objectFit: "contain" }}
+                />
+              </a>
             </div>
 
             <p className="text-sm leading-relaxed mb-6" style={{ fontFamily: "'KG Red Hands', sans-serif", color: "rgba(255,255,255,0.32)", maxWidth: "240px" }}>
@@ -4533,7 +4533,10 @@ export default function App() {
         <Contact />
         <Footer />
 
-        {/* Back to Top Button */}
+      </div>
+
+      {/* Back to Top Button — rendered via portal so fixed positioning is not broken by overflow:hidden parent */}
+      {createPortal(
         <AnimatePresence>
           {showBackToTop && (
             <motion.button
@@ -4541,7 +4544,7 @@ export default function App() {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.8, y: 20 }}
               onClick={scrollToTop}
-              className="fixed bottom-6 right-6 z-50 p-4 rounded-full shadow-lg flex items-center justify-center transition-all duration-300 group"
+              className="fixed bottom-6 right-6 z-[9999] p-4 rounded-full shadow-lg flex items-center justify-center group"
               style={{
                 background: GOLD,
                 color: NAVY,
@@ -4553,8 +4556,9 @@ export default function App() {
               <ArrowUp size={20} strokeWidth={2.5} className="group-hover:-translate-y-1 transition-transform duration-300" />
             </motion.button>
           )}
-        </AnimatePresence>
-      </div>
+        </AnimatePresence>,
+        document.body
+      )}
     </ContentContext.Provider>
   );
 }
