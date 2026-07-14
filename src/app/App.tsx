@@ -48,6 +48,12 @@ function GlobalStyles() {
   return (
     <style>{`
       @font-face {
+        font-family: 'Cheese Milky';
+        src: url('/fonts/CheeseMilky.otf') format('opentype');
+        font-weight: normal;
+        font-style: normal;
+      }
+      @font-face {
         font-family: 'KG Red Hands';
         src: url('/fonts/KGRedHands.ttf') format('truetype');
         font-weight: normal;
@@ -56,6 +62,7 @@ function GlobalStyles() {
       *, *::before, *::after { box-sizing: border-box; }
       html { scroll-behavior: smooth; }
       body { overflow-x: hidden; font-family: 'KG Red Hands', sans-serif; }
+      h1, h2, h3, h4, h5, h6, .font-title { font-family: 'Cheese Milky', sans-serif !important; }
       ::selection { background: rgba(245,166,35,0.28); color: #1B2A4A; }
       ::-webkit-scrollbar { width: 5px; }
       ::-webkit-scrollbar-track { background: #040c18; }
@@ -532,7 +539,7 @@ function Hero() {
           <div className="absolute -left-4 -top-8 select-none pointer-events-none overflow-hidden" style={{ zIndex: -1 }}>
             <span
               style={{
-                fontFamily: "'KG Red Hands', sans-serif",
+                fontFamily: "'Cheese Milky', sans-serif",
                 fontWeight: 900,
                 fontSize: "min(18vw, 12rem)",
                 color: "rgba(255,255,255,0.015)",
@@ -560,7 +567,7 @@ function Hero() {
                     transition={{ duration: 0.85, delay: 0.2 + idx * 0.1, ease }}
                     className="block font-black leading-[0.9]"
                     style={{
-                      fontFamily: "'KG Red Hands', sans-serif",
+                      fontFamily: "'Cheese Milky', sans-serif",
                       fontSize: "clamp(2.8rem, 9vw, 6.5rem)",
                       color: colorVal,
                       WebkitTextStroke: strokeVal,
@@ -751,8 +758,8 @@ function About() {
         <div className="max-w-3xl mx-auto text-center mb-20">
           {/* Label */}
           <div className="flex items-center justify-center gap-4 mb-10">
-            <span className="text-xs font-black tracking-[0.3em] uppercase" style={{ fontFamily: "'KG Red Hands', sans-serif", color: NAVY }}>
-              À Propos de nous
+            <span className="text-xs font-black tracking-[0.3em] uppercase" style={{ fontFamily: "'Cheese Milky', sans-serif", color: NAVY }}>
+              Ensemble, on va plus loin.
             </span>
           </div>
 
@@ -760,13 +767,13 @@ function About() {
           <h2 className="mb-8 flex flex-col items-center">
             <span
               className="font-black text-transparent leading-none"
-              style={{ fontFamily: "'KG Red Hands', sans-serif", fontSize: "clamp(3rem, 6vw, 4.5rem)", WebkitTextStroke: `1.5px ${NAVY}`, opacity: 0.7 }}
+              style={{ fontFamily: "'Cheese Milky', sans-serif", fontSize: "clamp(3rem, 6vw, 4.5rem)", WebkitTextStroke: `1.5px ${NAVY}`, opacity: 0.7 }}
             >
               Qu'est-Ce Que
             </span>
             <span
               className="font-black leading-none mt-1"
-              style={{ fontFamily: "'KG Red Hands', sans-serif", fontSize: "clamp(3.5rem, 7vw, 5.5rem)", color: NAVY, letterSpacing: "-0.04em" }}
+              style={{ fontFamily: "'Cheese Milky', sans-serif", fontSize: "clamp(3.5rem, 7vw, 5.5rem)", color: NAVY, letterSpacing: "-0.04em" }}
             >
               Yakoo Events ?
             </span>
@@ -1113,6 +1120,7 @@ function Activities() {
   const [selected, setSelected] = useState<Activity | null>(null);
   const [activities, setActivities] = useState<Activity[]>(ACTIVITIES);
   const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
     const fetchActivities = async () => {
@@ -1136,8 +1144,23 @@ function Activities() {
     };
   }, [selected]);
 
+  useEffect(() => {
+    setPage(1);
+  }, [active]);
+
   const filtered = active === "Tous" ? activities : activities.filter((a) => a.category === active);
   const accent   = CAT_COLOR[active] ?? GOLD;
+
+  const itemsPerPage = 9;
+  const totalPages = Math.ceil(filtered.length / itemsPerPage);
+  const paginated = filtered.slice((page - 1) * itemsPerPage, page * itemsPerPage);
+
+  const handlePageChange = (pageNum: number) => {
+    setPage(pageNum);
+    setTimeout(() => {
+      document.getElementById("activites")?.scrollIntoView({ behavior: "smooth" });
+    }, 50);
+  };
 
   return (
     <section id="activites" className="relative overflow-hidden" style={{ background: "#07101f" }}>
@@ -1161,7 +1184,7 @@ function Activities() {
 
         {/* Categories */}
         <Reveal delay={0.1}>
-          <div className="flex flex-wrap justify-center gap-6 md:gap-10 mb-16">
+          <div className="flex flex-wrap justify-center gap-4 mb-16">
             {CATEGORIES.map((cat) => {
               const isSelected = active === cat.label;
               const color = CAT_COLOR[cat.label] ?? GOLD;
@@ -1169,12 +1192,12 @@ function Activities() {
                 <button
                   key={cat.label}
                   onClick={() => setActive(cat.label)}
-                  className="inline-flex items-center justify-center rounded-full text-sm font-bold uppercase tracking-wider transition-all duration-300 backdrop-blur-sm whitespace-nowrap"
+                  className="inline-flex items-center justify-center rounded-full text-xs font-bold uppercase tracking-wider transition-all duration-300 backdrop-blur-sm whitespace-nowrap"
                   style={{
-                    padding: "14px 28px",
-                    color: isSelected ? "#0F1C30" : "white",
-                    background: isSelected ? color : "rgba(255,255,255,0.05)",
-                    border: `1px solid ${isSelected ? color : "rgba(255,255,255,0.1)"}`,
+                    padding: "8px 18px",
+                    color: isSelected ? "#0F1C30" : color,
+                    background: isSelected ? color : `${color}15`,
+                    border: `1px solid ${isSelected ? color : `${color}35`}`,
                     boxShadow: isSelected ? `0 0 20px ${color}40` : "none",
                   }}
                 >
@@ -1191,61 +1214,102 @@ function Activities() {
         ) : filtered.length === 0 ? (
           <div className="text-center text-white py-10">Aucune activité trouvée.</div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filtered.map((act, i) => (
-              <Reveal key={act.id} delay={0.1 * i}>
-                <div
-                  className="group relative rounded-2xl overflow-hidden cursor-pointer"
-                  style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.05)" }}
-                  onClick={() => setSelected(act)}
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {paginated.map((act, i) => (
+                <Reveal key={act.id} delay={0.1 * i}>
+                  <div
+                    className="group relative rounded-2xl overflow-hidden cursor-pointer"
+                    style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.05)" }}
+                    onClick={() => setSelected(act)}
+                  >
+                    {/* Image */}
+                    <div className="relative h-48 overflow-hidden">
+                      <img
+                        src={act.img || act.image_url || "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4"}
+                        alt={act.title}
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#0F1C30] via-[#0F1C30]/40 to-transparent" />
+                      
+                      {/* Badge */}
+                      <div
+                        className="absolute top-4 left-4 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide"
+                        style={{ background: CAT_COLOR[act.category] ?? GOLD, color: "#0F1C30" }}
+                      >
+                        {act.category}
+                      </div>
+                    </div>
+
+                    {/* Content */}
+                    <div className="p-6 relative">
+                      <h3 className="text-xl font-bold text-white mb-2 group-hover:text-[#F5A623] transition-colors line-clamp-1">
+                        {act.title}
+                      </h3>
+                      <p className="text-xs line-clamp-2 mb-6" style={{ color: TEXT_MUTED }}>
+                        {act.desc || act.description || ""}
+                      </p>
+
+                      {/* Meta */}
+                      <div className="flex items-center justify-between text-xs font-medium border-t pt-4" style={{ borderColor: "rgba(255,255,255,0.1)", color: "#9BA3AF" }}>
+                        <div className="flex items-center gap-1.5">
+                          <Clock size={14} style={{ color: GOLD }} />
+                          {act.duration || "N/A"}
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                          <Users size={14} style={{ color: GOLD }} />
+                          Jusqu'à {(act.maxPeople || act.max_people) || "N/A"}
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                          <User size={14} style={{ color: GOLD }} />
+                          {(act.minAge || act.min_age) || "N/A"}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </Reveal>
+              ))}
+            </div>
+
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <div className="flex items-center justify-center gap-2 mt-12">
+                <button
+                  onClick={() => handlePageChange(Math.max(page - 1, 1))}
+                  disabled={page === 1}
+                  className="px-4 py-2 rounded-full border border-white/10 text-white text-xs font-bold uppercase tracking-wider bg-white/5 hover:bg-[#F5A623] hover:text-[#0F1C30] disabled:opacity-40 disabled:hover:bg-white/5 disabled:hover:text-white transition-all duration-300"
                 >
-                  {/* Image */}
-                  <div className="relative h-64 overflow-hidden">
-                    <img
-                      src={act.img || act.image_url || "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4"}
-                      alt={act.title}
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#0F1C30] via-[#0F1C30]/40 to-transparent" />
-                    
-                    {/* Badge */}
-                    <div
-                      className="absolute top-4 left-4 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide"
-                      style={{ background: CAT_COLOR[act.category] ?? GOLD, color: "#0F1C30" }}
+                  Précédent
+                </button>
+                {Array.from({ length: totalPages }).map((_, idx) => {
+                  const pageNum = idx + 1;
+                  const isCurrent = pageNum === page;
+                  return (
+                    <button
+                      key={pageNum}
+                      onClick={() => handlePageChange(pageNum)}
+                      className="w-10 h-10 rounded-full border text-xs font-bold transition-all duration-300"
+                      style={{
+                        borderColor: isCurrent ? GOLD : "rgba(255,255,255,0.1)",
+                        background: isCurrent ? GOLD : "rgba(255,255,255,0.05)",
+                        color: isCurrent ? "#0F1C30" : "white",
+                        boxShadow: isCurrent ? `0 0 15px ${GOLD}50` : "none",
+                      }}
                     >
-                      {act.category}
-                    </div>
-                  </div>
-
-                  {/* Content */}
-                  <div className="p-6 relative">
-                    <h3 className="text-2xl font-bold text-white mb-2 group-hover:text-[#F5A623] transition-colors">
-                      {act.title}
-                    </h3>
-                    <p className="text-sm line-clamp-2 mb-6" style={{ color: TEXT_MUTED }}>
-                      {act.desc || act.description || ""}
-                    </p>
-
-                    {/* Meta */}
-                    <div className="flex items-center justify-between text-xs font-medium border-t pt-4" style={{ borderColor: "rgba(255,255,255,0.1)", color: "#9BA3AF" }}>
-                      <div className="flex items-center gap-1.5">
-                        <Clock size={14} style={{ color: GOLD }} />
-                        {act.duration || "N/A"}
-                      </div>
-                      <div className="flex items-center gap-1.5">
-                        <Users size={14} style={{ color: GOLD }} />
-                        Jusqu'à {(act.maxPeople || act.max_people) || "N/A"}
-                      </div>
-                      <div className="flex items-center gap-1.5">
-                        <User size={14} style={{ color: GOLD }} />
-                        {(act.minAge || act.min_age) || "N/A"}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </Reveal>
-            ))}
-          </div>
+                      {pageNum}
+                    </button>
+                  );
+                })}
+                <button
+                  onClick={() => handlePageChange(Math.min(page + 1, totalPages))}
+                  disabled={page === totalPages}
+                  className="px-4 py-2 rounded-full border border-white/10 text-white text-xs font-bold uppercase tracking-wider bg-white/5 hover:bg-[#F5A623] hover:text-[#0F1C30] disabled:opacity-40 disabled:hover:bg-white/5 disabled:hover:text-white transition-all duration-300"
+                >
+                  Suivant
+                </button>
+              </div>
+            )}
+          </>
         )}
       </div>
 
@@ -4035,6 +4099,7 @@ function EventManagementSection() {
 function EquipmentShowcaseSection() {
   const [equipments, setEquipments] = useState([]);
   const [selectedEq, setSelectedEq] = useState<any | null>(null);
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
     const fetchPublicMateriels = async () => {
@@ -4047,6 +4112,10 @@ function EquipmentShowcaseSection() {
     };
     fetchPublicMateriels();
   }, []);
+
+  useEffect(() => {
+    setPage(1);
+  }, [equipments]);
 
   const toImg = (img: any) => {
     if (!img || typeof img !== 'string') return null;
@@ -4093,6 +4162,17 @@ function EquipmentShowcaseSection() {
     return '#EF4444';
   };
 
+  const itemsPerPage = 9;
+  const totalPages = Math.ceil(displayList.length / itemsPerPage);
+  const paginatedEq = displayList.slice((page - 1) * itemsPerPage, page * itemsPerPage);
+
+  const handlePageChange = (pageNum: number) => {
+    setPage(pageNum);
+    setTimeout(() => {
+      document.getElementById("equipements")?.scrollIntoView({ behavior: "smooth" });
+    }, 50);
+  };
+
   return (
     <section id="equipements" className="relative overflow-hidden py-24" style={{ background: '#040914' }}>
       <div className="absolute inset-0 opacity-[0.02]"
@@ -4118,7 +4198,7 @@ function EquipmentShowcaseSection() {
 
         {/* Upgraded Cards Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {displayList.map((eq, i) => (
+          {paginatedEq.map((eq, i) => (
             <FadeUp key={eq.name} delay={i * 0.08}>
               <motion.div
                 onClick={() => setSelectedEq(eq)}
@@ -4200,6 +4280,45 @@ function EquipmentShowcaseSection() {
             </FadeUp>
           ))}
         </div>
+
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div className="flex items-center justify-center gap-2 mt-12">
+            <button
+              onClick={() => handlePageChange(Math.max(page - 1, 1))}
+              disabled={page === 1}
+              className="px-4 py-2 rounded-full border border-white/10 text-white text-xs font-bold uppercase tracking-wider bg-white/5 hover:bg-[#F5A623] hover:text-[#0F1C30] disabled:opacity-40 disabled:hover:bg-white/5 disabled:hover:text-white transition-all duration-300"
+            >
+              Précédent
+            </button>
+            {Array.from({ length: totalPages }).map((_, idx) => {
+              const pageNum = idx + 1;
+              const isCurrent = pageNum === page;
+              return (
+                <button
+                  key={pageNum}
+                  onClick={() => handlePageChange(pageNum)}
+                  className="w-10 h-10 rounded-full border text-xs font-bold transition-all duration-300"
+                  style={{
+                    borderColor: isCurrent ? GOLD : "rgba(255,255,255,0.1)",
+                    background: isCurrent ? GOLD : "rgba(255,255,255,0.05)",
+                    color: isCurrent ? "#0F1C30" : "white",
+                    boxShadow: isCurrent ? `0 0 15px ${GOLD}50` : "none",
+                  }}
+                >
+                  {pageNum}
+                </button>
+              );
+            })}
+            <button
+              onClick={() => handlePageChange(Math.min(page + 1, totalPages))}
+              disabled={page === totalPages}
+              className="px-4 py-2 rounded-full border border-white/10 text-white text-xs font-bold uppercase tracking-wider bg-white/5 hover:bg-[#F5A623] hover:text-[#0F1C30] disabled:opacity-40 disabled:hover:bg-white/5 disabled:hover:text-white transition-all duration-300"
+            >
+              Suivant
+            </button>
+          </div>
+        )}
       </div>
 
       {/* ── Equipment Detail Modal ── */}
