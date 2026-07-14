@@ -39,6 +39,7 @@ import {
   CalendarDays,
   Shirt,
   Map,
+  ArrowUp,
 } from "lucide-react";
 
 // ─── Global styles ───────────────────────────────────────────────────────────
@@ -3403,13 +3404,13 @@ function TransitionFilmStrip() {
   const WORD_1 = "YAKOO";
   const WORD_2 = "EVENT";
 
-  // Build card list: letters from word1, a separator, letters from word2
   type LetterCard = { char: string; isSep?: boolean; wordIndex: number; charIndex: number };
   const buildCards = (): LetterCard[] => {
     const cards: LetterCard[] = [];
     [...WORD_1].forEach((c, i) => cards.push({ char: c, wordIndex: 0, charIndex: i }));
     cards.push({ char: "·", isSep: true, wordIndex: -1, charIndex: -1 });
     [...WORD_2].forEach((c, i) => cards.push({ char: c, wordIndex: 1, charIndex: i }));
+    cards.push({ char: "·", isSep: true, wordIndex: -1, charIndex: -1 });
     return cards;
   };
   const cards = buildCards();
@@ -4463,6 +4464,7 @@ function EquipmentShowcaseSection() {
 // ─── App ──────────────────────────────────────────────────────────────────────
 export default function App() {
   const [content, setContent] = useState<Record<string, string>>({});
+  const [showBackToTop, setShowBackToTop] = useState(false);
 
   useEffect(() => {
     const fetchContent = async () => {
@@ -4496,6 +4498,18 @@ export default function App() {
     fetchContent();
   }, []);
 
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowBackToTop(window.scrollY > 400);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
     <ContentContext.Provider value={content}>
       <div style={{ fontFamily: "'KG Red Hands', sans-serif", overflowX: "hidden" }} className="min-h-screen bg-background text-foreground">
@@ -4518,6 +4532,28 @@ export default function App() {
         <TransitionContactNudge />
         <Contact />
         <Footer />
+
+        {/* Back to Top Button */}
+        <AnimatePresence>
+          {showBackToTop && (
+            <motion.button
+              initial={{ opacity: 0, scale: 0.8, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.8, y: 20 }}
+              onClick={scrollToTop}
+              className="fixed bottom-6 right-6 z-50 p-4 rounded-full shadow-lg flex items-center justify-center transition-all duration-300 group"
+              style={{
+                background: GOLD,
+                color: NAVY,
+                boxShadow: "0 10px 25px rgba(245, 166, 35, 0.45)",
+                border: "none",
+                cursor: "pointer",
+              }}
+            >
+              <ArrowUp size={20} strokeWidth={2.5} className="group-hover:-translate-y-1 transition-transform duration-300" />
+            </motion.button>
+          )}
+        </AnimatePresence>
       </div>
     </ContentContext.Provider>
   );
